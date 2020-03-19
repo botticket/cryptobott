@@ -24,7 +24,7 @@ IQXGL = '1699.79'
 IQXWTI = '32.87'
 tfexx = '913.40'
 sett = '1271.20'
-
+#by month
 
 def linechat(text):
     
@@ -58,7 +58,7 @@ def handle_message(event):
     userid = event.source.user_id
     
     disname = line_bot_api.get_profile(user_id=userid).display_name
-    request_text= (' mybot'+'\n' + '>> {} : {}'+'\n' + '>> {}').format(disname,text_from_user,userid)
+    request_text= ('mybot'+'\n' + '>> {} : {}'+'\n' + '>> {}').format(disname,text_from_user,userid)
 
     print(request_text)
     linechat(request_text)
@@ -141,15 +141,15 @@ def handle_message(event):
                     stop_longY = '%.2f'%stop_longY
                     stop_longY = str(stop_longY)
 
-                    exit_long1 = float(OpenD) * 1.07
+                    exit_long1 = float(OpenD) * 1.04
                     exit_long1 = '%.2f'%exit_long1
                     exit_long1 = str(exit_long1)
 
-                    exit_long2 = float(OpenD) * 1.14
+                    exit_long2 = float(OpenD) * 1.08
                     exit_long2 = '%.2f'%exit_long2
                     exit_long2 = str(exit_long2)
 
-                    exit_long3 = float(OpenD) * 1.21
+                    exit_long3 = float(OpenD) * 1.12
                     exit_long3 = '%.2f'%exit_long3
                     exit_long3 = str(exit_long3)
 
@@ -161,15 +161,15 @@ def handle_message(event):
                     stop_shortY = '%.2f'%stop_shortY
                     stop_shortY = str(stop_shortY)
 
-                    exit_short1 = float(OpenD) * 0.93
+                    exit_short1 = float(OpenD) * 0.96
                     exit_short1 = '%.2f'%exit_short1
                     exit_short1 = str(exit_short1)
 
-                    exit_short2 = float(OpenD) * 0.86
+                    exit_short2 = float(OpenD) * 0.92
                     exit_short2 = '%.2f'%exit_short2
                     exit_short2 = str(exit_short2)
 
-                    exit_short3 = float(OpenD) * 0.79
+                    exit_short3 = float(OpenD) * 0.88
                     exit_short3 = '%.2f'%exit_short3
                     exit_short3 = str(exit_short3)
                 
@@ -226,8 +226,8 @@ def handle_message(event):
 
                     word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
                     result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
-                    print(word_to_reply)
-                    print(result)
+                    # print(word_to_reply)
+                    # print(result)
                     print(number)
                     bubble = flex_crypto(text,price_now,change,chgp,notice,start,buy,stop,target)
                     
@@ -287,15 +287,15 @@ def handle_message(event):
                 stop_longY = '%.2f'%stop_longY
                 stop_longY = str(stop_longY)
 
-                exit_long1 = float(OpenD) * 1.05
+                exit_long1 = float(OpenD) * 1.04
                 exit_long1 = '%.2f'%exit_long1
                 exit_long1 = str(exit_long1)
 
-                exit_long2 = float(OpenD) * 1.10
+                exit_long2 = float(OpenD) * 1.08
                 exit_long2 = '%.2f'%exit_long2
                 exit_long2 = str(exit_long2)
 
-                exit_long3 = float(OpenD) * 1.15
+                exit_long3 = float(OpenD) * 1.12
                 exit_long3 = '%.2f'%exit_long3
                 exit_long3 = str(exit_long3)
 
@@ -307,15 +307,15 @@ def handle_message(event):
                 stop_shortY = '%.2f'%stop_shortY
                 stop_shortY = str(stop_shortY)
 
-                exit_short1 = float(OpenD) * 0.95
+                exit_short1 = float(OpenD) * 0.96
                 exit_short1 = '%.2f'%exit_short1
                 exit_short1 = str(exit_short1)
 
-                exit_short2 = float(OpenD) * 0.90
+                exit_short2 = float(OpenD) * 0.92
                 exit_short2 = '%.2f'%exit_short2
                 exit_short2 = str(exit_short2)
 
-                exit_short3 = float(OpenD) * 0.85
+                exit_short3 = float(OpenD) * 0.88
                 exit_short3 = '%.2f'%exit_short3
                 exit_short3 = str(exit_short3)
             
@@ -373,7 +373,7 @@ def handle_message(event):
                 word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
                 result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
                 # print(word_to_reply)
-                # print(number)
+                print(number)
 
                 bubble = flex_usdcheck(text,price_now,change,chgp,notice,start,buy,stop,target)
                 flex_to_reply = SetMessage_Object(bubble)
@@ -415,22 +415,22 @@ def handle_message(event):
             def goldcheck():
                 gg = goldscrapt()
 
-                exit_long1 = float(gg[0]) * 1.015
+                exit_long1 = float(gg[0]) * 1.04
                 exit_long1 = '%.2f'%exit_long1
 
-                exit_long2 = float(gg[0]) * 1.03
+                exit_long2 = float(gg[0]) * 1.08
                 exit_long2 = '%.2f'%exit_long2
 
-                exit_long3 = float(gg[0]) * 1.045
+                exit_long3 = float(gg[0]) * 1.12
                 exit_long3 = '%.2f'%exit_long3      
 
-                exit_short1 = float(gg[0]) * 0.985
+                exit_short1 = float(gg[0]) * 0.96
                 exit_short1 = '%.2f'%exit_short1
 
-                exit_short2 = float(gg[0]) * 0.97
+                exit_short2 = float(gg[0]) * 0.92
                 exit_short2 = '%.2f'%exit_short2
 
-                exit_short3 = float(gg[0]) * 0.955
+                exit_short3 = float(gg[0]) * 0.88
                 exit_short3 = '%.2f'%exit_short3
 
                 LongY = float(IQXGL) * 1.005
@@ -442,7 +442,7 @@ def handle_message(event):
                 shortY = float(IQXGL) * 0.995
                 shortY = '%.2f'%shortY
 
-                stop_shortY = float(IQXGL) * 1.0025
+                stop_shortY = float(IQXGL) * 1.005
                 stop_shortY = '%.2f'%stop_shortY                    
 
                 price_now = float(gg[0])
@@ -520,34 +520,34 @@ def handle_message(event):
             def wticheck():
                 wti = wtiscrapt()
 
-                exit_long1 = float(wti[0]) * 1.05
+                exit_long1 = float(wti[0]) * 1.04
                 exit_long1 = '%.2f'%exit_long1
 
-                exit_long2 = float(wti[0]) * 1.10
+                exit_long2 = float(wti[0]) * 1.08
                 exit_long2 = '%.2f'%exit_long2
 
-                exit_long3 = float(wti[0]) * 1.15
+                exit_long3 = float(wti[0]) * 1.12
                 exit_long3 = '%.2f'%exit_long3      
 
-                exit_short1 = float(wti[0]) * 0.95
+                exit_short1 = float(wti[0]) * 0.96
                 exit_short1 = '%.2f'%exit_short1
 
-                exit_short2 = float(wti[0]) * 0.90
+                exit_short2 = float(wti[0]) * 0.92
                 exit_short2 = '%.2f'%exit_short2
 
-                exit_short3 = float(wti[0]) * 0.85
+                exit_short3 = float(wti[0]) * 0.88
                 exit_short3 = '%.2f'%exit_short3
 
-                LongY = float(IQXWTI) * 1.01
+                LongY = float(IQXWTI) * 1.005
                 LongY = '%.2f'%LongY
 
-                stop_longY = float(IQXWTI) * 0.985
+                stop_longY = float(IQXWTI) * 0.995
                 stop_longY = '%.2f'%stop_longY     
 
-                shortY = float(IQXWTI) * 0.985
+                shortY = float(IQXWTI) * 0.995
                 shortY = '%.2f'%shortY
 
-                stop_shortY = float(IQXWTI) * 1.01
+                stop_shortY = float(IQXWTI) * 1.005
                 stop_shortY = '%.2f'%stop_shortY                    
 
                 price_now = float(wti[0])
@@ -652,7 +652,7 @@ def handle_message(event):
                 shortY = float(tfexx) * 0.995
                 shortY = '%.2f'%shortY
 
-                stop_shortY = float(tfexx) * 1.0025
+                stop_shortY = float(tfexx) * 1.005
                 stop_shortY = '%.2f'%stop_shortY                    
 
                 price_now = float(tff[0])
@@ -759,7 +759,7 @@ def handle_message(event):
                 shortY = float(sett) * 0.995
                 shortY = '%.2f'%shortY
 
-                stop_shortY = float(sett) * 1.0025
+                stop_shortY = float(sett) * 1.005
                 stop_shortY = '%.2f'%stop_shortY                    
 
                 price_now = float(st[0])
@@ -938,7 +938,7 @@ def handle_message(event):
                     support1 = '%.2f'%support1
                     support1 = str(support1)
 
-                    support2 = float(OpenY) * 0.65
+                    support2 = float(OpenY) * 0.60
                     support2 = '%.2f'%support2
                     support2 = str(support2)
 
