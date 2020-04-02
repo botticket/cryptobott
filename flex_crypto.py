@@ -39,7 +39,7 @@ def flex_crypto(text,price_now,change,chgp,notice,start,buy,stop,target):
                 "contents": [
                 {
                     "type": "image",
-                    "url": "https://images.yourstory.com/cs/1/2c5ce4f07adc11e9ac5fc599b2efcdfd/UnicoinCryptocurrency1569309883726jpg",
+                    "url": "https://mystickermania.com/scale/resize/256/256?format=png&quality=80&crop=true&progressive=true&url=/cdn/stickers/star-wars/previews.png",
                     "aspectMode": "cover"
                 }
                 ],
@@ -308,7 +308,7 @@ def flex_usdcheck(text,price_now,change,chgp,notice,start,buy,stop,target):
                 "contents": [
                 {
                     "type": "image",
-                    "url": "https://kasikornresearch.com/SiteCollectionDocuments/analysis/business/money/HardBaht_Banner.jpg",
+                    "url": "https://mystickermania.com/scale/resize/256/256?format=png&quality=80&crop=true&progressive=true&url=/cdn/stickers/star-wars/previews.png",
                     "aspectMode": "cover"
                 }
                 ],
@@ -848,7 +848,7 @@ def flex_wticheck(text,price_now,change,chgp,notice,start,buy,stop,target):
                 "contents": [
                 {
                     "type": "image",
-                    "url": "https://static.posttoday.com/media/content/2014/06/19/09FD4903F4224438B6C49E1817EBE7BF.jpg",
+                    "url": "https://mystickermania.com/scale/resize/256/256?format=png&quality=80&crop=true&progressive=true&url=/cdn/stickers/star-wars/previews.png",
                     "aspectMode": "cover"
                 }
                 ],
@@ -1118,7 +1118,7 @@ def flex_tfexcheck(text,price_now,change,chgp,notice,start,buy,stop,target):
                 "contents": [
                 {
                     "type": "image",
-                    "url": "https://akm-img-a-in.tosshub.com/sites/btmt/images/stories/shares_1280_20180404115810324_660x450_020120061652.jpg",
+                    "url": "https://mystickermania.com/scale/resize/256/256?format=png&quality=80&crop=true&progressive=true&url=/cdn/stickers/star-wars/previews.png",
                     "aspectMode": "cover"
                 }
                 ],
@@ -1388,7 +1388,7 @@ def flex_setcheck(text,price_now,change,chgp,notice,start,buy,stop,target):
                 "contents": [
                 {
                     "type": "image",
-                    "url": "https://d1sr9z1pdl3mb7.cloudfront.net/wp-content/uploads/2018/03/09172121/stock-market.jpg",
+                    "url": "https://mystickermania.com/scale/resize/256/256?format=png&quality=80&crop=true&progressive=true&url=/cdn/stickers/star-wars/previews.png",
                     "aspectMode": "cover"
                 }
                 ],
@@ -1660,7 +1660,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 "contents": [
                 {
                     "type": "image",
-                    "url": "https://www.knowtechbetter.com/wp-content/uploads/2018/05/Software-for-Stock-Buying-and-selling.jpg",
+                    "url": "https://mystickermania.com/scale/resize/256/256?format=png&quality=80&crop=true&progressive=true&url=/cdn/stickers/star-wars/previews.png",
                     "aspectMode": "cover"
                 }
                 ],
