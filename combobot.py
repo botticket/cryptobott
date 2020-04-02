@@ -198,7 +198,7 @@ def handle_message(event):
                 alert1 = 'Long'
                 alert2 = 'Short'
 
-                text = text_from_user
+                text = 'IQXUSTB'
                 change = str(thb[1]) 
 
                 if barM >= 0:
@@ -304,7 +304,7 @@ def handle_message(event):
                 alert1 = 'Long'
                 alert2 = 'Short'
 
-                text = text_from_user
+                text = 'IQXGL'
                 change = str(gg[1]) 
 
                 if barM >= 0:
@@ -407,7 +407,7 @@ def handle_message(event):
                 alert1 = 'Long'
                 alert2 = 'Short'
 
-                text = text_from_user
+                text = 'IQWTI'
                 change = str(wti[1]) 
 
                 if barQ >= 0:
@@ -616,7 +616,7 @@ def handle_message(event):
                 alert1 = 'Long'
                 alert2 = 'Short'
 
-                text = text_from_user
+                text = text_from_user.upper()
                 change = str(st[1]) 
 
                 if barQ >= 0:
