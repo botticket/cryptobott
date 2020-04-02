@@ -11,6 +11,7 @@ from line_notify import LineNotify
 from reply import reply_msg , SetMessage_Object
 from flex_crypto import *
 from dialogflow_uncle import detect_intent_texts
+from datetime import datetime,date
 
 app = Flask(__name__)
 
@@ -20,11 +21,29 @@ channel_access_token = 'hkU+OYWsepq11sc+uM6bAE/ECjFb8+NUiTvjfQI1WUrXzKiUZvHU5YAv
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
-IQXGL = '1699.79'
-IQXWTI = '32.87'
-tfexx = '913.40'
-sett = '1271.20'
-#by month
+IQXGL = '1576.70'
+IQXWTI = '20.10'
+IQUSTB = '32.77'
+tfex_value = '736.00'
+set_value = '1171.51'
+#Monthly
+
+today = date.today()
+yearly = '{}-01-01'.format(today.year)
+monthly = '{}-{}-01'.format(today.year,today.month)
+
+if today.month >= 10 :
+    quarter = '{}-10-01'.format(today.year)
+    tfex_code = 'S50Z20'
+elif today.month >= 7:
+    quarter = '{}-07-01'.format(today.year)
+    tfex_code = 'S50U20'
+elif today.month >= 4 :
+    quarter = '{}-04-01'.format(today.year)
+    tfex_code = 'S50M20'
+else:
+    quarter = '{}-01-01'.format(today.year)
+    tfex_code = 'S50H20'
 
 def linechat(text):
     
@@ -83,296 +102,123 @@ def handle_message(event):
             line_bot_api.reply_message(reply_token,messages=all_text) #reply messageกลับไป
             return 'OK'
 
-        elif action == "crypto_response":
+        elif 'สวัสดี' in text_from_user:    
+            text_list = [
+                'สวัสดีจ้า คุณ {} '.format(disname),
+                'สวัสดีจ้า คุณ {} วันนี้จะเล่นตัวไหนดี'.format(disname),
+            ]
+
+            from random import choice
+            word_to_reply = choice(text_list)
+            text_to_reply = TextSendMessage(text = word_to_reply)
+            line_bot_api.reply_message(
+                    event.reply_token,
+                    messages=[text_to_reply]
+                )
+            return 'OK'
+
+        elif 'IQUSTB' in text_from_user:        
             from urllib.request import Request, urlopen
-            from bs4 import BeautifulSoup as soup 
-            from pandas_datareader import data
-            from datetime import datetime
-            
-            text_from_user = text_from_user.upper()
-            code = [text_from_user]
-            codes = list(map(lambda e: e + '-USD', code))
+            from bs4 import BeautifulSoup as soup
 
-            class usdcheck:
-                def __init__(self,code):
-                    self.code = code
-                def ticket(self):
-                    end = datetime.now()
-                    start = datetime(end.year,end.month,end.day)
-                    list = self.code
+            def thbscrapt():
+                req = Request('https://th.investing.com/currencies/usd-thb', headers={'User-Agent': 'Chrome/78.0'})
+                webopen = urlopen(req).read()
+                data = soup(webopen, 'html.parser')
 
-                    dfY = data.DataReader(f'{list}', data_source="yahoo", start='2020-01-01', end=end)
-                    dfW = data.DataReader(f'{list}', data_source="yahoo", start='2020-03-16', end=end)
-                    #2020-01-01 = Y M D
+                thb_now = data.findAll('div',{'class':'top bold inlineblock'})
+                thb_now = thb_now[0].text
+                thb_now = thb_now.replace('\n',' ')
+                thb_now = thb_now.replace(',','')
+                thb_now = thb_now.replace(' ','')
+                thb_now = thb_now.replace('\xa0','')
+                thb_now = thb_now[0:6]
 
-                    OpenY = dfY['Open'].iloc[1]
-                    OpenY  = '%.2f'%OpenY
-                    OpenY = str(OpenY)
+                thb_chg = data.findAll('div',{'class':'top bold inlineblock'})
+                thb_chg = thb_chg[0].text
+                thb_chg = thb_chg.replace('\n',' ')
+                thb_chg = thb_chg.replace(',','')
+                thb_chg = thb_chg.replace(' ','')
+                thb_chg = thb_chg.replace('\xa0','')
+                thb_chg = thb_chg[6:12]
 
-                    OpenW = dfW['Open'].iloc[1]
-                    OpenW  = '%.2f'%OpenW
-                    OpenW = str(OpenW)
-
-                    OpenD = dfY['Open'].iloc[-1]
-                    OpenD  = '%.2f'%OpenD
-                    OpenD = str(OpenD)
-
-                    Close = dfY['Close'].iloc[-1]
-                    Close  = '%.2f'%Close
-                    Close = str(Close)
-
-                    Prev = dfY['Close'].iloc[-2]
-                    Prev  = '%.2f'%Prev
-                    Prev = str(Prev)
-                    
-                    barY = ((float(Close) - float(OpenY)) / float(OpenY) )*100
-                    barY = '%.2f'%barY
-                    barY = float(barY)
-
-                    barW = ((float(Close) - float(OpenW)) / float(OpenW) )*100
-                    barW = '%.2f'%barW
-                    barW = float(barW)
-
-                    LongY = float(OpenW) * 1.01
-                    LongY = '%.2f'%LongY
-                    LongY = str(LongY) 
-
-                    stop_longY = float(OpenW) * 0.985
-                    stop_longY = '%.2f'%stop_longY
-                    stop_longY = str(stop_longY)
-
-                    exit_long1 = float(OpenD) * 1.04
-                    exit_long1 = '%.2f'%exit_long1
-                    exit_long1 = str(exit_long1)
-
-                    exit_long2 = float(OpenD) * 1.08
-                    exit_long2 = '%.2f'%exit_long2
-                    exit_long2 = str(exit_long2)
-
-                    exit_long3 = float(OpenD) * 1.12
-                    exit_long3 = '%.2f'%exit_long3
-                    exit_long3 = str(exit_long3)
-
-                    shortY = float(OpenW) * 0.985
-                    shortY = '%.2f'%shortY
-                    shortY = str(shortY) 
-
-                    stop_shortY = float(OpenW) * 1.01
-                    stop_shortY = '%.2f'%stop_shortY
-                    stop_shortY = str(stop_shortY)
-
-                    exit_short1 = float(OpenD) * 0.96
-                    exit_short1 = '%.2f'%exit_short1
-                    exit_short1 = str(exit_short1)
-
-                    exit_short2 = float(OpenD) * 0.92
-                    exit_short2 = '%.2f'%exit_short2
-                    exit_short2 = str(exit_short2)
-
-                    exit_short3 = float(OpenD) * 0.88
-                    exit_short3 = '%.2f'%exit_short3
-                    exit_short3 = str(exit_short3)
+                thb_pchg = data.findAll('div',{'class':'top bold inlineblock'})
+                thb_pchg = thb_pchg[0].text
+                thb_pchg = thb_pchg.replace('\n',' ')
+                thb_pchg = thb_pchg.replace(',','')
+                thb_pchg = thb_pchg.replace(' ','')
+                thb_pchg = thb_pchg.replace('\xa0','')
+                thb_pchg = thb_pchg[13:18]
                 
-                    change = float(Close) - float(Prev)
-                    change = '%.2f'%change
-                    change = str(change) 
-
-                    chgp = (float(change) / float(Prev))*100
-                    chgp = '%.2f'%chgp
-                    chgp = str(chgp) 		
-                    
-                    text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
-                    text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
-
-                    alert1 = 'ชนแนวต้าน'
-                    alert2 = 'Long'
-                    alert3 = 'Short'
-                    alert4 = 'กำลังย่อ'
-
-                    text = code
-                    price_now = float(Close) 
-                    change = str(change) 
-
-                    if barY > 0.00:
-                        if barW >= 0:
-                            notice = alert2
-                            start = OpenW
-                            buy = LongY
-                            stop = stop_longY
-                            target = text1
-                            number = '1'
-                        else:
-                            notice = alert3
-                            start = OpenW
-                            buy = shortY
-                            stop = stop_shortY
-                            target = text2 
-                            number = '2'
-                    else:
-                        if barW >= 0:
-                            notice = alert2
-                            start = OpenW
-                            buy = LongY
-                            stop = stop_longY
-                            target = text1 
-                            number = '3'
-                        else:
-                            notice = alert3
-                            start = OpenW
-                            buy = shortY
-                            stop = stop_shortY
-                            target = text2 
-                            number = '4'
-
-                    word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
-                    result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
-                    # print(word_to_reply)
-                    # print(result)
-                    print(number)
-                    bubble = flex_crypto(text,price_now,change,chgp,notice,start,buy,stop,target)
-                    
-                    flex_to_reply = SetMessage_Object(bubble)
-                    reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
-                    return 'OK'
-
-            for code in codes:
-                usdcheck(code).ticket()
-
-        elif 'USDTHB' in text_from_user:
-            from urllib.request import Request, urlopen
-            from bs4 import BeautifulSoup as soup 
-            from pandas_datareader import data
-            from datetime import datetime     
+                return[thb_now,thb_chg,thb_pchg]
 
             def usdcheck():
-                end = datetime.now()
-                start = datetime(end.year,end.month,end.day)
-                dfY = data.DataReader('THB=X', data_source="yahoo", start='2020-01-01', end=end)
-                dfW = data.DataReader('THB=X', data_source="yahoo", start='2020-03-16', end=end)
-                #2020-01-01 = Y M D
+                thb = thbscrapt()
 
-                OpenY = dfY['Open'].iloc[1]
-                OpenY  = '%.2f'%OpenY
-                OpenY = str(OpenY)
-
-                OpenW = dfW['Open'].iloc[1]
-                OpenW  = '%.2f'%OpenW
-                OpenW = str(OpenW)
-
-                OpenD = dfY['Open'].iloc[-1]
-                OpenD  = '%.2f'%OpenD
-                OpenD = str(OpenD)
-
-                Close = dfY['Close'].iloc[-1]
-                Close  = '%.3f'%Close
-                Close = str(Close)
-
-                Prev = dfY['Close'].iloc[-2]
-                Prev  = '%.2f'%Prev
-                Prev = str(Prev)
-                
-                barY = ((float(Close) - float(OpenY)) / float(OpenY) )*100
-                barY = '%.2f'%barY
-                barY = float(barY)
-
-                barW = ((float(Close) - float(OpenW)) / float(OpenW) )*100
-                barW = '%.2f'%barW
-                barW = float(barW)
-
-                LongY = float(OpenW) * 1.01
-                LongY = '%.2f'%LongY
-                LongY = str(LongY) 
-
-                stop_longY = float(OpenW) * 0.985
-                stop_longY = '%.2f'%stop_longY
-                stop_longY = str(stop_longY)
-
-                exit_long1 = float(OpenD) * 1.04
+                exit_long1 = float(thb[0]) * 1.015
                 exit_long1 = '%.2f'%exit_long1
-                exit_long1 = str(exit_long1)
 
-                exit_long2 = float(OpenD) * 1.08
+                exit_long2 = float(thb[0]) * 1.03
                 exit_long2 = '%.2f'%exit_long2
-                exit_long2 = str(exit_long2)
 
-                exit_long3 = float(OpenD) * 1.12
-                exit_long3 = '%.2f'%exit_long3
-                exit_long3 = str(exit_long3)
+                exit_long3 = float(thb[0]) * 1.045
+                exit_long3 = '%.2f'%exit_long3      
 
-                shortY = float(OpenW) * 0.985
-                shortY = '%.2f'%shortY
-                shortY = str(shortY) 
-
-                stop_shortY = float(OpenW) * 1.01
-                stop_shortY = '%.2f'%stop_shortY
-                stop_shortY = str(stop_shortY)
-
-                exit_short1 = float(OpenD) * 0.96
+                exit_short1 = float(thb[0]) * 0.985
                 exit_short1 = '%.2f'%exit_short1
-                exit_short1 = str(exit_short1)
 
-                exit_short2 = float(OpenD) * 0.92
+                exit_short2 = float(thb[0]) * 0.97
                 exit_short2 = '%.2f'%exit_short2
-                exit_short2 = str(exit_short2)
 
-                exit_short3 = float(OpenD) * 0.88
+                exit_short3 = float(thb[0]) * 0.955
                 exit_short3 = '%.2f'%exit_short3
-                exit_short3 = str(exit_short3)
-            
-                change = float(Close) - float(Prev)
-                change = '%.3f'%change
-                change = str(change) 
 
-                chgp = (float(change)/ float(Prev))*100
-                chgp = '%.2f'%chgp
-                chgp = str(chgp) 		
+                LongY = float(IQUSTB) * 1.005
+                LongY = '%.2f'%LongY
+
+                stop_longY = float(IQUSTB) * 0.995
+                stop_longY = '%.2f'%stop_longY     
+
+                shortY = float(IQUSTB) * 0.995
+                shortY = '%.2f'%shortY
+
+                stop_shortY = float(IQUSTB) * 1.005
+                stop_shortY = '%.2f'%stop_shortY                    
+
+                price_now = float(thb[0])
+                price_now = '%.2f'%price_now
+                price_now = str(price_now)
                 
+                barM = float(price_now) - float(IQUSTB)
+                chgp = str(thb[2])
+
                 text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
                 text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
 
-                alert1 = 'ชนแนวต้าน'
-                alert2 = 'Long'
-                alert3 = 'Short'
-                alert4 = 'กำลังย่อ'
+                alert1 = 'Long'
+                alert2 = 'Short'
 
                 text = text_from_user
-                price_now = float(Close) 
-                change = str(change) 
+                change = str(thb[1]) 
 
-                if barY > 0.00:
-                    if barW >= 0:
-                        notice = alert2
-                        start = OpenW
-                        buy = LongY
-                        stop = stop_longY
-                        target = text1
-                        number = '1'
-                    else:
-                        notice = alert3
-                        start = OpenW
-                        buy = shortY
-                        stop = stop_shortY
-                        target = text2 
-                        number = '2'
+                if barM >= 0:
+                    notice = alert1
+                    start = IQUSTB
+                    buy = LongY
+                    stop = stop_longY
+                    target = text1
+                    number = '1'
                 else:
-                    if barW >= 0:
-                        notice = alert2
-                        start = OpenW
-                        buy = LongY
-                        stop = stop_longY
-                        target = text1 
-                        number = '3'
-                    else:
-                        notice = alert3
-                        start = OpenW
-                        buy = shortY
-                        stop = stop_shortY
-                        target = text2 
-                        number = '4'
-
+                    notice = alert2
+                    start = IQUSTB
+                    buy = shortY
+                    stop = stop_shortY
+                    target = text2 
+                    number = '2'
+                
                 word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
                 result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
-                # print(word_to_reply)
+                print(word_to_reply)
                 print(number)
 
                 bubble = flex_usdcheck(text,price_now,change,chgp,notice,start,buy,stop,target)
@@ -415,22 +261,22 @@ def handle_message(event):
             def goldcheck():
                 gg = goldscrapt()
 
-                exit_long1 = float(gg[0]) * 1.04
+                exit_long1 = float(gg[0]) * 1.015
                 exit_long1 = '%.2f'%exit_long1
 
-                exit_long2 = float(gg[0]) * 1.08
+                exit_long2 = float(gg[0]) * 1.03
                 exit_long2 = '%.2f'%exit_long2
 
-                exit_long3 = float(gg[0]) * 1.12
+                exit_long3 = float(gg[0]) * 1.045
                 exit_long3 = '%.2f'%exit_long3      
 
-                exit_short1 = float(gg[0]) * 0.96
+                exit_short1 = float(gg[0]) * 0.985
                 exit_short1 = '%.2f'%exit_short1
 
-                exit_short2 = float(gg[0]) * 0.92
+                exit_short2 = float(gg[0]) * 0.97
                 exit_short2 = '%.2f'%exit_short2
 
-                exit_short3 = float(gg[0]) * 0.88
+                exit_short3 = float(gg[0]) * 0.955
                 exit_short3 = '%.2f'%exit_short3
 
                 LongY = float(IQXGL) * 1.005
@@ -449,29 +295,27 @@ def handle_message(event):
                 price_now = '%.2f'%price_now
                 price_now = str(price_now)
                 
-                barW = float(price_now) - float(IQXGL)
+                barM = float(price_now) - float(IQXGL)
                 chgp = str(gg[2])
 
                 text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
                 text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
 
-                alert1 = 'ชนแนวต้าน'
-                alert2 = 'Long'
-                alert3 = 'Short'
-                alert4 = 'กำลังย่อ'
+                alert1 = 'Long'
+                alert2 = 'Short'
 
                 text = text_from_user
                 change = str(gg[1]) 
 
-                if barW >= 0:
-                    notice = alert2
+                if barM >= 0:
+                    notice = alert1
                     start = IQXGL
                     buy = LongY
                     stop = stop_longY
                     target = text1
                     number = '1'
                 else:
-                    notice = alert3
+                    notice = alert2
                     start = IQXGL
                     buy = shortY
                     stop = stop_shortY
@@ -538,45 +382,43 @@ def handle_message(event):
                 exit_short3 = float(wti[0]) * 0.88
                 exit_short3 = '%.2f'%exit_short3
 
-                LongY = float(IQXWTI) * 1.005
+                LongY = float(IQXWTI) * 1.01
                 LongY = '%.2f'%LongY
 
-                stop_longY = float(IQXWTI) * 0.995
+                stop_longY = float(IQXWTI) * 0.985
                 stop_longY = '%.2f'%stop_longY     
 
-                shortY = float(IQXWTI) * 0.995
+                shortY = float(IQXWTI) * 0.985
                 shortY = '%.2f'%shortY
 
-                stop_shortY = float(IQXWTI) * 1.005
+                stop_shortY = float(IQXWTI) * 1.01
                 stop_shortY = '%.2f'%stop_shortY                    
 
                 price_now = float(wti[0])
                 price_now = '%.2f'%price_now
                 price_now = str(price_now)
                 
-                barW = float(price_now) - float(IQXWTI)
+                barQ = float(price_now) - float(IQXWTI)
                 chgp = str(wti[2])
 
                 text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
                 text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
 
-                alert1 = 'ชนแนวต้าน'
-                alert2 = 'Long'
-                alert3 = 'Short'
-                alert4 = 'กำลังย่อ'
+                alert1 = 'Long'
+                alert2 = 'Short'
 
                 text = text_from_user
                 change = str(wti[1]) 
 
-                if barW >= 0:
-                    notice = alert2
+                if barQ >= 0:
+                    notice = alert1
                     start = IQXWTI
                     buy = LongY
                     stop = stop_longY
                     target = text1
                     number = '1'
                 else:
-                    notice = alert3
+                    notice = alert2
                     start = IQXWTI
                     buy = shortY
                     stop = stop_shortY
@@ -597,7 +439,8 @@ def handle_message(event):
             from bs4 import BeautifulSoup as soup 
 
             def tfexupdate():
-                req = Request('https://www.tfex.co.th/tfex/dailySeriesQuotation.html?locale=th_TH&symbol=S50H20', headers={'User-Agent': 'Chrome/78.0'})
+
+                req = Request('https://www.tfex.co.th/tfex/dailySeriesQuotation.html?locale=th_TH&symbol={}'.format(tfex_code), headers={'User-Agent': 'Chrome/78.0'})
                 webopen = urlopen(req).read()
                 data = soup(webopen, 'html.parser')
                 main = data.findAll('span',{'class':'h2'})
@@ -643,46 +486,44 @@ def handle_message(event):
                 exit_short3 = float(tff[0]) * 0.88
                 exit_short3 = '%.2f'%exit_short3
 
-                LongY = float(tfexx) * 1.005
+                LongY = float(tfex_value) * 1.005
                 LongY = '%.2f'%LongY
 
-                stop_longY = float(tfexx) * 0.995
+                stop_longY = float(tfex_value) * 0.995
                 stop_longY = '%.2f'%stop_longY     
 
-                shortY = float(tfexx) * 0.995
+                shortY = float(tfex_value) * 0.995
                 shortY = '%.2f'%shortY
 
-                stop_shortY = float(tfexx) * 1.005
+                stop_shortY = float(tfex_value) * 1.005
                 stop_shortY = '%.2f'%stop_shortY                    
 
                 price_now = float(tff[0])
                 price_now = '%.2f'%price_now
                 price_now = str(price_now)
                 
-                barW = float(price_now) - float(tfexx)
+                barM = float(price_now) - float(tfex_value)
                 chgp = str(tff[2])
 
                 text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
                 text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
 
-                alert1 = 'ชนแนวต้าน'
-                alert2 = 'Long'
-                alert3 = 'Short'
-                alert4 = 'กำลังย่อ'
+                alert1 = 'Long'
+                alert2 = 'Short'
 
-                text = text_from_user
+                text = '{}'.format(tfex_code)
                 change = str(tff[1]) 
 
-                if barW >= 0:
-                    notice = alert2
-                    start = tfexx
+                if barM >= 0:
+                    notice = alert1
+                    start = tfex_value
                     buy = LongY
                     stop = stop_longY
                     target = text1
                     number = '1'
                 else:
-                    notice = alert3
-                    start = tfexx
+                    notice = alert2
+                    start = tfex_value
                     buy = shortY
                     stop = stop_shortY
                     target = text2 
@@ -700,20 +541,20 @@ def handle_message(event):
         elif 'SET' in text_from_user:
             from urllib.request import Request, urlopen
             from bs4 import BeautifulSoup as soup 
-        
+
             def setnow():
                 req = Request('https://www.settrade.com/C13_MarketSummary.jsp?detail=SET', headers={'User-Agent': 'Chrome/78.0'})
                 webopen = urlopen(req).read()
                 data = soup(webopen, 'html.parser')
                 currency = data.findAll('div',{'class':'col-xs-12'})
 
-                st = currency[0].text
-                st = st.replace('\n',' ')
-                st = st.replace('\r',' ')
-                st = st.replace('\n',' ')
-                st = st[3316:]
-                st = st[0:9]
-                st = st.replace(',','')
+                set_now = currency[0].text
+                set_now = set_now.replace('\n',' ')
+                set_now = set_now.replace('\r',' ')
+                set_now = set_now.replace('\n',' ')
+                set_now = set_now[3316:]
+                set_now = set_now[0:9]
+                set_now = set_now.replace(',','')
 
                 chg = currency[0].text
                 chg = chg.replace('\n',' ')
@@ -728,7 +569,7 @@ def handle_message(event):
                 chgp = chgp.replace('\n',' ')
                 chgp = chgp[3370:]
                 chgp = chgp[0:5]
-                return[st,chg,chgp]
+                return[set_now,chg,chgp]
 
             def setcheck():
                 st = setnow()
@@ -750,46 +591,44 @@ def handle_message(event):
                 exit_short3 = float(st[0]) * 0.88
                 exit_short3 = '%.2f'%exit_short3
 
-                LongY = float(sett) * 1.005
+                LongY = float(set_value) * 1.005
                 LongY = '%.2f'%LongY
 
-                stop_longY = float(sett) * 0.995
+                stop_longY = float(set_value) * 0.995
                 stop_longY = '%.2f'%stop_longY     
 
-                shortY = float(sett) * 0.995
+                shortY = float(set_value) * 0.995
                 shortY = '%.2f'%shortY
 
-                stop_shortY = float(sett) * 1.005
+                stop_shortY = float(set_value) * 1.005
                 stop_shortY = '%.2f'%stop_shortY                    
 
                 price_now = float(st[0])
                 price_now = '%.2f'%price_now
                 price_now = str(price_now)
                 
-                barW = float(price_now) - float(sett)
+                barQ = float(price_now) - float(set_value)
                 chgp = str(st[2])
 
                 text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
                 text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
 
-                alert1 = 'ชนแนวต้าน'
-                alert2 = 'Long'
-                alert3 = 'Short'
-                alert4 = 'กำลังย่อ'
+                alert1 = 'Long'
+                alert2 = 'Short'
 
                 text = text_from_user
                 change = str(st[1]) 
 
-                if barW >= 0:
-                    notice = alert2
-                    start = sett
+                if barQ >= 0:
+                    notice = alert1
+                    start = set_value
                     buy = LongY
                     stop = stop_longY
                     target = text1
                     number = '1'
                 else:
-                    notice = alert3
-                    start = sett
+                    notice = alert2
+                    start = set_value
                     buy = shortY
                     stop = stop_shortY
                     target = text2 
@@ -804,16 +643,153 @@ def handle_message(event):
                 return 'OK'
             setcheck()
 
+        elif action == "crypto_response":
+            from urllib.request import Request, urlopen
+            from bs4 import BeautifulSoup as soup 
+            from pandas_datareader import data
+            from datetime import datetime
+            
+            text_from_user = text_from_user.upper()
+            code = [text_from_user]
+            codes = list(map(lambda e: e + '-USD', code))
+
+            class crypto:
+                def __init__(self,code):
+                    self.code = code
+                def ticket(self):
+                    end = datetime.now()
+                    start = datetime(end.year,end.month,end.day)
+                    list = self.code
+
+                    dfY = data.DataReader(f'{list}', data_source="yahoo", start=yearly, end=end)
+                    dfM = data.DataReader(f'{list}', data_source="yahoo", start=monthly, end=end)
+                    #2020-01-01 = Y M D
+
+                    OpenY = dfY['Open'].iloc[1]
+                    OpenY  = '%.2f'%OpenY
+                    OpenY = str(OpenY)
+
+                    OpenM = dfM['Open'].iloc[1]
+                    OpenM  = '%.2f'%OpenM
+                    OpenM = str(OpenM)
+
+                    OpenD = dfY['Open'].iloc[-1]
+                    OpenD  = '%.2f'%OpenD
+                    OpenD = str(OpenD)
+
+                    Close = dfY['Close'].iloc[-1]
+                    Close  = '%.2f'%Close
+                    Close = str(Close)
+
+                    Prev = dfY['Close'].iloc[-2]
+                    Prev  = '%.2f'%Prev
+                    Prev = str(Prev)
+                    
+                    barY = ((float(Close) - float(OpenY)) / float(OpenY) )*100
+                    barY = '%.2f'%barY
+                    barY = float(barY)
+
+                    barM = ((float(Close) - float(OpenM)) / float(OpenM) )*100
+                    barM = '%.2f'%barM
+                    barM = float(barM)
+
+                    LongY = float(OpenM) * 1.01
+                    LongY = '%.2f'%LongY
+                    LongY = str(LongY) 
+
+                    stop_longY = float(OpenM) * 0.985
+                    stop_longY = '%.2f'%stop_longY
+                    stop_longY = str(stop_longY)
+
+                    exit_long1 = float(OpenD) * 1.04
+                    exit_long1 = '%.2f'%exit_long1
+                    exit_long1 = str(exit_long1)
+
+                    exit_long2 = float(OpenD) * 1.08
+                    exit_long2 = '%.2f'%exit_long2
+                    exit_long2 = str(exit_long2)
+
+                    exit_long3 = float(OpenD) * 1.12
+                    exit_long3 = '%.2f'%exit_long3
+                    exit_long3 = str(exit_long3)
+
+                    shortY = float(OpenM) * 0.985
+                    shortY = '%.2f'%shortY
+                    shortY = str(shortY) 
+
+                    stop_shortY = float(OpenM) * 1.01
+                    stop_shortY = '%.2f'%stop_shortY
+                    stop_shortY = str(stop_shortY)
+
+                    exit_short1 = float(OpenD) * 0.96
+                    exit_short1 = '%.2f'%exit_short1
+                    exit_short1 = str(exit_short1)
+
+                    exit_short2 = float(OpenD) * 0.92
+                    exit_short2 = '%.2f'%exit_short2
+                    exit_short2 = str(exit_short2)
+
+                    exit_short3 = float(OpenD) * 0.88
+                    exit_short3 = '%.2f'%exit_short3
+                    exit_short3 = str(exit_short3)
+                
+                    change = float(Close) - float(Prev)
+                    change = '%.2f'%change
+                    change = str(change) 
+
+                    chgp = (float(change) / float(Prev))*100
+                    chgp = '%.2f'%chgp
+                    chgp = str(chgp) 		
+                    
+                    text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
+                    text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
+
+                    alert1 = 'Long'
+                    alert2 = 'Short'
+
+                    text = code
+                    price_now = float(Close) 
+                    change = str(change) 
+
+                    if barM >= 0:
+                        notice = alert1
+                        start = OpenM
+                        buy = LongY
+                        stop = stop_longY
+                        target = text1
+                        number = '1'
+                    else:
+                        notice = alert2
+                        start = OpenM
+                        buy = shortY
+                        stop = stop_shortY
+                        target = text2 
+                        number = '2'
+
+                    word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
+                    result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
+                    #print(word_to_reply)
+                    print(result)
+                    print(number)
+                    bubble = flex_crypto(text,price_now,change,chgp,notice,start,buy,stop,target)
+                    
+                    flex_to_reply = SetMessage_Object(bubble)
+                    reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                    return 'OK'
+
+            for code in codes:
+                crypto(code).ticket()
+
         else:
             from bs4 import BeautifulSoup as soup
             from urllib.request import urlopen as req
             from pandas_datareader import data
-            from datetime import datetime
+            from datetime import datetime, date
                     
             code = text_from_user
             ticket = [text_from_user]
             symbols = list(map(lambda e: e + '.bk', ticket))
-            
+                        
             def request(code):
                 url = 'https://www.settrade.com/C04_02_stock_historical_p1.jsp?txtSymbol={}&ssoPageId=10&selectPage=2'.format(code)
                 webopen = req(url)
@@ -844,7 +820,6 @@ def handle_message(event):
                 return [title,stockprice,change,pchange,stockupdate]
 
             r = request(code)
-
             # text_request = '{} {} ({})'.format(r[0], r[1], r[2])
 
             class stock:
@@ -855,13 +830,9 @@ def handle_message(event):
                     start = datetime(end.year,end.month,end.day)
                     list = self.stock
 
-                    dfY = data.DataReader(f'{list}', data_source="yahoo", start='2020-01-01', end=end)
-                    dfQ = data.DataReader(f'{list}', data_source="yahoo", start='2020-01-01', end=end)
-                    #chg for Quarter : Jan Apr Jul Sep
-
-                    dfW = data.DataReader(f'{list}', data_source="yahoo", start='2020-03-16', end=end)
-                    #2020-01-01 = Y M D
-
+                    dfY = data.DataReader(f'{list}', data_source="yahoo", start=yearly, end=end)
+                    dfQ = data.DataReader(f'{list}', data_source="yahoo", start=quarter, end=end)
+                    dfM = data.DataReader(f'{list}', data_source="yahoo", start=monthly, end=end)
                     list = list.replace('.bk','')
                                 
                     OpenY = dfY['Open'].iloc[0]
@@ -872,9 +843,9 @@ def handle_message(event):
                     OpenQ  = '%.2f'%OpenQ
                     OpenQ = str(OpenQ)
 
-                    OpenW = dfQ['Open'].iloc[0]
-                    OpenW  = '%.2f'%OpenW
-                    OpenW = str(OpenW)
+                    OpenM = dfM['Open'].iloc[0]
+                    OpenM  = '%.2f'%OpenM
+                    OpenM = str(OpenM)
 
                     Close = float(f'{r[1]}')
                     Close  = '%.2f'%Close
@@ -888,12 +859,13 @@ def handle_message(event):
                     barQ = '%.2f'%barQ
                     barQ = float(barQ)
 
-                    barW = ((float(Close) - float(OpenW)) / float(OpenW) )*100
-                    barW = '%.2f'%barW
-                    barW = float(barW)
+                    barM = ((float(Close) - float(OpenM)) / float(OpenM) )*100
+                    barM = '%.2f'%barM
+                    barM = float(barM)
 
-                    Volume1 = dfQ['Volume'].iloc[-1]
-                    Volume2 = dfQ['Volume'].iloc[-2]
+                    Volume1 = dfY['Volume'].iloc[-1]
+                    Volume2 = dfY['Volume'].iloc[-2]
+
                     Volume = (float(Volume1)+float(Volume2))/2
                     Volume  = '%.0f'%Volume
                     Volume = str(Volume)
@@ -934,63 +906,105 @@ def handle_message(event):
                     stopY = '%.2f'%stopY
                     stopY = str(stopY) 
 
+                    max_value = dfY.nlargest(1, columns = 'High')
+                    max_value = max_value['High'].iloc[0]
+                    max_value = '%.2f'%max_value
+                    max_value = str(max_value) 
+
+                    pmax_value = ((float(max_value) - float(OpenY)) / float(OpenY)) * 100
+                    pmax_value = '%.2f'%pmax_value
+                    pmax_value = str(pmax_value)  
+
+                    min_value = dfY.nsmallest(1, columns = 'Low')
+                    min_value = min_value['Low'].iloc[0]
+                    min_value = '%.2f'%min_value
+                    min_value = str(min_value) 
+
+                    pmin_value = ((float(min_value) - float(OpenY)) / float(OpenY)) * 100
+                    pmin_value = '%.2f'%pmin_value
+                    pmin_value = str(pmin_value)
+
                     support1 = float(OpenY) * 0.75
                     support1 = '%.2f'%support1
                     support1 = str(support1)
+
+                    pfibo_Q1 = (((float(Close) - float(support1))/float(support1)))*100  
+                    pfibo_Q1  = '%.2f'%pfibo_Q1
+                    pfibo_Q1 = str(pfibo_Q1) 
 
                     support2 = float(OpenY) * 0.60
                     support2 = '%.2f'%support2
                     support2 = str(support2)
 
+                    pfibo_Q2 = (((float(Close) - float(support2))/float(support2)))*100     
+                    pfibo_Q2 = '%.2f'%pfibo_Q2
+                    pfibo_Q2 = str(pfibo_Q2) 
+
                     support3 = float(OpenY) * 0.50
                     support3 = '%.2f'%support3
                     support3 = str(support3)
 
-                    chgp = str(r[3])
+                    pfibo_Q3 = (((float(Close) - float(support3))/float(support3)))*100     
+                    pfibo_Q3  = '%.2f'%pfibo_Q3
+                    pfibo_Q3 = str(pfibo_Q3) 
 
-                    text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 
-                    text2 = support1 + ' | ' + support2 + ' | ' + support3  
+                    ChgY = ((float(r[1]) - float(OpenY))/ float(OpenY))*100
+                    ChgY  = '%.2f'%ChgY
+                    ChgY = str(ChgY)
+
+                    ChgQ = ((float(r[1]) - float(OpenQ))/ float(OpenQ))*100
+                    ChgQ  = '%.2f'%ChgQ
+                    ChgQ = str(ChgQ)
+
+                    ChgM = ((float(r[1]) - float(OpenM)) / float(OpenM) )*100
+                    ChgM = '%.2f'%ChgM
+                    ChgM = float(ChgM)	
+                    
+                    text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n'  + 'H ' + max_value 
+                    text2 = support1 + ' | ' + support2 + ' | ' + support3 + '\n' + 'L ' + min_value 
 
                     alert1 = 'ชนแนวต้าน'
                     alert2 = 'ไปต่อ'
                     alert3 = 'ซื้อ'
                     alert4 = 'อย่าเพิ่งเข้า'
                     alert5 = 'กำลังย่อ'
-                    alert6 = 'น่าสนใจ'
-                    alert7 = 'รอเข้า'
-                    alert8 = 'รอต่ำ'
+                    alert6 = 'ห้ามพลาด'
+                    alert7 = 'เด้ง'
+                    alert8 = 'ลงต่อ'
                     alert9 = 'Vol น้อย'
 
                     text = r[0]
                     price_now = r[1] 
                     change = r[2] 
+                    chgp = str(r[3])
 
                     if float(value) > 7500000:
-                        if barY > 3.00:
+                        if barY > 6.00:
                             if barQ > 6.00:
                                 notice = alert1
-                                stop = stopQ
                                 start = OpenQ
                                 buy = buyQ
+                                stop = stopQ
                                 target = text1
                                 avg = barQ
-                            elif barQ >= 3.00:
-                                if barW >= 0:
+                            elif barQ >= 4.00:
+                                if barM >= 0.00:
                                     notice = alert2
-                                    stop = stopQ
                                     start = OpenQ
                                     buy = buyQ
+                                    stop = stopQ
                                     target = text1
                                     avg = barQ
                                 else:
-                                    notice = alert7
-                                    stop = stopQ
+                                    notice = alert4
                                     start = OpenQ
                                     buy = buyQ
+                                    stop = stopQ
+
                                     target = text1
                                     avg = barQ
                             elif barQ >= 0.00:
-                                if barW >= 0:
+                                if barM >= 0.00:
                                     notice = alert3
                                     stop = stopQ
                                     start = OpenQ
@@ -1013,7 +1027,7 @@ def handle_message(event):
                                 avg = barQ
                         elif barY >= 0.00:
                             if barQ >= 0:
-                                if barW > 0:
+                                if barM > 0.00:
                                     notice = alert6
                                     stop = stopY
                                     start = OpenY
@@ -1035,57 +1049,78 @@ def handle_message(event):
                                 target = text2
                                 avg = barY
                         else:
-                            if barQ > 6.00:
-                                notice = alert1
-                                stop = stopQ
-                                start = OpenQ
-                                buy = buyQ
-                                target = text1
-                                avg = barQ
-                            elif barQ >= 3.00:
-                                if barW >= 0:
-                                    notice = alert2
-                                    stop = stopQ
-                                    start = OpenQ
-                                    buy = buyQ
-                                    target = text1
-                                    avg = barQ
+                            if float(Close) > float(OpenM):
+                                if float(Close) > float(support1):
+                                    if 0.00 < float(pfibo_Q1) < 2.00:
+                                        notice = alert7
+                                        start = support1
+                                        buy = float(support1) * 1.01
+                                        buy = '%.2f'%buy
+                                        stop = float(support1) * 0.985
+                                        stop = '%.2f'%stop
+                                        target = text2
+                                        avg = barY
+                                    else:
+                                        notice = alert7
+                                        start = support1
+                                        buy = float(support1) * 1.01
+                                        buy = '%.2f'%buy
+                                        stop = float(support1) * 0.985
+                                        stop = '%.2f'%stop
+                                        target = text2
+                                        avg = barY
+                                elif float(Close) > float(support2):
+                                    if 0.00 < float(pfibo_Q2) < 2.00:
+                                        notice = alert7
+                                        start = support2
+                                        buy = float(support2) * 1.01
+                                        buy = '%.2f'%buy
+                                        stop = float(support2) * 0.985
+                                        stop = '%.2f'%stop
+                                        target = text2
+                                        avg = barY
+                                    else:
+                                        notice = alert7
+                                        start = float(support2)
+                                        buy = float(support2) * 1.01
+                                        buy = '%.2f'%buy
+                                        stop = float(support2) * 0.985
+                                        stop = '%.2f'%stop
+                                        target = text2
+                                        avg = barY
                                 else:
-                                    notice = alert8
-                                    stop = stopQ
-                                    start = OpenQ
-                                    buy = buyQ
-                                    target = text1
-                                    avg = barQ
-                            elif barQ >= 0.00:
-                                if barW >= 0:
-                                    notice = alert3
-                                    stop = stopQ
-                                    start = OpenQ
-                                    buy = buyQ
-                                    target = text1
-                                    avg = barQ
-                                else:
-                                    notice = alert8
-                                    stop = stopQ
-                                    start = OpenQ
-                                    buy = buyQ
-                                    target = text1
-                                    avg = barQ
+                                    if 0.00 < float(pfibo_Q3) < 2.00:
+                                        notice = alert7
+                                        start = float(support3)
+                                        buy = float(support3) * 1.01
+                                        buy = '%.2f'%buy
+                                        stop = float(support3) * 0.985
+                                        stop = '%.2f'%stop
+                                        target = text2
+                                        avg = barY
+                                    else:
+                                        notice = alert7
+                                        start = float(support3)
+                                        buy = float(support3) * 1.01
+                                        buy = '%.2f'%buy
+                                        stop = float(support3) * 0.985
+                                        stop = '%.2f'%stop
+                                        target = text2
+                                        avg = barY
                             else:
-                                notice = alert4
-                                stop = stopQ
-                                start = OpenQ
-                                buy = buyQ
+                                notice = alert8
+                                start = OpenY
+                                buy = buyY
+                                stop = stopY
                                 target = text2
-                                avg = barQ
+                                avg = barY          
                     else:
                         notice = alert9
-                        stop = stopQ
-                        start = OpenQ
-                        buy = buyQ
+                        stop = stopY
+                        start = OpenY
+                        buy = buyY
                         target = text2
-                        avg = barQ
+                        avg = barY
 
                     word_to_reply = str('{} {}'.format(text,notice))
                     print(word_to_reply)
@@ -1095,13 +1130,14 @@ def handle_message(event):
                     flex_to_reply = SetMessage_Object(bubble)
                     reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
                     return 'OK'
+
             for symbol in symbols:
                 stock(symbol).ticket()
 
     except:
         text_list = [
-            '{} ไม่มีในฐานข้อมูล {} ลองใหม่อีกครั้ง'.format(text_from_user,disname),
-            '{} ค้นหาหุ้น {} ไม่ถูกต้อง ลองใหม่อีกครั้ง'.format(disname, text_from_user),
+            'คุณ {} รอสักครู่นะคะ กำลังค้นหา {} ในฐานข้อมูล'.format(disname, text_from_user),
+            '{} สะกด {} ไม่ถูกต้อง ลองใหม่อีกครั้ง'.format(disname, text_from_user),
         ]
 
         from random import choice
