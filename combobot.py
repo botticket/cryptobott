@@ -77,7 +77,7 @@ def handle_message(event):
     userid = event.source.user_id
     
     disname = line_bot_api.get_profile(user_id=userid).display_name
-    request_text= ('mybot'+'\n' + '>> {} : {}'+'\n' + '>> {}').format(disname,text_from_user,userid)
+    request_text= ('mybot'+'\n' + '>> {} : {}').format(disname,text_from_user)
 
     print(request_text)
     linechat(request_text)
