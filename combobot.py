@@ -117,7 +117,7 @@ def handle_message(event):
                 )
             return 'OK'
 
-        elif 'IQUSTB' in text_from_user:        
+        elif 'Usd' in text_from_user:        
             from urllib.request import Request, urlopen
             from bs4 import BeautifulSoup as soup
 
@@ -227,7 +227,7 @@ def handle_message(event):
                 return 'OK'
             usdcheck()
 
-        elif 'IQXGL' in text_from_user:
+        elif 'Xgl' in text_from_user:
             from urllib.request import Request, urlopen
             from bs4 import BeautifulSoup as soup 
 
@@ -331,7 +331,7 @@ def handle_message(event):
                 return 'OK'
             goldcheck()
 
-        elif 'IQXWTI' in text_from_user:
+        elif 'Wti' in text_from_user:
             from urllib.request import Request, urlopen
             from bs4 import BeautifulSoup as soup 
 
@@ -434,7 +434,7 @@ def handle_message(event):
                 return 'OK'
             wticheck()
 
-        elif 'TFEX' in text_from_user:
+        elif 'Tfex' in text_from_user:
             from urllib.request import Request, urlopen
             from bs4 import BeautifulSoup as soup 
 
@@ -538,7 +538,7 @@ def handle_message(event):
                 return 'OK'
             tfexcheck()
 
-        elif 'SET' in text_from_user:
+        elif 'Set' in text_from_user:
             from urllib.request import Request, urlopen
             from bs4 import BeautifulSoup as soup 
 
