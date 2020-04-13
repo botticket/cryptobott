@@ -1057,14 +1057,14 @@ def handle_message(event):
                                 target = text2
                                 avg = re_avg
                         else:
-                            if float(Close) > float(OpenM):
+                            if float(Close) > float(OpenQ):
                                 if float(Close) > float(support1):
                                     if 0.00 < float(pfibo_Q1) < 2.00:
                                         notice = alert7
                                         start = support1
                                         buy = float(support1) * 1.01
                                         buy = '%.2f'%buy
-                                        stop = float(support1) * 0.985
+                                        stop = OpenQ
                                         stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
@@ -1073,7 +1073,7 @@ def handle_message(event):
                                         start = support1
                                         buy = float(support1) * 1.01
                                         buy = '%.2f'%buy
-                                        stop = float(support1) * 0.985
+                                        stop = OpenQ
                                         stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
@@ -1083,7 +1083,7 @@ def handle_message(event):
                                         start = support2
                                         buy = float(support2) * 1.01
                                         buy = '%.2f'%buy
-                                        stop = float(support2) * 0.985
+                                        stop = OpenQ
                                         stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
@@ -1092,17 +1092,17 @@ def handle_message(event):
                                         start = float(support2)
                                         buy = float(support2) * 1.01
                                         buy = '%.2f'%buy
-                                        stop = float(support2) * 0.985
+                                        stop = OpenQ
                                         stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
-                                else:
+                                elif float(Close) > float(support3):
                                     if 0.00 < float(pfibo_Q3) < 2.00:
                                         notice = alert7
                                         start = float(support3)
                                         buy = float(support3) * 1.01
                                         buy = '%.2f'%buy
-                                        stop = float(support3) * 0.985
+                                        stop = OpenQ
                                         stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
@@ -1111,10 +1111,29 @@ def handle_message(event):
                                         start = float(support3)
                                         buy = float(support3) * 1.01
                                         buy = '%.2f'%buy
-                                        stop = float(support3) * 0.985
+                                        stop = OpenQ
                                         stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
+                                else:
+                                    if 0.00 < float(pfibo_Q4) < 2.00:
+                                        notice = alert7
+                                        start = float(support4)
+                                        buy = float(support4) * 1.01
+                                        buy = '%.2f'%buy
+                                        stop = OpenQ
+                                        stop = '%.2f'%stop
+                                        target = text2
+                                        avg = re_avg
+                                    else:
+                                        notice = alert7
+                                        start = float(support4)
+                                        buy = float(support4) * 1.01
+                                        buy = '%.2f'%buy
+                                        stop = OpenQ
+                                        stop = '%.2f'%stop
+                                        target = text2
+                                        avg = re_avg                                    
                             else:
                                 notice = alert8
                                 start = OpenY
