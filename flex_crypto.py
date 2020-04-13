@@ -1905,7 +1905,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}%".format(avg),
+                    "text": "{}".format(avg),
                     "flex": 3,
                     "color": "{}".format(trend),
                     "size": "lg",

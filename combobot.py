@@ -924,7 +924,7 @@ def handle_message(event):
                     pmin_value = '%.2f'%pmin_value
                     pmin_value = str(pmin_value)
 
-                    support1 = float(OpenY) * 0.75
+                    support1 = float(OpenY) * 0.70
                     support1 = '%.2f'%support1
                     support1 = str(support1)
 
@@ -977,6 +977,7 @@ def handle_message(event):
                     price_now = r[1] 
                     change = r[2] 
                     chgp = str(r[3])
+                    re_avg = '{}% > {}%'.format(pmin_value,barY)
 
                     if float(value) > 7500000:
                         if barY > 6.00:
@@ -986,7 +987,7 @@ def handle_message(event):
                                 buy = buyQ
                                 stop = stopQ
                                 target = text1
-                                avg = barQ
+                                avg = re_avg
                             elif barQ >= 4.00:
                                 if barM >= 0.00:
                                     notice = alert2
@@ -994,15 +995,14 @@ def handle_message(event):
                                     buy = buyQ
                                     stop = stopQ
                                     target = text1
-                                    avg = barQ
+                                    avg = re_avg
                                 else:
                                     notice = alert4
                                     start = OpenQ
                                     buy = buyQ
                                     stop = stopQ
-
                                     target = text1
-                                    avg = barQ
+                                    avg = re_avg
                             elif barQ >= 0.00:
                                 if barM >= 0.00:
                                     notice = alert3
@@ -1010,21 +1010,21 @@ def handle_message(event):
                                     start = OpenQ
                                     buy = buyQ
                                     target = text1
-                                    avg = barQ
+                                    avg = re_avg
                                 else:
                                     notice = alert7
                                     stop = stopQ
                                     start = OpenQ
                                     buy = buyQ
                                     target = text1
-                                    avg = barQ
+                                    avg = re_avg
                             else:
                                 notice = alert4
                                 stop = stopQ
                                 start = OpenQ
                                 buy = buyQ
                                 target = text2
-                                avg = barQ
+                                avg = re_avg
                         elif barY >= 0.00:
                             if barQ >= 0:
                                 if barM > 0.00:
@@ -1033,21 +1033,21 @@ def handle_message(event):
                                     start = OpenY
                                     buy = buyY
                                     target = text1
-                                    avg = barY
+                                    avg = re_avg
                                 else:
                                     notice = alert7
                                     stop = stopY
                                     start = OpenY
                                     buy = buyY
                                     target = text1
-                                    avg = barY
+                                    avg = re_avg
                             else:
                                 notice = alert5
                                 stop = stopY
                                 start = OpenY
                                 buy = buyY
                                 target = text2
-                                avg = barY
+                                avg = re_avg
                         else:
                             if float(Close) > float(OpenM):
                                 if float(Close) > float(support1):
@@ -1059,7 +1059,7 @@ def handle_message(event):
                                         stop = float(support1) * 0.985
                                         stop = '%.2f'%stop
                                         target = text2
-                                        avg = barY
+                                        avg = re_avg
                                     else:
                                         notice = alert7
                                         start = support1
@@ -1068,7 +1068,7 @@ def handle_message(event):
                                         stop = float(support1) * 0.985
                                         stop = '%.2f'%stop
                                         target = text2
-                                        avg = barY
+                                        avg = re_avg
                                 elif float(Close) > float(support2):
                                     if 0.00 < float(pfibo_Q2) < 2.00:
                                         notice = alert7
@@ -1078,7 +1078,7 @@ def handle_message(event):
                                         stop = float(support2) * 0.985
                                         stop = '%.2f'%stop
                                         target = text2
-                                        avg = barY
+                                        avg = re_avg
                                     else:
                                         notice = alert7
                                         start = float(support2)
@@ -1087,7 +1087,7 @@ def handle_message(event):
                                         stop = float(support2) * 0.985
                                         stop = '%.2f'%stop
                                         target = text2
-                                        avg = barY
+                                        avg = re_avg
                                 else:
                                     if 0.00 < float(pfibo_Q3) < 2.00:
                                         notice = alert7
@@ -1097,7 +1097,7 @@ def handle_message(event):
                                         stop = float(support3) * 0.985
                                         stop = '%.2f'%stop
                                         target = text2
-                                        avg = barY
+                                        avg = re_avg
                                     else:
                                         notice = alert7
                                         start = float(support3)
@@ -1106,21 +1106,21 @@ def handle_message(event):
                                         stop = float(support3) * 0.985
                                         stop = '%.2f'%stop
                                         target = text2
-                                        avg = barY
+                                        avg = re_avg
                             else:
                                 notice = alert8
                                 start = OpenY
                                 buy = buyY
                                 stop = stopY
                                 target = text2
-                                avg = barY          
+                                avg = re_avg          
                     else:
                         notice = alert9
                         stop = stopY
                         start = OpenY
                         buy = buyY
                         target = text2
-                        avg = barY
+                        avg = re_avg
 
                     word_to_reply = str('{} {}'.format(text,notice))
                     print(word_to_reply)
