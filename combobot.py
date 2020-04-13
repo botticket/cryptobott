@@ -948,6 +948,14 @@ def handle_message(event):
                     pfibo_Q3  = '%.2f'%pfibo_Q3
                     pfibo_Q3 = str(pfibo_Q3) 
 
+                    support4 = float(OpenY) * 0.40
+                    support4 = '%.2f'%support4
+                    support4 = str(support4)
+
+                    pfibo_Q4 = (((float(Close) - float(support4))/float(support4)))*100     
+                    pfibo_Q4  = '%.2f'%pfibo_Q4
+                    pfibo_Q4 = str(pfibo_Q4)
+
                     ChgY = ((float(r[1]) - float(OpenY))/ float(OpenY))*100
                     ChgY  = '%.2f'%ChgY
                     ChgY = str(ChgY)
@@ -961,7 +969,7 @@ def handle_message(event):
                     ChgM = float(ChgM)	
                     
                     text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n' + 'y {} : m {} : H {}'.format(OpenY,OpenM,max_value)
-                    text2 = support1 + ' | ' + support2 + ' | ' + support3 + '\n' + 'y {} : m {} : L {}'.format(OpenY,OpenM,min_value)
+                    text2 = support1 + ' | ' + support2 + ' | ' + support3 + ' | ' + support4 + '\n' + 'y {} : m {} : L {}'.format(OpenY,OpenM,min_value)
 
                     alert1 = 'ชนแนวต้าน'
                     alert2 = 'ไปต่อ'
