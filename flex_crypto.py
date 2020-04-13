@@ -1641,7 +1641,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 ],
                 "flex": 1,
                 "backgroundColor": "#3c3c3c",
-                "height": "32%"
+                "height": "30%"
             },
             {
                 "type": "box",
@@ -1764,7 +1764,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 }
                 ],
                 "position": "absolute",
-                "offsetTop": "35%",
+                "offsetTop": "31%",
                 "offsetStart": "5%",
                 "width": "100%"
             },
@@ -1781,7 +1781,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 }
                 ],
                 "position": "absolute",
-                "offsetTop": "40%",
+                "offsetTop": "35%",
                 "offsetStart": "5%",
                 "width": "100%"
             },
@@ -1797,7 +1797,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 }
                 ],
                 "position": "absolute",
-                "offsetTop": "47%",
+                "offsetTop": "42%",
                 "offsetStart": "5%",
                 "width": "100%"
             },
@@ -1813,7 +1813,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 }
                 ],
                 "position": "absolute",
-                "offsetTop": "52%",
+                "offsetTop": "47%",
                 "offsetStart": "5%",
                 "width": "100%"
             },
@@ -1829,7 +1829,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 }
                 ],
                 "position": "absolute",
-                "offsetTop": "59%",
+                "offsetTop": "54%",
                 "offsetStart": "5%",
                 "width": "100%"
             },
@@ -1845,7 +1845,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 }
                 ],
                 "position": "absolute",
-                "offsetTop": "64%",
+                "offsetTop": "59%",
                 "offsetStart": "5%",
                 "width": "100%"
             },
@@ -1861,7 +1861,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 }
                 ],
                 "position": "absolute",
-                "offsetTop": "71%",
+                "offsetTop": "66%",
                 "offsetStart": "5%",
                 "width": "100%"
             },
@@ -1879,7 +1879,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 }
                 ],
                 "position": "absolute",
-                "offsetTop": "76%",
+                "offsetTop": "71%",
                 "offsetStart": "5%",
                 "width": "95%"
             },

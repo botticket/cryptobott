@@ -1065,7 +1065,6 @@ def handle_message(event):
                                         buy = float(support1) * 1.01
                                         buy = '%.2f'%buy
                                         stop = OpenQ
-                                        stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
                                     else:
@@ -1074,7 +1073,6 @@ def handle_message(event):
                                         buy = float(support1) * 1.01
                                         buy = '%.2f'%buy
                                         stop = OpenQ
-                                        stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
                                 elif float(Close) > float(support2):
@@ -1084,7 +1082,6 @@ def handle_message(event):
                                         buy = float(support2) * 1.01
                                         buy = '%.2f'%buy
                                         stop = OpenQ
-                                        stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
                                     else:
@@ -1093,7 +1090,6 @@ def handle_message(event):
                                         buy = float(support2) * 1.01
                                         buy = '%.2f'%buy
                                         stop = OpenQ
-                                        stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
                                 elif float(Close) > float(support3):
@@ -1103,7 +1099,6 @@ def handle_message(event):
                                         buy = float(support3) * 1.01
                                         buy = '%.2f'%buy
                                         stop = OpenQ
-                                        stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
                                     else:
@@ -1112,7 +1107,6 @@ def handle_message(event):
                                         buy = float(support3) * 1.01
                                         buy = '%.2f'%buy
                                         stop = OpenQ
-                                        stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
                                 else:
@@ -1122,7 +1116,6 @@ def handle_message(event):
                                         buy = float(support4) * 1.01
                                         buy = '%.2f'%buy
                                         stop = OpenQ
-                                        stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg
                                     else:
@@ -1131,7 +1124,6 @@ def handle_message(event):
                                         buy = float(support4) * 1.01
                                         buy = '%.2f'%buy
                                         stop = OpenQ
-                                        stop = '%.2f'%stop
                                         target = text2
                                         avg = re_avg                                    
                             else:
