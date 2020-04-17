@@ -969,7 +969,7 @@ def handle_message(event):
                     ChgM = float(ChgM)	
                     
                     text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n' + 'Y {} : Q {} : H {}'.format(OpenY,OpenQ,max_value)
-                    text2 = support1 + ' | ' + support2 + ' | ' + support3 + ' | ' + support4 + '\n' + 'Y {} : Q {} : L {}'.format(OpenY,OpenQ,min_value)
+                    text2 = support2 + ' | ' + support3 + ' | ' + support4 + '\n' + 'Y {} : Q {} : L {}'.format(OpenY,OpenQ,min_value)
 
                     alert1 = 'ชนแนวต้าน'
                     alert2 = 'ไปต่อ'
