@@ -968,8 +968,8 @@ def handle_message(event):
                     ChgM = '%.2f'%ChgM
                     ChgM = float(ChgM)	
                     
-                    text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n' + 'y {} : m {} : H {}'.format(OpenY,OpenM,max_value)
-                    text2 = support1 + ' | ' + support2 + ' | ' + support3 + ' | ' + support4 + '\n' + 'y {} : m {} : L {}'.format(OpenY,OpenM,min_value)
+                    text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n' + 'Y {} : Q {} : H {}'.format(OpenY,OpenQ,max_value)
+                    text2 = support1 + ' | ' + support2 + ' | ' + support3 + ' | ' + support4 + '\n' + 'Y {} : Q {} : L {}'.format(OpenY,OpenQ,min_value)
 
                     alert1 = 'ชนแนวต้าน'
                     alert2 = 'ไปต่อ'
@@ -988,7 +988,7 @@ def handle_message(event):
                     re_avg = '{}% > {}%'.format(pmin_value,barY)
 
                     if float(value) > 7500000:
-                        if barY > 6.00:
+                        if barY > 8.00:
                             if barQ > 6.00:
                                 notice = alert1
                                 start = OpenQ
@@ -996,21 +996,6 @@ def handle_message(event):
                                 stop = stopQ
                                 target = text1
                                 avg = re_avg
-                            elif barQ >= 4.00:
-                                if barM >= 0.00:
-                                    notice = alert2
-                                    start = OpenQ
-                                    buy = buyQ
-                                    stop = stopQ
-                                    target = text1
-                                    avg = re_avg
-                                else:
-                                    notice = alert4
-                                    start = OpenQ
-                                    buy = buyQ
-                                    stop = stopQ
-                                    target = text1
-                                    avg = re_avg
                             elif barQ >= 0.00:
                                 if barM >= 0.00:
                                     notice = alert3
