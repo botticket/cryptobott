@@ -969,7 +969,7 @@ def handle_message(event):
                     ChgM = float(ChgM)	
                     
                     text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n' + 'Y {} : Q {} : H {}'.format(OpenY,OpenQ,max_value)
-                    text2 = support2 + ' | ' + support3 + ' | ' + support4 + '\n' + 'Y {} : Q {} : L {}'.format(OpenY,OpenQ,min_value)
+                    text2 = support4 + ' | ' + support3 + ' | ' + support2 + ' | ' + support1 + '\n' + 'Y {} : Q {} : L {}'.format(OpenY,OpenQ,min_value)
 
                     alert1 = 'ชนแนวต้าน'
                     alert2 = 'ไปต่อ'
@@ -999,23 +999,23 @@ def handle_message(event):
                             elif barQ >= 0.00:
                                 if barM >= 0.00:
                                     notice = alert3
-                                    stop = stopQ
                                     start = OpenQ
                                     buy = buyQ
+                                    stop = stopQ
                                     target = text1
                                     avg = re_avg
                                 else:
                                     notice = alert5
-                                    stop = stopQ
                                     start = OpenQ
                                     buy = buyQ
+                                    stop = stopQ
                                     target = text1
                                     avg = re_avg
                             else:
                                 notice = alert4
-                                stop = stopQ
                                 start = OpenQ
                                 buy = buyQ
+                                stop = stopQ
                                 target = text2
                                 avg = re_avg
                         else:
@@ -1057,11 +1057,11 @@ def handle_message(event):
                                                           
                             else:
                                 notice = alert4
-                                start = OpenY
+                                start = OpenQ
                                 buy = buyQ
-                                stop = stopM
+                                stop = stopQ
                                 target = text2
-                                avg = re_avg          
+                                avg = re_avg         
                     else:
                         notice = alert9
                         start = OpenY
