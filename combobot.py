@@ -995,7 +995,7 @@ def handle_message(event):
                                         notice = alert3
                                         start = OpenY
                                         buy = buyY
-                                        stop = stopY
+                                        stop = stopQ
                                         target = text1
                                         avg = re_avg
                                     elif barQ > 6.00:
