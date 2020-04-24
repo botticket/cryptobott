@@ -890,7 +890,7 @@ def handle_message(event):
                     exit3 = '%.2f'%exit3
                     exit3 = str(exit3)
 
-                    buyQ = float(OpenQ) * 1.01
+                    buyQ = float(OpenQ) * 1.02
                     buyQ = '%.2f'%buyQ
                     buyQ = str(buyQ) 
 
@@ -898,7 +898,7 @@ def handle_message(event):
                     stopQ = '%.2f'%stopQ
                     stopQ = str(stopQ) 
 
-                    buyY = float(OpenY) * 1.01
+                    buyY = float(OpenY) * 1.02
                     buyY = '%.2f'%buyY
                     buyY = str(buyY) 
 
