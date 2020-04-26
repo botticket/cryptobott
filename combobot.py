@@ -973,7 +973,7 @@ def handle_message(event):
                     ChgM = '%.2f'%ChgM
                     ChgM = float(ChgM)	
                     
-                    text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n' + 'Y {} : Q {} : H {}'.format(OpenY,OpenQ,max_value)
+                    text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n' + 'Y {} : Q {} : H {}'.format(OpenY,OpenQ,max_Qvalue)
                     text2 = support4 + ' | ' + support3 + ' | ' + support2 + ' | ' + support1 + '\n' + 'Y {} : Q {} : L {}'.format(OpenY,OpenQ,min_value)
 
                     alert1 = 'ชนแนวต้าน'
