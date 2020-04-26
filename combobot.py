@@ -1045,9 +1045,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support1) *1.25
                                         point2 = '%.2f'%point2
-                                        point3 = float(support1) *1.35
-                                        point3 = '%.2f'%point3                                        
-                                        stop = point1 + '|' + point2 + '|' + point3 
+                                        stop = point1 + ' | ' + point2 
                                         target = text2
                                         avg = re_avg
                                     else:
@@ -1059,9 +1057,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support1) *1.25
                                         point2 = '%.2f'%point2
-                                        point3 = float(support1) *1.35
-                                        point3 = '%.2f'%point3                                        
-                                        stop = point1 + '|' + point2 + '|' + point3 
+                                        stop = point1 + ' | ' + point2 
                                         target = text2
                                         avg = re_avg
                                 elif float(Close) > float(support2):
@@ -1074,9 +1070,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support2) *1.25
                                         point2 = '%.2f'%point2
-                                        point3 = float(support2) *1.35
-                                        point3 = '%.2f'%point3                                        
-                                        stop = point1 + '|' + point2 + '|' + point3 
+                                        stop = point1 + ' | ' + point2 
                                         target = text2
                                         avg = re_avg   
                                     else:
@@ -1088,9 +1082,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support2) *1.25
                                         point2 = '%.2f'%point2
-                                        point3 = float(support2) *1.35
-                                        point3 = '%.2f'%point3                                        
-                                        stop = point1 + '|' + point2 + '|' + point3 
+                                        stop = point1 + ' | ' + point2
                                         target = text2
                                         avg = re_avg
                                 elif float(Close) > float(support3):
@@ -1103,9 +1095,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support3) *1.25
                                         point2 = '%.2f'%point2
-                                        point3 = float(support3) *1.35
-                                        point3 = '%.2f'%point3
-                                        stop = point1 + '|' + point2 + '|' + point3 
+                                        stop = point1 + ' | ' + point2 
                                         target = text2
                                         avg = re_avg
                                     else:
@@ -1117,9 +1107,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support3) *1.25
                                         point2 = '%.2f'%point2
-                                        point3 = float(support3) *1.35
-                                        point3 = '%.2f'%point3
-                                        stop = point1 + '|' + point2 + '|' + point3
+                                        stop = point1 + ' | ' + point2 
                                         target = text2
                                         avg = re_avg  
                                 else:
@@ -1132,9 +1120,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support4) *1.25
                                         point2 = '%.2f'%point2
-                                        point3 = float(support4) *1.35
-                                        point3 = '%.2f'%point3
-                                        stop = point1 + '|' + point2 + '|' + point3
+                                        stop = point1 + ' | ' + point2
                                         target = text2
                                         avg = re_avg
                                     else:
@@ -1146,9 +1132,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support4) *1.25
                                         point2 = '%.2f'%point2
-                                        point3 = float(support4) *1.35
-                                        point3 = '%.2f'%point3
-                                        stop = point1 + '|' + point2 + '|' + point3
+                                        stop = point1 + ' | ' + point2 
                                         target = text2
                                         avg = re_avg 
                             else:
