@@ -183,7 +183,7 @@ def handle_message(event):
                 shortY = '%.2f'%shortY
 
                 stop_shortY = float(IQUSTB) * 1.005
-                stop_shortY = '%.2f'%stop_shortY                    
+                stop_shortY = '%.2f'%stop_shortY
 
                 price_now = float(thb[0])
                 price_now = '%.2f'%price_now
@@ -289,7 +289,7 @@ def handle_message(event):
                 shortY = '%.2f'%shortY
 
                 stop_shortY = float(IQXGL) * 1.005
-                stop_shortY = '%.2f'%stop_shortY                    
+                stop_shortY = '%.2f'%stop_shortY
 
                 price_now = float(gg[0])
                 price_now = '%.2f'%price_now
@@ -392,7 +392,7 @@ def handle_message(event):
                 shortY = '%.2f'%shortY
 
                 stop_shortY = float(IQXWTI) * 1.01
-                stop_shortY = '%.2f'%stop_shortY                    
+                stop_shortY = '%.2f'%stop_shortY
 
                 price_now = float(wti[0])
                 price_now = '%.2f'%price_now
@@ -475,7 +475,7 @@ def handle_message(event):
                 exit_long2 = '%.2f'%exit_long2
 
                 exit_long3 = float(tff[0]) * 1.12
-                exit_long3 = '%.2f'%exit_long3      
+                exit_long3 = '%.2f'%exit_long3
 
                 exit_short1 = float(tff[0]) * 0.96
                 exit_short1 = '%.2f'%exit_short1
@@ -496,7 +496,7 @@ def handle_message(event):
                 shortY = '%.2f'%shortY
 
                 stop_shortY = float(tfex_value) * 1.005
-                stop_shortY = '%.2f'%stop_shortY                    
+                stop_shortY = '%.2f'%stop_shortY
 
                 price_now = float(tff[0])
                 price_now = '%.2f'%price_now
@@ -580,7 +580,7 @@ def handle_message(event):
                 exit_long2 = '%.2f'%exit_long2
 
                 exit_long3 = float(st[0]) * 1.12
-                exit_long3 = '%.2f'%exit_long3      
+                exit_long3 = '%.2f'%exit_long3
 
                 exit_short1 = float(st[0]) * 0.96
                 exit_short1 = '%.2f'%exit_short1
@@ -601,7 +601,7 @@ def handle_message(event):
                 shortY = '%.2f'%shortY
 
                 stop_shortY = float(set_value) * 1.005
-                stop_shortY = '%.2f'%stop_shortY                    
+                stop_shortY = '%.2f'%stop_shortY
 
                 price_now = float(st[0])
                 price_now = '%.2f'%price_now
@@ -1041,7 +1041,13 @@ def handle_message(event):
                                         start = float(support1)
                                         buy = float(support1) *1.02
                                         buy = '%.2f'%buy
-                                        stop = OpenQ
+                                        point1 = float(support1) *1.15
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support1) *1.25
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support1) *1.35
+                                        point3 = '%.2f'%point3                                        
+                                        stop = point1 + '|' + point2 + '|' + point3 
                                         target = text2
                                         avg = re_avg
                                     else:
@@ -1049,7 +1055,13 @@ def handle_message(event):
                                         start = float(support1)
                                         buy = float(support1) *1.02
                                         buy = '%.2f'%buy
-                                        stop = OpenQ
+                                        point1 = float(support1) *1.15
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support1) *1.25
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support1) *1.35
+                                        point3 = '%.2f'%point3                                        
+                                        stop = point1 + '|' + point2 + '|' + point3 
                                         target = text2
                                         avg = re_avg
                                 elif float(Close) > float(support2):
@@ -1058,7 +1070,13 @@ def handle_message(event):
                                         start = float(support2)
                                         buy = float(support2) *1.02
                                         buy = '%.2f'%buy
-                                        stop = OpenQ
+                                        point1 = float(support2) *1.15
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support2) *1.25
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support2) *1.35
+                                        point3 = '%.2f'%point3                                        
+                                        stop = point1 + '|' + point2 + '|' + point3 
                                         target = text2
                                         avg = re_avg   
                                     else:
@@ -1066,24 +1084,42 @@ def handle_message(event):
                                         start = float(support2)
                                         buy = float(support2) *1.02
                                         buy = '%.2f'%buy
-                                        stop = OpenQ
+                                        point1 = float(support2) *1.15
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support2) *1.25
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support2) *1.35
+                                        point3 = '%.2f'%point3                                        
+                                        stop = point1 + '|' + point2 + '|' + point3 
                                         target = text2
-                                        avg = re_avg   
+                                        avg = re_avg
                                 elif float(Close) > float(support3):
                                     if barM > 0.00:
                                         notice = alert3
                                         start = float(support3)
                                         buy = float(support3) *1.02
                                         buy = '%.2f'%buy
-                                        stop = OpenQ
+                                        point1 = float(support3) *1.15
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support3) *1.25
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support3) *1.35
+                                        point3 = '%.2f'%point3
+                                        stop = point1 + '|' + point2 + '|' + point3 
                                         target = text2
-                                        avg = re_avg         
+                                        avg = re_avg
                                     else:
                                         notice = alert5
                                         start = float(support3)
                                         buy = float(support3) *1.02
                                         buy = '%.2f'%buy
-                                        stop = OpenQ
+                                        point1 = float(support3) *1.15
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support3) *1.25
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support3) *1.35
+                                        point3 = '%.2f'%point3
+                                        stop = point1 + '|' + point2 + '|' + point3
                                         target = text2
                                         avg = re_avg  
                                 else:
@@ -1092,15 +1128,27 @@ def handle_message(event):
                                         start = float(support4)
                                         buy = float(support4) *1.02
                                         buy = '%.2f'%buy
-                                        stop = OpenQ
+                                        point1 = float(support4) *1.15
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support4) *1.25
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support4) *1.35
+                                        point3 = '%.2f'%point3
+                                        stop = point1 + '|' + point2 + '|' + point3
                                         target = text2
-                                        avg = re_avg      
+                                        avg = re_avg
                                     else:
                                         notice = alert5
                                         start = float(support4)
                                         buy = float(support4) *1.02
                                         buy = '%.2f'%buy
-                                        stop = OpenQ
+                                        point1 = float(support4) *1.15
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support4) *1.25
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support4) *1.35
+                                        point3 = '%.2f'%point3
+                                        stop = point1 + '|' + point2 + '|' + point3
                                         target = text2
                                         avg = re_avg 
                             else:
@@ -1109,7 +1157,7 @@ def handle_message(event):
                                 buy = buyQ
                                 stop = stopQ
                                 target = text2
-                                avg = re_avg         
+                                avg = re_avg
                     else:
                         notice = alert9
                         start = OpenY
