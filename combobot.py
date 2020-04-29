@@ -878,15 +878,15 @@ def handle_message(event):
                     request_val  = '{:,.0f}'.format(request_val)
                     request_val = str(request_val)
                     
-                    exit1 = float(r[1]) * 1.06
+                    exit1 = float(OpenQ) * 1.12
                     exit1 = '%.2f'%exit1
                     exit1 = str(exit1)
 
-                    exit2 = float(r[1]) * 1.12
+                    exit2 = float(OpenQ) * 1.24
                     exit2 = '%.2f'%exit2
                     exit2 = str(exit2)
 
-                    exit3 = float(r[1]) * 1.18
+                    exit3 = float(OpenQ) * 1.36
                     exit3 = '%.2f'%exit3
                     exit3 = str(exit3)
 
@@ -1046,9 +1046,9 @@ def handle_message(event):
                                         start = float(support1)
                                         buy = float(support1) *1.02
                                         buy = '%.2f'%buy
-                                        point1 = float(support1) *1.15
+                                        point1 = float(support1) *1.12
                                         point1 = '%.2f'%point1
-                                        point2 = float(support1) *1.25
+                                        point2 = float(support1) *1.24
                                         point2 = '%.2f'%point2
                                         stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
                                         target = text2
@@ -1058,9 +1058,9 @@ def handle_message(event):
                                         start = float(support1)
                                         buy = float(support1) *1.02
                                         buy = '%.2f'%buy
-                                        point1 = float(support1) *1.15
+                                        point1 = float(support1) *1.12
                                         point1 = '%.2f'%point1
-                                        point2 = float(support1) *1.25
+                                        point2 = float(support1) *1.24
                                         point2 = '%.2f'%point2
                                         stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
                                         target = text2
@@ -1071,9 +1071,9 @@ def handle_message(event):
                                         start = float(support2)
                                         buy = float(support2) *1.02
                                         buy = '%.2f'%buy
-                                        point1 = float(support2) *1.15
+                                        point1 = float(support2) *1.12
                                         point1 = '%.2f'%point1
-                                        point2 = float(support2) *1.25
+                                        point2 = float(support2) *1.24
                                         point2 = '%.2f'%point2
                                         stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
                                         target = text2
@@ -1083,9 +1083,9 @@ def handle_message(event):
                                         start = float(support2)
                                         buy = float(support2) *1.02
                                         buy = '%.2f'%buy
-                                        point1 = float(support2) *1.15
+                                        point1 = float(support2) *1.12
                                         point1 = '%.2f'%point1
-                                        point2 = float(support2) *1.25
+                                        point2 = float(support2) *1.24
                                         point2 = '%.2f'%point2
                                         stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
                                         target = text2
@@ -1096,9 +1096,9 @@ def handle_message(event):
                                         start = float(support3)
                                         buy = float(support3) *1.02
                                         buy = '%.2f'%buy
-                                        point1 = float(support3) *1.15
+                                        point1 = float(support3) *1.12
                                         point1 = '%.2f'%point1
-                                        point2 = float(support3) *1.25
+                                        point2 = float(support3) *1.24
                                         point2 = '%.2f'%point2
                                         stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
                                         target = text2
@@ -1108,9 +1108,9 @@ def handle_message(event):
                                         start = float(support3)
                                         buy = float(support3) *1.02
                                         buy = '%.2f'%buy
-                                        point1 = float(support3) *1.15
+                                        point1 = float(support3) *1.12
                                         point1 = '%.2f'%point1
-                                        point2 = float(support3) *1.25
+                                        point2 = float(support3) *1.24
                                         point2 = '%.2f'%point2
                                         stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
                                         target = text2
@@ -1121,9 +1121,9 @@ def handle_message(event):
                                         start = float(support4)
                                         buy = float(support4) *1.02
                                         buy = '%.2f'%buy
-                                        point1 = float(support4) *1.15
+                                        point1 = float(support4) *1.12
                                         point1 = '%.2f'%point1
-                                        point2 = float(support4) *1.25
+                                        point2 = float(support4) *1.24
                                         point2 = '%.2f'%point2
                                         stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
                                         target = text2
@@ -1133,9 +1133,9 @@ def handle_message(event):
                                         start = float(support4)
                                         buy = float(support4) *1.02
                                         buy = '%.2f'%buy
-                                        point1 = float(support4) *1.15
+                                        point1 = float(support4) *1.12
                                         point1 = '%.2f'%point1
-                                        point2 = float(support4) *1.25
+                                        point2 = float(support4) *1.24
                                         point2 = '%.2f'%point2
                                         stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
                                         target = text2
