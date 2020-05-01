@@ -980,7 +980,7 @@ def handle_message(event):
                     alert2 = 'ไปต่อ'
                     alert3 = 'ซื้อ'
                     alert4 = 'อย่าเพิ่งเข้า'
-                    alert5 = 'กำลังย่อ'
+                    alert5 = 'ขายทำกำไร'
                     alert6 = 'ห้ามพลาด'
                     alert7 = 'เด้ง'
                     alert8 = 'ลงต่อ'
