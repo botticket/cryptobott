@@ -768,7 +768,6 @@ def handle_message(event):
 
                     word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
                     result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
-                    #print(word_to_reply)
                     print(result)
                     print(number)
                     bubble = flex_crypto(text,price_now,change,chgp,notice,start,buy,stop,target)
@@ -820,7 +819,6 @@ def handle_message(event):
                 return [title,stockprice,change,pchange,stockupdate]
 
             r = request(code)
-            # text_request = '{} {} ({})'.format(r[0], r[1], r[2])
 
             class stock:
                 def __init__(self,stock):
@@ -973,8 +971,8 @@ def handle_message(event):
                     ChgM = '%.2f'%ChgM
                     ChgM = float(ChgM)	
                     
-                    text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n' + 'Y {} : Q {} : H {}'.format(OpenY,OpenQ,max_Qvalue)
-                    text2 = support4 + ' | ' + support3 + ' | ' + support2 + ' | ' + support1 + '\n' + 'Y {} : Q {} : L {}'.format(OpenY,OpenQ,min_value)
+                    text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n' + 'Y {} : Q {} : M {}'.format(OpenY,OpenQ,OpenM)
+                    text2 = support4 + ' | ' + support3 + ' | ' + support2 + ' | ' + support1 + '\n' + 'Y {} : Q {} : M {}'.format(OpenY,OpenQ,OpenM)
 
                     alert1 = 'ชนแนวต้าน'
                     alert2 = 'ไปต่อ'
@@ -1050,7 +1048,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support1) *1.24
                                         point2 = '%.2f'%point2
-                                        stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
+                                        stop = point1 + ' | ' + point2 + ' ] ' + max_Qvalue
                                         target = text2
                                         avg = re_avg
                                     else:
@@ -1062,7 +1060,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support1) *1.24
                                         point2 = '%.2f'%point2
-                                        stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
+                                        stop = point1 + ' | ' + point2 + ' ] ' + max_Qvalue
                                         target = text2
                                         avg = re_avg
                                 elif float(Close) > float(support2):
@@ -1075,7 +1073,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support2) *1.24
                                         point2 = '%.2f'%point2
-                                        stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
+                                        stop = point1 + ' | ' + point2 + ' ] ' + max_Qvalue
                                         target = text2
                                         avg = re_avg   
                                     else:
@@ -1087,7 +1085,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support2) *1.24
                                         point2 = '%.2f'%point2
-                                        stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
+                                        stop = point1 + ' | ' + point2 + ' ] ' + max_Qvalue
                                         target = text2
                                         avg = re_avg
                                 elif float(Close) > float(support3):
@@ -1100,7 +1098,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support3) *1.24
                                         point2 = '%.2f'%point2
-                                        stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
+                                        stop = point1 + ' | ' + point2 + ' ] ' + max_Qvalue
                                         target = text2
                                         avg = re_avg
                                     else:
@@ -1112,7 +1110,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support3) *1.24
                                         point2 = '%.2f'%point2
-                                        stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
+                                        stop = point1 + ' | ' + point2 + ' ] ' + max_Qvalue
                                         target = text2
                                         avg = re_avg  
                                 else:
@@ -1125,7 +1123,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support4) *1.24
                                         point2 = '%.2f'%point2
-                                        stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
+                                        stop = point1 + ' | ' + point2 + ' ] ' + max_Qvalue
                                         target = text2
                                         avg = re_avg
                                     else:
@@ -1137,7 +1135,7 @@ def handle_message(event):
                                         point1 = '%.2f'%point1
                                         point2 = float(support4) *1.24
                                         point2 = '%.2f'%point2
-                                        stop = point1 + ' | ' + point2 + ' ! ' + max_Qvalue
+                                        stop = point1 + ' | ' + point2 + ' ] ' + max_Qvalue
                                         target = text2
                                         avg = re_avg 
                             else:
@@ -1169,8 +1167,8 @@ def handle_message(event):
 
     except:
         text_list = [
-            'คุณ {} รอสักครู่นะคะ กำลังค้นหา {} ในฐานข้อมูล'.format(disname, text_from_user),
-            '{} สะกด {} ไม่ถูกต้อง ลองใหม่อีกครั้ง'.format(disname, text_from_user),
+            'คุณ {} กำลังค้นหา {} ในฐานข้อมูล'.format(disname, text_from_user),
+            '{} สะกด {} ไม่ถูกต้อง'.format(disname, text_from_user),
         ]
 
         from random import choice
