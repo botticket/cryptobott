@@ -996,14 +996,14 @@ def handle_message(event):
                         if  barY > 0.00:
                             if barQ >= 0.00:
                                 if barM > 0.00:
-                                    if 0.00 < float(barY) < 4.00:
+                                    if 0.00 < float(barY) < 3.00:
                                         notice = alert3
                                         start = OpenY
                                         buy = buyY
                                         stop = stopQ
                                         target = text1
                                         avg = re_avg
-                                    elif barQ > 6.00:
+                                    elif barQ > 8.00:
                                         notice = alert1
                                         start = OpenQ
                                         buy = buyQ
@@ -1025,12 +1025,20 @@ def handle_message(event):
                                         target = text1
                                         avg = re_avg
                                 else:
-                                    notice = alert5
-                                    start = OpenQ
-                                    buy = buyQ
-                                    stop = stopQ
-                                    target = text1
-                                    avg = re_avg
+                                    if 0.00 < float(barY) < 3.00:
+                                        notice = alert4
+                                        start = OpenY
+                                        buy = buyY
+                                        stop = stopQ
+                                        target = text1
+                                        avg = re_avg
+                                    else:
+                                        notice = alert5
+                                        start = OpenQ
+                                        buy = buyQ
+                                        stop = stopQ
+                                        target = text1
+                                        avg = re_avg
                             else:
                                 notice = alert4
                                 start = OpenQ
