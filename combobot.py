@@ -830,7 +830,9 @@ def handle_message(event):
 
                 dfY = data.DataReader(f'{list}', data_source="yahoo", start=yearly, end=end)
                 dfQ = data.DataReader(f'{list}', data_source="yahoo", start=quarter, end=end)
-                dfM = data.DataReader(f'{list}', data_source="yahoo", start=monthly, end=end)
+                # dfM = data.DataReader(f'{list}', data_source="yahoo", start=monthly, end=end)
+                dfM = data.DataReader(f'{list}', data_source="yahoo", start='2020-04-01', end=end)
+
                 list = list.replace('.bk','')
                             
                 OpenY = dfY['Open'].iloc[0]
