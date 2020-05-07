@@ -1040,21 +1040,21 @@ def handle_message(event):
                                     avg = re_avg
                             else:
                                 if 0.00 < float(barY) < 3.00:
-                                    notice = alert10
+                                    notice = alert5
                                     start = OpenY
                                     buy = buyY
                                     stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                     target = text1
                                     avg = re_avg
                                 elif 0.00 < float(barQ) < 3.00:
-                                    notice = alert10
+                                    notice = alert5
                                     start = OpenQ
                                     buy = buyQ
                                     stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                     target = text1
                                     avg = re_avg
                                 else:
-                                    notice = alert4
+                                    notice = alert10
                                     start = OpenQ
                                     buy = buyQ
                                     stop = 'H {} | L {}'.format(max_Qvalue,min_value)
