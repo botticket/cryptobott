@@ -1069,7 +1069,7 @@ def handle_message(event):
                             avg = re_avg
                     else:
                         if barQ >= 0.00:
-                            if float(Close) > float(support1):
+                            if float(Close) >= float(support1):
                                 if barM > 0.00:
                                     notice = alert3
                                     start = float(support1)
@@ -1080,7 +1080,7 @@ def handle_message(event):
                                     point2 = float(support1) *1.24
                                     point2 = '%.2f'%point2
                                     point3 = float(support1) *1.36
-                                    point3 = '%.2f'%point3                                    
+                                    point3 = '%.2f'%point3
                                     stop = '{} | {} | {}'.format(point1,point2,point3)
                                     target = '{} | {} | {}'.format(support3,support2,support1) + text2
                                     avg = re_avg
@@ -1094,11 +1094,11 @@ def handle_message(event):
                                     point2 = float(support1) *1.24
                                     point2 = '%.2f'%point2
                                     point3 = float(support1) *1.36
-                                    point3 = '%.2f'%point3                                    
+                                    point3 = '%.2f'%point3
                                     stop = '{} | {} | {}'.format(point1,point2,point3)
                                     target = '{} | {} | {}'.format(support3,support2,support1) + text2
                                     avg = re_avg
-                            elif float(Close) > float(support2):
+                            elif float(Close) >= float(support2):
                                 if barM > 0.00:
                                     notice = alert3
                                     start = float(support2)
@@ -1109,7 +1109,7 @@ def handle_message(event):
                                     point2 = float(support2) *1.24
                                     point2 = '%.2f'%point2
                                     point3 = float(support2) *1.36
-                                    point3 = '%.2f'%point3                                    
+                                    point3 = '%.2f'%point3
                                     stop = '{} | {} | {}'.format(point1,point2,point3)
                                     target = '{} | {} | {}'.format(support4,support3,support2) + text2
                                     avg = re_avg   
@@ -1123,11 +1123,11 @@ def handle_message(event):
                                     point2 = float(support2) *1.24
                                     point2 = '%.2f'%point2
                                     point3 = float(support2) *1.36
-                                    point3 = '%.2f'%point3                                    
+                                    point3 = '%.2f'%point3
                                     stop = '{} | {} | {}'.format(point1,point2,point3)
                                     target = '{} | {} | {}'.format(support4,support3,support2) + text2
                                     avg = re_avg
-                            elif float(Close) > float(support3):
+                            elif float(Close) >= float(support3):
                                 if barM > 0.00:
                                     notice = alert3
                                     start = float(support3)
@@ -1138,7 +1138,7 @@ def handle_message(event):
                                     point2 = float(support3) *1.24
                                     point2 = '%.2f'%point2
                                     point3 = float(support3) *1.36
-                                    point3 = '%.2f'%point3                                    
+                                    point3 = '%.2f'%point3
                                     stop = '{} | {} | {}'.format(point1,point2,point3)
                                     target = '{} | {} | {}'.format(support5,support4,support3) + text2
                                     avg = re_avg
@@ -1152,11 +1152,11 @@ def handle_message(event):
                                     point2 = float(support3) *1.24
                                     point2 = '%.2f'%point2
                                     point3 = float(support3) *1.36
-                                    point3 = '%.2f'%point3                                    
+                                    point3 = '%.2f'%point3
                                     stop = '{} | {} | {}'.format(point1,point2,point3)
                                     target = '{} | {} | {}'.format(support5,support4,support3) + text2
                                     avg = re_avg  
-                            elif float(Close) > float(support4):
+                            elif float(Close) >= float(support4):
                                 if barM > 0.00:
                                     notice = alert3
                                     start = float(support4)
@@ -1167,7 +1167,7 @@ def handle_message(event):
                                     point2 = float(support4) *1.24
                                     point2 = '%.2f'%point2
                                     point3 = float(support4) *1.36
-                                    point3 = '%.2f'%point3                                    
+                                    point3 = '%.2f'%point3
                                     stop = '{} | {} | {}'.format(point1,point2,point3)
                                     target = '{} | {} | {}'.format(support6,support5,support4) + text2
                                     avg = re_avg
@@ -1181,11 +1181,11 @@ def handle_message(event):
                                     point2 = float(support4) *1.24
                                     point2 = '%.2f'%point2
                                     point3 = float(support4) *1.36
-                                    point3 = '%.2f'%point3                                    
+                                    point3 = '%.2f'%point3
                                     stop = '{} | {} | {}'.format(point1,point2,point3)
                                     target = '{} | {} | {}'.format(support6,support5,support4) + text2
                                     avg = re_avg 
-                            elif float(Close) > float(support5):
+                            elif float(Close) >= float(support5):
                                 if barM > 0.00:
                                     notice = alert3
                                     start = float(support5)
@@ -1196,7 +1196,7 @@ def handle_message(event):
                                     point2 = float(support5) *1.24
                                     point2 = '%.2f'%point2
                                     point3 = float(support5) *1.36
-                                    point3 = '%.2f'%point3                                    
+                                    point3 = '%.2f'%point3
                                     stop = '{} | {} | {}'.format(point1,point2,point3)
                                     target = '{} | {} | {}'.format(support6,support5,support4) + text2
                                     avg = re_avg
@@ -1210,11 +1210,11 @@ def handle_message(event):
                                     point2 = float(support5) *1.24
                                     point2 = '%.2f'%point2
                                     point3 = float(support5) *1.36
-                                    point3 = '%.2f'%point3                                    
+                                    point3 = '%.2f'%point3
                                     stop = '{} | {} | {}'.format(point1,point2,point3)
                                     target = '{} | {} | {}'.format(support6,support5,support4) + text2
                                     avg = re_avg 
-                            else:
+                            elif float(Close) >= float(support6):
                                 if barM > 0.00:
                                     notice = alert3
                                     start = float(support6)
@@ -1225,7 +1225,7 @@ def handle_message(event):
                                     point2 = float(support6) *1.24
                                     point2 = '%.2f'%point2
                                     point3 = float(support6) *1.36
-                                    point3 = '%.2f'%point3                                    
+                                    point3 = '%.2f'%point3
                                     stop = '{} | {} | {}'.format(point1,point2,point3)
                                     target = '{} | {} | {}'.format(support6,support5,support4) + text2
                                     avg = re_avg
@@ -1239,10 +1239,17 @@ def handle_message(event):
                                     point2 = float(support6) *1.24
                                     point2 = '%.2f'%point2
                                     point3 = float(support6) *1.36
-                                    point3 = '%.2f'%point3                                    
+                                    point3 = '%.2f'%point3
                                     stop = '{} | {} | {}'.format(point1,point2,point3)
                                     target = '{} | {} | {}'.format(support6,support5,support4) + text2
                                     avg = re_avg 
+                            else:
+                                notice = alert4
+                                start = OpenQ
+                                buy = buyQ
+                                stop = 'Hq {} ~ Ly {}'.format(max_Qvalue,min_value)
+                                target = text2
+                                avg = re_avg
                         else:
                             notice = alert4
                             start = OpenQ
