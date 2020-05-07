@@ -996,13 +996,13 @@ def handle_message(event):
                 text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n' + 'Y {} : M {}'.format(OpenY,OpenM)
                 text2 = '\n' + 'Y {} : Q {} : M {}'.format(OpenY,OpenQ,OpenM)
 
-                alert1 = 'ชนแนวต้าน'
+                alert1 = 'ชนต้าน'
                 alert2 = 'ไปต่อ'
-                alert3 = 'ซื้อ'
+                alert3 = 'ซื้อใกล้ Q'
                 alert4 = 'เปลี่ยนตัวเล่น'
-                alert5 = 'ขาย //รอเก็บต่ำ'
+                alert5 = 'ขาย //รอใกล้ Q'
                 alert6 = 'ห้ามพลาด'
-                alert7 = 'เด้ง'
+                alert7 = 'ซื้อแถว Q'
                 alert8 = 'ลงต่อ'
                 alert9 = 'Vol น้อย'
                 alert10 = 'ดูตลาด'
