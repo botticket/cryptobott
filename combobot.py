@@ -1058,14 +1058,14 @@ def handle_message(event):
                                     start = OpenQ
                                     buy = buyQ
                                     stop = 'H {} | L {}'.format(max_Qvalue,min_value)
-                                    target = text2
+                                    target = text1
                                     avg = re_avg
                         else:
                             notice = alert4
                             start = OpenQ
                             buy = buyQ
                             stop = 'H {} | L {}'.format(max_Qvalue,min_value)
-                            target = text2
+                            target = text1
                             avg = re_avg
                     else:
                         if barQ >= 0.00:
