@@ -993,8 +993,8 @@ def handle_message(event):
                 ChgM = '%.2f'%ChgM
                 ChgM = float(ChgM)	
                 
-                text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n' + 'Y {} : M {}'.format(OpenY,OpenM)
-                text2 = '\n' + 'Y {} : Q {} : M {}'.format(OpenY,OpenQ,OpenM)
+                text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 + '\n' + 'Q {} ({}%)'.format(OpenQ,p_OpenQ)
+                text2 = '\n' + 'Q {} ({}%)'.format(OpenQ,p_OpenQ)
 
                 alert1 = 'ชนต้าน'
                 alert2 = 'ไปต่อ'
@@ -1011,7 +1011,7 @@ def handle_message(event):
                 price_now = r[1] 
                 change = r[2] 
                 chgp = str(r[3])
-                re_avg = 'Y {}% | pQ {}%'.format(barY,p_OpenQ)
+                re_avg = 'Y {} ({}%) : M {}'.format(OpenY,barY,OpenM)
 
                 if float(value) > 7500000:
                     if  barY > 0.00:
