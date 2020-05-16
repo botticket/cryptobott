@@ -1890,13 +1890,13 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "Avg.",
+                    "text": "info",
                     "flex": 3,
                     "size": "sm"
                 }
                 ],
                 "position": "absolute",
-                "offsetTop": "88%",
+                "offsetTop": "77%",
                 "offsetStart": "5%",
                 "width": "100%"
             },
@@ -1914,7 +1914,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
                 }
                 ],
                 "position": "absolute",
-                "offsetTop": "92%",
+                "offsetTop": "80%",
                 "offsetStart": "5%",
                 "width": "95%"
             }
