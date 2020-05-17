@@ -994,22 +994,21 @@ def handle_message(event):
                     ChgM = float(ChgM)	
                     
                     text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 
-                    text2 = '\n' + 'Q {} ({}%)'.format(OpenQ,p_OpenQ)
 
-                    alert2 = 'ไปต่อ Q ({}%)'.format(ChgQ)
-                    alert3 = 'ซื้อ Y / Q ({}%)'.format(ChgQ)
-                    alert4 = 'เปลี่ยนตัว Q ({}%)'.format(ChgQ)
-                    alert5 = 'ขาย Q ({}%)'.format(ChgQ)
-                    alert7 = 'ซื้อ Q ({}%)'.format(ChgQ)
-                    alert8 = 'ลงต่อ Q ({}%)'.format(ChgQ)
+                    alert2 = 'ไปต่อ'
+                    alert3 = 'ซื้อ Y / Q'
+                    alert4 = 'เปลี่ยนตัว'
+                    alert5 = 'ขาย'
+                    alert7 = 'ซื้อ'
+                    alert8 = 'ลงต่อ'
                     alert9 = 'Vol น้อย'
-                    alert10 = 'ดูตลาด Q ({}%)'.format(ChgQ)
+                    alert10 = 'ดูตลาด'
 
                     text = r[0]
                     price_now = r[1] 
                     change = r[2] 
                     chgp = str(r[3])
-                    re_avg = 'Q {} ({} > {}%)'.format(OpenQ,p_OpenQ,barY) + '\n' + 'Y {} M {}'.format(OpenY,OpenM)
+                    re_avg = 'Q {} ({} > {}%)'.format(OpenQ,p_OpenQ,barY) + '\n' + 'Y {}'.format(OpenY)+ '\n' + 'M {}'.format(OpenM)
 
                     if float(value) > 7500000:
                         if  barY > 0.00:
@@ -1018,21 +1017,21 @@ def handle_message(event):
                                     if 0.00 < float(barY) < 3.00:
                                         notice = alert3
                                         start = OpenY
-                                        buy = buyY
+                                        buy = ChgQ
                                         stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                         target = text1
                                         avg = re_avg
                                     elif 0.00 < float(barQ) < 3.00:
                                         notice = alert7
                                         start = OpenQ
-                                        buy = buyQ
+                                        buy = ChgQ
                                         stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                         target = text1
                                         avg = re_avg
                                     else:
                                         notice = alert2
                                         start = OpenQ
-                                        buy = buyQ
+                                        buy = ChgQ
                                         stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                         target = text1
                                         avg = re_avg
@@ -1040,28 +1039,28 @@ def handle_message(event):
                                     if 0.00 < float(barY) < 3.00:
                                         notice = alert5
                                         start = OpenY
-                                        buy = buyY
+                                        buy = ChgQ
                                         stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                         target = text1
                                         avg = re_avg
                                     elif 0.00 < float(barQ) < 3.00:
                                         notice = alert5
                                         start = OpenQ
-                                        buy = buyQ
+                                        buy = ChgQ
                                         stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                         target = text1
                                         avg = re_avg
                                     else:
                                         notice = alert10
                                         start = OpenQ
-                                        buy = buyQ
+                                        buy = ChgQ
                                         stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                         target = text1
                                         avg = re_avg
                             else:
                                 notice = alert4
                                 start = OpenQ
-                                buy = buyQ
+                                buy = ChgQ
                                 stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                 target = text1
                                 avg = re_avg
@@ -1071,8 +1070,7 @@ def handle_message(event):
                                     if barM > 0.00:
                                         notice = alert7
                                         start = float(support1)
-                                        buy = float(support1) *1.02
-                                        buy = '%.2f'%buy
+                                        buy = ChgQ
                                         point1 = float(support1) *1.12
                                         point1 = '%.2f'%point1
                                         point2 = float(support1) *1.24
@@ -1085,8 +1083,7 @@ def handle_message(event):
                                     else:
                                         notice = alert5
                                         start = float(support1)
-                                        buy = float(support1) *1.02
-                                        buy = '%.2f'%buy
+                                        buy = ChgQ
                                         point1 = float(support1) *1.12
                                         point1 = '%.2f'%point1
                                         point2 = float(support1) *1.24
@@ -1100,8 +1097,7 @@ def handle_message(event):
                                     if barM > 0.00:
                                         notice = alert7
                                         start = float(support2)
-                                        buy = float(support2) *1.02
-                                        buy = '%.2f'%buy
+                                        buy = ChgQ
                                         point1 = float(support2) *1.12
                                         point1 = '%.2f'%point1
                                         point2 = float(support2) *1.24
@@ -1114,8 +1110,7 @@ def handle_message(event):
                                     else:
                                         notice = alert5
                                         start = float(support2)
-                                        buy = float(support2) *1.02
-                                        buy = '%.2f'%buy
+                                        buy = ChgQ
                                         point1 = float(support2) *1.12
                                         point1 = '%.2f'%point1
                                         point2 = float(support2) *1.24
@@ -1129,8 +1124,7 @@ def handle_message(event):
                                     if barM > 0.00:
                                         notice = alert7
                                         start = float(support3)
-                                        buy = float(support3) *1.02
-                                        buy = '%.2f'%buy
+                                        buy = ChgQ
                                         point1 = float(support3) *1.12
                                         point1 = '%.2f'%point1
                                         point2 = float(support3) *1.24
@@ -1143,8 +1137,7 @@ def handle_message(event):
                                     else:
                                         notice = alert5
                                         start = float(support3)
-                                        buy = float(support3) *1.02
-                                        buy = '%.2f'%buy
+                                        buy = ChgQ
                                         point1 = float(support3) *1.12
                                         point1 = '%.2f'%point1
                                         point2 = float(support3) *1.24
@@ -1158,8 +1151,7 @@ def handle_message(event):
                                     if barM > 0.00:
                                         notice = alert7
                                         start = float(support4)
-                                        buy = float(support4) *1.02
-                                        buy = '%.2f'%buy
+                                        buy = ChgQ
                                         point1 = float(support4) *1.12
                                         point1 = '%.2f'%point1
                                         point2 = float(support4) *1.24
@@ -1172,8 +1164,7 @@ def handle_message(event):
                                     else:
                                         notice = alert5
                                         start = float(support4) 
-                                        buy = float(support4) *1.02
-                                        buy = '%.2f'%buy
+                                        buy = ChgQ
                                         point1 = float(support4) *1.12
                                         point1 = '%.2f'%point1
                                         point2 = float(support4) *1.24
@@ -1187,8 +1178,7 @@ def handle_message(event):
                                     if barM > 0.00:
                                         notice = alert7
                                         start = float(support5)
-                                        buy = float(support5) *1.02
-                                        buy = '%.2f'%buy
+                                        buy = ChgQ
                                         point1 = float(support5) *1.12
                                         point1 = '%.2f'%point1
                                         point2 = float(support5) *1.24
@@ -1201,8 +1191,7 @@ def handle_message(event):
                                     else:
                                         notice = alert5
                                         start = float(support5) 
-                                        buy = float(support5) *1.02
-                                        buy = '%.2f'%buy
+                                        buy = ChgQ
                                         point1 = float(support5) *1.12
                                         point1 = '%.2f'%point1
                                         point2 = float(support5) *1.24
@@ -1216,8 +1205,7 @@ def handle_message(event):
                                     if barM > 0.00:
                                         notice = alert7
                                         start = float(support6)
-                                        buy = float(support6) *1.02
-                                        buy = '%.2f'%buy
+                                        buy = ChgQ
                                         point1 = float(support6) *1.12
                                         point1 = '%.2f'%point1
                                         point2 = float(support6) *1.24
@@ -1230,8 +1218,7 @@ def handle_message(event):
                                     else:
                                         notice = alert5
                                         start = float(support6) 
-                                        buy = float(support6) *1.02
-                                        buy = '%.2f'%buy
+                                        buy = ChgQ
                                         point1 = float(support6) *1.12
                                         point1 = '%.2f'%point1
                                         point2 = float(support6) *1.24
@@ -1244,21 +1231,21 @@ def handle_message(event):
                                 else:
                                     notice = alert4
                                     start = OpenQ
-                                    buy = buyQ
+                                    buy = ChgQ
                                     stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                     target = text1
                                     avg = re_avg
                             else:
                                 notice = alert4
                                 start = OpenQ
-                                buy = buyQ
+                                buy = ChgQ
                                 stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                 target = text1
                                 avg = re_avg
                     else:
                         notice = alert9
                         start = OpenQ
-                        buy = buyQ
+                        buy = ChgQ
                         stop = 'Hq {} ~ Ly {}'.format(max_Qvalue,min_value)
                         target = text1
                         avg = re_avg 
