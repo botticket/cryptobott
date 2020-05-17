@@ -1245,22 +1245,22 @@ def handle_message(event):
                                     notice = alert4
                                     start = OpenQ
                                     buy = buyQ
-                                    stop = 'Hq {} ~ Ly {}'.format(max_Qvalue,min_value)
-                                    target = text2
+                                    stop = 'H {} | L {}'.format(max_Qvalue,min_value)
+                                    target = text1
                                     avg = re_avg
                             else:
                                 notice = alert4
                                 start = OpenQ
                                 buy = buyQ
-                                stop = 'Hq {} ~ Ly {}'.format(max_Qvalue,min_value)
-                                target = text2
+                                stop = 'H {} | L {}'.format(max_Qvalue,min_value)
+                                target = text1
                                 avg = re_avg
                     else:
                         notice = alert9
                         start = OpenQ
                         buy = buyQ
                         stop = 'Hq {} ~ Ly {}'.format(max_Qvalue,min_value)
-                        target = text2
+                        target = text1
                         avg = re_avg 
 
                     word_to_reply = str('{} {}'.format(text,notice))
