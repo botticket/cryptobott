@@ -1008,7 +1008,7 @@ def handle_message(event):
                     price_now = r[1] 
                     change = r[2] 
                     chgp = str(r[3])
-                    re_avg = 'Q {} ({} > {}%)'.format(OpenQ,p_OpenQ,barY) + '\n' + 'Y {}'.format(OpenY)+ '\n' + 'M {}'.format(OpenM)
+                    re_avg = 'Q {} ({} > {}%)'.format(OpenQ,p_OpenQ,barY) + '\n' + 'Y {} M {}'.format(OpenY,OpenM)+ '\n' + 'Hq {} Ly {}'.format(max_Qvalue,min_value)
 
                     if float(value) > 7500000:
                         if  barY > 0.00:
