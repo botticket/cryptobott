@@ -1617,7 +1617,7 @@ def flex_setcheck(text,price_now,change,chgp,notice,start,buy,stop,target):
     }
     return bubble
 
-def flex_stock(text,price_now,change,chgp,notice,start,buy,stop,target,avg):
+def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
     Change_color = ['#EE0000' if '-' in str(change) else '#23D500'][0]
     trend = ['#EE0000' if '-' in str(avg) else '#3c3c3c'][0]
     switch = ['Fibo Support' if '-' in str(avg) else 'Target'][0]
