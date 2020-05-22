@@ -1740,7 +1740,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                         "align": "end",
                         "color": "#F8F9F9",
                         "gravity": "center",
-                        "size": "lg",
+                        "size": "md",
                         "wrap": True
                     }
                     ],
