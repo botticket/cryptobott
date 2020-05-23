@@ -1736,7 +1736,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                     "contents": [
                     {
                         "type": "text",
-                        "text": "Q {} %".format(chgp),
+                        "text": "= {} %".format(chgp),
                         "align": "end",
                         "color": "#F8F9F9",
                         "gravity": "center",
