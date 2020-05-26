@@ -370,7 +370,7 @@ def handle_message(event):
                 exit_long2 = float(wti[0]) * 1.08
                 exit_long2 = '%.2f'%exit_long2
 
-                exit_long3 = float(wti[0]) * 1.12
+                exit_long3 = float(wti[0]) * 1.15
                 exit_long3 = '%.2f'%exit_long3      
 
                 exit_short1 = float(wti[0]) * 0.96
@@ -474,7 +474,7 @@ def handle_message(event):
                 exit_long2 = float(tff[0]) * 1.08
                 exit_long2 = '%.2f'%exit_long2
 
-                exit_long3 = float(tff[0]) * 1.12
+                exit_long3 = float(tff[0]) * 1.15
                 exit_long3 = '%.2f'%exit_long3
 
                 exit_short1 = float(tff[0]) * 0.96
@@ -579,7 +579,7 @@ def handle_message(event):
                 exit_long2 = float(st[0]) * 1.08
                 exit_long2 = '%.2f'%exit_long2
 
-                exit_long3 = float(st[0]) * 1.12
+                exit_long3 = float(st[0]) * 1.15
                 exit_long3 = '%.2f'%exit_long3
 
                 exit_short1 = float(st[0]) * 0.96
@@ -709,7 +709,7 @@ def handle_message(event):
                     exit_long2 = '%.2f'%exit_long2
                     exit_long2 = str(exit_long2)
 
-                    exit_long3 = float(OpenD) * 1.12
+                    exit_long3 = float(OpenD) * 1.15
                     exit_long3 = '%.2f'%exit_long3
                     exit_long3 = str(exit_long3)
 
@@ -882,33 +882,17 @@ def handle_message(event):
                     request_val  = '{:,.0f}'.format(request_val)
                     request_val = str(request_val)
                     
-                    exit1 = float(OpenQ) * 1.12
+                    exit1 = float(OpenQ) * 1.15
                     exit1 = '%.2f'%exit1
                     exit1 = str(exit1)
 
-                    exit2 = float(OpenQ) * 1.24
+                    exit2 = float(OpenQ) * 1.30
                     exit2 = '%.2f'%exit2
                     exit2 = str(exit2)
 
-                    exit3 = float(OpenQ) * 1.36
+                    exit3 = float(OpenQ) * 1.45
                     exit3 = '%.2f'%exit3
                     exit3 = str(exit3)
-
-                    buyQ = float(OpenQ) * 1.02
-                    buyQ = '%.2f'%buyQ
-                    buyQ = str(buyQ) 
-
-                    stopQ = float(OpenQ) * 0.985
-                    stopQ = '%.2f'%stopQ
-                    stopQ = str(stopQ) 
-
-                    buyY = float(OpenY) * 1.02
-                    buyY = '%.2f'%buyY
-                    buyY = str(buyY) 
-
-                    stopY = float(OpenY) * 0.985
-                    stopY = '%.2f'%stopY
-                    stopY = str(stopY) 
 
                     max_value = dfY.nlargest(1, columns = 'High')
                     max_value = max_value['High'].iloc[0]
@@ -1063,11 +1047,11 @@ def handle_message(event):
                                     if barM > 0.00:
                                         notice = alert7
                                         start = float(support1)
-                                        point1 = float(support1) *1.12
+                                        point1 = float(support1) *1.15
                                         point1 = '%.2f'%point1
-                                        point2 = float(support1) *1.24
+                                        point2 = float(support1) *1.30
                                         point2 = '%.2f'%point2
-                                        point3 = float(support1) *1.36
+                                        point3 = float(support1) *1.45
                                         point3 = '%.2f'%point3
                                         stop = '{} | {} | {}'.format(point1,point2,point3)
                                         target = '{} | {} | {}'.format(support3,support2,support1)
@@ -1075,11 +1059,11 @@ def handle_message(event):
                                     else:
                                         notice = alert5
                                         start = float(support1)
-                                        point1 = float(support1) *1.12
+                                        point1 = float(support1) *1.15
                                         point1 = '%.2f'%point1
-                                        point2 = float(support1) *1.24
+                                        point2 = float(support1) *1.30
                                         point2 = '%.2f'%point2
-                                        point3 = float(support1) *1.36
+                                        point3 = float(support1) *1.45
                                         point3 = '%.2f'%point3
                                         stop = '{} | {} | {}'.format(point1,point2,point3)
                                         target = '{} | {} | {}'.format(support3,support2,support1)
@@ -1088,11 +1072,11 @@ def handle_message(event):
                                     if barM > 0.00:
                                         notice = alert7
                                         start = float(support2)
-                                        point1 = float(support2) *1.12
+                                        point1 = float(support2) *1.15
                                         point1 = '%.2f'%point1
-                                        point2 = float(support2) *1.24
+                                        point2 = float(support2) *1.30
                                         point2 = '%.2f'%point2
-                                        point3 = float(support2) *1.36
+                                        point3 = float(support2) *1.45
                                         point3 = '%.2f'%point3
                                         stop = '{} | {} | {}'.format(point1,point2,point3)
                                         target = '{} | {} | {}'.format(support4,support3,support2)
@@ -1100,11 +1084,11 @@ def handle_message(event):
                                     else:
                                         notice = alert5
                                         start = float(support2)
-                                        point1 = float(support2) *1.12
+                                        point1 = float(support2) *1.15
                                         point1 = '%.2f'%point1
-                                        point2 = float(support2) *1.24
+                                        point2 = float(support2) *1.30
                                         point2 = '%.2f'%point2
-                                        point3 = float(support2) *1.36
+                                        point3 = float(support2) *1.45
                                         point3 = '%.2f'%point3
                                         stop = '{} | {} | {}'.format(point1,point2,point3)
                                         target = '{} | {} | {}'.format(support4,support3,support2)
@@ -1113,11 +1097,11 @@ def handle_message(event):
                                     if barM > 0.00:
                                         notice = alert7
                                         start = float(support3)
-                                        point1 = float(support3) *1.12
+                                        point1 = float(support3) *1.15
                                         point1 = '%.2f'%point1
-                                        point2 = float(support3) *1.24
+                                        point2 = float(support3) *1.30
                                         point2 = '%.2f'%point2
-                                        point3 = float(support3) *1.36
+                                        point3 = float(support3) *1.45
                                         point3 = '%.2f'%point3
                                         stop = '{} | {} | {}'.format(point1,point2,point3)
                                         target = '{} | {} | {}'.format(support5,support4,support3)
@@ -1125,11 +1109,11 @@ def handle_message(event):
                                     else:
                                         notice = alert5
                                         start = float(support3)
-                                        point1 = float(support3) *1.12
+                                        point1 = float(support3) *1.15
                                         point1 = '%.2f'%point1
-                                        point2 = float(support3) *1.24
+                                        point2 = float(support3) *1.30
                                         point2 = '%.2f'%point2
-                                        point3 = float(support3) *1.36
+                                        point3 = float(support3) *1.45
                                         point3 = '%.2f'%point3
                                         stop = '{} | {} | {}'.format(point1,point2,point3)
                                         target = '{} | {} | {}'.format(support5,support4,support3)
@@ -1138,11 +1122,11 @@ def handle_message(event):
                                     if barM > 0.00:
                                         notice = alert7
                                         start = float(support4)
-                                        point1 = float(support4) *1.12
+                                        point1 = float(support4) *1.15
                                         point1 = '%.2f'%point1
-                                        point2 = float(support4) *1.24
+                                        point2 = float(support4) *1.30
                                         point2 = '%.2f'%point2
-                                        point3 = float(support4) *1.36
+                                        point3 = float(support4) *1.45
                                         point3 = '%.2f'%point3
                                         stop = '{} | {} | {}'.format(point1,point2,point3)
                                         target = '{} | {} | {}'.format(support6,support5,support4)
@@ -1150,11 +1134,11 @@ def handle_message(event):
                                     else:
                                         notice = alert5
                                         start = float(support4) 
-                                        point1 = float(support4) *1.12
+                                        point1 = float(support4) *1.15
                                         point1 = '%.2f'%point1
-                                        point2 = float(support4) *1.24
+                                        point2 = float(support4) *1.30
                                         point2 = '%.2f'%point2
-                                        point3 = float(support4) *1.36
+                                        point3 = float(support4) *1.45
                                         point3 = '%.2f'%point3
                                         stop = '{} | {} | {}'.format(point1,point2,point3)
                                         target = '{} | {} | {}'.format(support6,support5,support4)
@@ -1163,11 +1147,11 @@ def handle_message(event):
                                     if barM > 0.00:
                                         notice = alert7
                                         start = float(support5)
-                                        point1 = float(support5) *1.12
+                                        point1 = float(support5) *1.15
                                         point1 = '%.2f'%point1
-                                        point2 = float(support5) *1.24
+                                        point2 = float(support5) *1.30
                                         point2 = '%.2f'%point2
-                                        point3 = float(support5) *1.36
+                                        point3 = float(support5) *1.45
                                         point3 = '%.2f'%point3
                                         stop = '{} | {} | {}'.format(point1,point2,point3)
                                         target = '{} | {} | {}'.format(support6,support5,support4)
@@ -1175,11 +1159,11 @@ def handle_message(event):
                                     else:
                                         notice = alert5
                                         start = float(support5) 
-                                        point1 = float(support5) *1.12
+                                        point1 = float(support5) *1.15
                                         point1 = '%.2f'%point1
-                                        point2 = float(support5) *1.24
+                                        point2 = float(support5) *1.30
                                         point2 = '%.2f'%point2
-                                        point3 = float(support5) *1.36
+                                        point3 = float(support5) *1.45
                                         point3 = '%.2f'%point3
                                         stop = '{} | {} | {}'.format(point1,point2,point3)
                                         target = '{} | {} | {}'.format(support6,support5,support4)
@@ -1188,11 +1172,11 @@ def handle_message(event):
                                     if barM > 0.00:
                                         notice = alert7
                                         start = float(support6)
-                                        point1 = float(support6) *1.12
+                                        point1 = float(support6) *1.15
                                         point1 = '%.2f'%point1
-                                        point2 = float(support6) *1.24
+                                        point2 = float(support6) *1.30
                                         point2 = '%.2f'%point2
-                                        point3 = float(support6) *1.36
+                                        point3 = float(support6) *1.45
                                         point3 = '%.2f'%point3
                                         stop = '{} | {} | {}'.format(point1,point2,point3)
                                         target = '{} | {} | {}'.format(support6,support5,support4)
@@ -1200,11 +1184,11 @@ def handle_message(event):
                                     else:
                                         notice = alert5
                                         start = float(support6) 
-                                        point1 = float(support6) *1.12
+                                        point1 = float(support6) *1.15
                                         point1 = '%.2f'%point1
-                                        point2 = float(support6) *1.24
+                                        point2 = float(support6) *1.30
                                         point2 = '%.2f'%point2
-                                        point3 = float(support6) *1.36
+                                        point3 = float(support6) *1.45
                                         point3 = '%.2f'%point3
                                         stop = '{} | {} | {}'.format(point1,point2,point3)
                                         target = '{} | {} | {}'.format(support6,support5,support4)
