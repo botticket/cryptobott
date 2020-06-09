@@ -21,13 +21,6 @@ channel_access_token = 'hkU+OYWsepq11sc+uM6bAE/ECjFb8+NUiTvjfQI1WUrXzKiUZvHU5YAv
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
-IQXGL = '1576.70'
-IQXWTI = '20.10'
-IQUSTB = '32.77'
-tfex_value = '736.00'
-set_value = '1171.51'
-#Quarter
-
 today = date.today()
 yearly = '{}-01-01'.format(today.year)
 monthly = '{}-{}-01'.format(today.year,today.month)
@@ -55,20 +48,14 @@ def linechat(text):
 
 @app.route("/callback", methods=['POST'])
 def callback():
-	# get X-Line-Signature header value
 	signature = request.headers['X-Line-Signature']
-
-	# get request body as text
 	body = request.get_data(as_text=True)
 	app.logger.info("Request body: " + body)
-	# handle webhook body
 	try:
 		handler.handle(body, signature)
 	except InvalidSignatureError:
 		abort(400)
-
 	return 'OK'
-
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -391,7 +378,7 @@ def handle_message(event):
                     pmin_value = '%.2f'%pmin_value
                     pmin_value = str(pmin_value)
 
-                    support1 = float(OpenY) * 0.90
+                    support1 = float(max_value) * 0.90
                     support1 = '%.2f'%support1
                     support1 = str(support1)
 
@@ -399,7 +386,7 @@ def handle_message(event):
                     pfibo_Q1  = '%.2f'%pfibo_Q1
                     pfibo_Q1 = str(pfibo_Q1) 
 
-                    support2 = float(OpenY) * 0.80
+                    support2 = float(max_value) * 0.80
                     support2 = '%.2f'%support2
                     support2 = str(support2)
 
@@ -407,7 +394,7 @@ def handle_message(event):
                     pfibo_Q2 = '%.2f'%pfibo_Q2
                     pfibo_Q2 = str(pfibo_Q2) 
 
-                    support3 = float(OpenY) * 0.70
+                    support3 = float(max_value) * 0.70
                     support3 = '%.2f'%support3
                     support3 = str(support3)
 
@@ -415,7 +402,7 @@ def handle_message(event):
                     pfibo_Q3  = '%.2f'%pfibo_Q3
                     pfibo_Q3 = str(pfibo_Q3) 
 
-                    support4 = float(OpenY) * 0.60
+                    support4 = float(max_value) * 0.60
                     support4 = '%.2f'%support4
                     support4 = str(support4)
 
@@ -423,7 +410,7 @@ def handle_message(event):
                     pfibo_Q4  = '%.2f'%pfibo_Q4
                     pfibo_Q4 = str(pfibo_Q4)
 
-                    support5 = float(OpenY) * 0.50
+                    support5 = float(max_value) * 0.50
                     support5 = '%.2f'%support5
                     support5 = str(support5)
 
@@ -431,7 +418,7 @@ def handle_message(event):
                     pfibo_Q5  = '%.2f'%pfibo_Q5
                     pfibo_Q5 = str(pfibo_Q5)
 
-                    support6 = float(OpenY) * 0.40
+                    support6 = float(max_value) * 0.40
                     support6 = '%.2f'%support6
                     support6 = str(support6)
 
