@@ -1,7 +1,6 @@
 import json
 import requests
 
-
 def ReplyMessage(Reply_token, TextMessage, Line_Access_Token):
     LINE_API = 'https://api.line.me/v2/bot/message/reply'
 
@@ -32,7 +31,6 @@ def ReplyMessage(Reply_token, TextMessage, Line_Access_Token):
 
     r = requests.post(LINE_API, headers=headers, data=data) 
     return 'OK'
-
 
 def PushMessage(userid, TextMessage, Line_Access_Token):
     LINE_API = 'https://api.line.me/v2/bot/message/push'
@@ -68,9 +66,6 @@ def PushMessage(userid, TextMessage, Line_Access_Token):
     r = requests.post(LINE_API, headers=headers, data=data)
     print(r) 
     return 'OK'
-
-
-
 
 def SetMessage_Object(Message_data,Quick_Reply = None):
     file_data = {"replyToken":'', "messages": []}
