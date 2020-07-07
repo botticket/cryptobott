@@ -1,1 +1,1 @@
-web: gunicorn combobot:app
+web: gunicorn ticketapp:app
