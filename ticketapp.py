@@ -75,16 +75,16 @@ def handle_message(event):
     print(request_text)
     linechat(request_text)
 
-    result_from_dialogflow = detect_intent_texts(project_id="worldstock-iardyn",
-                                        session_id=userid ,
-                                        text=text_from_user , 
-                                        language_code="th")
+    # result_from_dialogflow = detect_intent_texts(project_id="worldstock-iardyn",
+    #                                     session_id=userid ,
+    #                                     text=text_from_user , 
+    #                                     language_code="th")
     
-    action = result_from_dialogflow["action"]
-    response = result_from_dialogflow["fulfillment_messages"] #as list
+    # action = result_from_dialogflow["action"]
+    # response = result_from_dialogflow["fulfillment_messages"] #as list
 
-    print("action : " + action)
-    print("response : " + str(response))
+    # print("action : " + action)
+    # print("response : " + str(response))
 
     try:
         if 'Hello Bot' in text_from_user:    
