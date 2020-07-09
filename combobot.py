@@ -21,6 +21,13 @@ channel_access_token = 'hkU+OYWsepq11sc+uM6bAE/ECjFb8+NUiTvjfQI1WUrXzKiUZvHU5YAv
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
+IQXGL = '1576.70'
+IQXWTI = '20.10'
+IQUSTB = '32.77'
+tfex_value = '736.00'
+set_value = '1171.51'
+#Quarter
+
 today = date.today()
 yearly = '{}-01-01'.format(today.year)
 monthly = '{}-{}-01'.format(today.year,today.month)
@@ -40,20 +47,28 @@ else:
 
 def linechat(text):
     
-    ACCESS_TOKEN = "qh4YLKs18Z4RYKLvsFnLmgtVWmSpi7pY7KS112AFl7C"
+    ACCESS_TOKEN = "oK2sk4w1eidfRyOVfgIcln38TBS8JmL0PgfbbQ8t0Zv"
+
     notify = LineNotify(ACCESS_TOKEN)
+
     notify.send(text)
 
 @app.route("/callback", methods=['POST'])
 def callback():
+	# get X-Line-Signature header value
 	signature = request.headers['X-Line-Signature']
+
+	# get request body as text
 	body = request.get_data(as_text=True)
 	app.logger.info("Request body: " + body)
+	# handle webhook body
 	try:
 		handler.handle(body, signature)
 	except InvalidSignatureError:
 		abort(400)
+
 	return 'OK'
+
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -79,7 +94,15 @@ def handle_message(event):
     print("response : " + str(response))
 
     try:        
-        if 'สวัสดี' in text_from_user:    
+        if action == "Welcome_response":
+            all_text = []
+            for each in response:
+                text = TextSendMessage(text=each)
+                all_text.append(text)
+            line_bot_api.reply_message(reply_token,messages=all_text) #reply messageกลับไป
+            return 'OK'
+
+        elif 'สวัสดี' in text_from_user:    
             text_list = [
                 'สวัสดีจ้า คุณ {} '.format(disname),
                 'สวัสดีจ้า คุณ {} วันนี้จะเล่นตัวไหนดี'.format(disname),
@@ -93,6 +116,532 @@ def handle_message(event):
                     messages=[text_to_reply]
                 )
             return 'OK'
+
+        elif 'Usd' in text_from_user:        
+            from urllib.request import Request, urlopen
+            from bs4 import BeautifulSoup as soup
+
+            def thbscrapt():
+                req = Request('https://th.investing.com/currencies/usd-thb', headers={'User-Agent': 'Chrome/78.0'})
+                webopen = urlopen(req).read()
+                data = soup(webopen, 'html.parser')
+
+                thb_now = data.findAll('div',{'class':'top bold inlineblock'})
+                thb_now = thb_now[0].text
+                thb_now = thb_now.replace('\n',' ')
+                thb_now = thb_now.replace(',','')
+                thb_now = thb_now.replace(' ','')
+                thb_now = thb_now.replace('\xa0','')
+                thb_now = thb_now[0:6]
+
+                thb_chg = data.findAll('div',{'class':'top bold inlineblock'})
+                thb_chg = thb_chg[0].text
+                thb_chg = thb_chg.replace('\n',' ')
+                thb_chg = thb_chg.replace(',','')
+                thb_chg = thb_chg.replace(' ','')
+                thb_chg = thb_chg.replace('\xa0','')
+                thb_chg = thb_chg[6:12]
+
+                thb_pchg = data.findAll('div',{'class':'top bold inlineblock'})
+                thb_pchg = thb_pchg[0].text
+                thb_pchg = thb_pchg.replace('\n',' ')
+                thb_pchg = thb_pchg.replace(',','')
+                thb_pchg = thb_pchg.replace(' ','')
+                thb_pchg = thb_pchg.replace('\xa0','')
+                thb_pchg = thb_pchg[13:18]
+                
+                return[thb_now,thb_chg,thb_pchg]
+
+            def usdcheck():
+                thb = thbscrapt()
+
+                exit_long1 = float(thb[0]) * 1.015
+                exit_long1 = '%.2f'%exit_long1
+
+                exit_long2 = float(thb[0]) * 1.03
+                exit_long2 = '%.2f'%exit_long2
+
+                exit_long3 = float(thb[0]) * 1.045
+                exit_long3 = '%.2f'%exit_long3      
+
+                exit_short1 = float(thb[0]) * 0.985
+                exit_short1 = '%.2f'%exit_short1
+
+                exit_short2 = float(thb[0]) * 0.97
+                exit_short2 = '%.2f'%exit_short2
+
+                exit_short3 = float(thb[0]) * 0.955
+                exit_short3 = '%.2f'%exit_short3
+
+                LongY = float(IQUSTB) * 1.005
+                LongY = '%.2f'%LongY
+
+                stop_longY = float(IQUSTB) * 0.995
+                stop_longY = '%.2f'%stop_longY     
+
+                shortY = float(IQUSTB) * 0.995
+                shortY = '%.2f'%shortY
+
+                stop_shortY = float(IQUSTB) * 1.005
+                stop_shortY = '%.2f'%stop_shortY
+
+                price_now = float(thb[0])
+                price_now = '%.2f'%price_now
+                price_now = str(price_now)
+                
+                barM = float(price_now) - float(IQUSTB)
+                chgp = str(thb[2])
+
+                text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
+                text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
+
+                alert1 = 'Long'
+                alert2 = 'Short'
+
+                text = 'IQXUSTB'
+                change = str(thb[1]) 
+
+                if barM >= 0:
+                    notice = alert1
+                    start = IQUSTB
+                    buy = LongY
+                    stop = stop_longY
+                    target = text1
+                    number = '1'
+                else:
+                    notice = alert2
+                    start = IQUSTB
+                    buy = shortY
+                    stop = stop_shortY
+                    target = text2 
+                    number = '2'
+                
+                word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
+                result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
+                print(word_to_reply)
+                print(number)
+
+                bubble = flex_usdcheck(text,price_now,change,chgp,notice,start,buy,stop,target)
+                flex_to_reply = SetMessage_Object(bubble)
+                reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                return 'OK'
+            usdcheck()
+
+        elif 'Xgl' in text_from_user:
+            from urllib.request import Request, urlopen
+            from bs4 import BeautifulSoup as soup 
+
+            def goldscrapt():
+                req = Request('https://th.investing.com/currencies/xau-usd', headers={'User-Agent': 'Chrome/78.0'})
+                webopen = urlopen(req).read()
+                data = soup(webopen, 'html.parser')
+
+                gold_now = data.findAll('div',{'class':'top bold inlineblock'})
+                gold_now = gold_now[0].text
+                gold_now = gold_now.replace('\n',' ')
+                gold_now = gold_now.replace(',','')
+                gold_now = gold_now[1:]
+                gold_now = gold_now[0:8]
+
+                goldchange = data.findAll('div',{'class':'top bold inlineblock'})
+                goldchange = goldchange[0].text
+                goldchange = goldchange.replace('\n',' ')
+                goldchange = goldchange.replace(',','')
+                goldchange = goldchange[9:]
+                goldchange = goldchange[0:5]
+
+                chgp = data.findAll('div',{'class':'top bold inlineblock'})
+                chgp = chgp[0].text
+                chgp = chgp.replace('\n',' ')
+                chgp = chgp.replace(',','')
+                chgp = chgp[18:]
+
+                return[gold_now,goldchange,chgp]
+
+            def goldcheck():
+                gg = goldscrapt()
+
+                exit_long1 = float(gg[0]) * 1.015
+                exit_long1 = '%.2f'%exit_long1
+
+                exit_long2 = float(gg[0]) * 1.03
+                exit_long2 = '%.2f'%exit_long2
+
+                exit_long3 = float(gg[0]) * 1.045
+                exit_long3 = '%.2f'%exit_long3      
+
+                exit_short1 = float(gg[0]) * 0.985
+                exit_short1 = '%.2f'%exit_short1
+
+                exit_short2 = float(gg[0]) * 0.97
+                exit_short2 = '%.2f'%exit_short2
+
+                exit_short3 = float(gg[0]) * 0.955
+                exit_short3 = '%.2f'%exit_short3
+
+                LongY = float(IQXGL) * 1.005
+                LongY = '%.2f'%LongY
+
+                stop_longY = float(IQXGL) * 0.995
+                stop_longY = '%.2f'%stop_longY     
+
+                shortY = float(IQXGL) * 0.995
+                shortY = '%.2f'%shortY
+
+                stop_shortY = float(IQXGL) * 1.005
+                stop_shortY = '%.2f'%stop_shortY
+
+                price_now = float(gg[0])
+                price_now = '%.2f'%price_now
+                price_now = str(price_now)
+                
+                barM = float(price_now) - float(IQXGL)
+                chgp = str(gg[2])
+
+                text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
+                text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
+
+                alert1 = 'Long'
+                alert2 = 'Short'
+
+                text = 'IQXGL'
+                change = str(gg[1]) 
+
+                if barM >= 0:
+                    notice = alert1
+                    start = IQXGL
+                    buy = LongY
+                    stop = stop_longY
+                    target = text1
+                    number = '1'
+                else:
+                    notice = alert2
+                    start = IQXGL
+                    buy = shortY
+                    stop = stop_shortY
+                    target = text2 
+                    number = '2'
+                
+                word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
+                result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
+                bubble = flex_goldcheck(text,price_now,change,chgp,notice,start,buy,stop,target)
+                
+                flex_to_reply = SetMessage_Object(bubble)
+                reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                return 'OK'
+            goldcheck()
+
+        elif 'Wti' in text_from_user:
+            from urllib.request import Request, urlopen
+            from bs4 import BeautifulSoup as soup 
+
+            def wtiscrapt():
+                req = Request('https://th.investing.com/commodities/crude-oil', headers={'User-Agent': 'Chrome/78.0'})
+                webopen = urlopen(req).read()
+                data = soup(webopen, 'html.parser')
+
+                wti_now = data.findAll('div',{'class':'top bold inlineblock'})
+                wti_now = wti_now[0].text
+                wti_now = wti_now.replace('\n',' ')
+                wti_now = wti_now.replace(',','')
+                wti_now = wti_now[1:]
+                wti_now = wti_now[0:6]
+
+                wtichange = data.findAll('div',{'class':'top bold inlineblock'})
+                wtichange = wtichange[0].text
+                wtichange = wtichange.replace('\n',' ')
+                wtichange = wtichange.replace(',','')
+                wtichange = wtichange[1:]
+                wtichange = wtichange[6:11]
+
+                chgp = data.findAll('div',{'class':'top bold inlineblock'})
+                chgp = chgp[0].text
+                chgp = chgp.replace('\n',' ')
+                chgp = chgp.replace(',','')
+                chgp = chgp[16:]
+                return[wti_now,wtichange,chgp]
+
+            def wticheck():
+                wti = wtiscrapt()
+
+                exit_long1 = float(wti[0]) * 1.04
+                exit_long1 = '%.2f'%exit_long1
+
+                exit_long2 = float(wti[0]) * 1.08
+                exit_long2 = '%.2f'%exit_long2
+
+                exit_long3 = float(wti[0]) * 1.12
+                exit_long3 = '%.2f'%exit_long3      
+
+                exit_short1 = float(wti[0]) * 0.96
+                exit_short1 = '%.2f'%exit_short1
+
+                exit_short2 = float(wti[0]) * 0.92
+                exit_short2 = '%.2f'%exit_short2
+
+                exit_short3 = float(wti[0]) * 0.88
+                exit_short3 = '%.2f'%exit_short3
+
+                LongY = float(IQXWTI) * 1.01
+                LongY = '%.2f'%LongY
+
+                stop_longY = float(IQXWTI) * 0.985
+                stop_longY = '%.2f'%stop_longY     
+
+                shortY = float(IQXWTI) * 0.985
+                shortY = '%.2f'%shortY
+
+                stop_shortY = float(IQXWTI) * 1.01
+                stop_shortY = '%.2f'%stop_shortY
+
+                price_now = float(wti[0])
+                price_now = '%.2f'%price_now
+                price_now = str(price_now)
+                
+                barQ = float(price_now) - float(IQXWTI)
+                chgp = str(wti[2])
+
+                text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
+                text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
+
+                alert1 = 'Long'
+                alert2 = 'Short'
+
+                text = 'IQWTI'
+                change = str(wti[1]) 
+
+                if barQ >= 0:
+                    notice = alert1
+                    start = IQXWTI
+                    buy = LongY
+                    stop = stop_longY
+                    target = text1
+                    number = '1'
+                else:
+                    notice = alert2
+                    start = IQXWTI
+                    buy = shortY
+                    stop = stop_shortY
+                    target = text2 
+                    number = '2'
+                
+                word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
+                result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
+                bubble = flex_wticheck(text,price_now,change,chgp,notice,start,buy,stop,target)
+                
+                flex_to_reply = SetMessage_Object(bubble)
+                reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                return 'OK'
+            wticheck()
+
+        elif 'Tfex' in text_from_user:
+            from urllib.request import Request, urlopen
+            from bs4 import BeautifulSoup as soup 
+
+            def tfexupdate():
+
+                req = Request('https://www.tfex.co.th/tfex/dailySeriesQuotation.html?locale=th_TH&symbol={}'.format(tfex_code), headers={'User-Agent': 'Chrome/78.0'})
+                webopen = urlopen(req).read()
+                data = soup(webopen, 'html.parser')
+                main = data.findAll('span',{'class':'h2'})
+                
+                tx = main[0].text
+                tx = tx.replace('\n','')
+                tx = tx.replace('\r','')
+                tx = tx.replace(' ','')
+                tx = tx.replace(',','')
+
+                sub = data.findAll('span',{'class':'h3'})
+                ux = sub[0].text
+                ux = ux.replace('\n','')
+                ux = ux.replace('\r','')
+                ux = ux.replace(' ','')
+
+                cx = sub[1].text
+                cx = cx.replace('\n','')
+                cx = cx.replace('\r','')
+                cx = cx.replace(' ','')
+                cx = cx.replace(')','')
+                cx = cx.replace('(','')
+                return[tx,ux,cx]
+
+            def tfexcheck():
+                tff = tfexupdate()
+
+                exit_long1 = float(tff[0]) * 1.04
+                exit_long1 = '%.2f'%exit_long1
+
+                exit_long2 = float(tff[0]) * 1.08
+                exit_long2 = '%.2f'%exit_long2
+
+                exit_long3 = float(tff[0]) * 1.12
+                exit_long3 = '%.2f'%exit_long3
+
+                exit_short1 = float(tff[0]) * 0.96
+                exit_short1 = '%.2f'%exit_short1
+
+                exit_short2 = float(tff[0]) * 0.92
+                exit_short2 = '%.2f'%exit_short2
+
+                exit_short3 = float(tff[0]) * 0.88
+                exit_short3 = '%.2f'%exit_short3
+
+                LongY = float(tfex_value) * 1.005
+                LongY = '%.2f'%LongY
+
+                stop_longY = float(tfex_value) * 0.995
+                stop_longY = '%.2f'%stop_longY     
+
+                shortY = float(tfex_value) * 0.995
+                shortY = '%.2f'%shortY
+
+                stop_shortY = float(tfex_value) * 1.005
+                stop_shortY = '%.2f'%stop_shortY
+
+                price_now = float(tff[0])
+                price_now = '%.2f'%price_now
+                price_now = str(price_now)
+                
+                barM = float(price_now) - float(tfex_value)
+                chgp = str(tff[2])
+
+                text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
+                text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
+
+                alert1 = 'Long'
+                alert2 = 'Short'
+
+                text = '{}'.format(tfex_code)
+                change = str(tff[1]) 
+
+                if barM >= 0:
+                    notice = alert1
+                    start = tfex_value
+                    buy = LongY
+                    stop = stop_longY
+                    target = text1
+                    number = '1'
+                else:
+                    notice = alert2
+                    start = tfex_value
+                    buy = shortY
+                    stop = stop_shortY
+                    target = text2 
+                    number = '2'
+                
+                word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
+                result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
+                bubble = flex_tfexcheck(text,price_now,change,chgp,notice,start,buy,stop,target)
+                
+                flex_to_reply = SetMessage_Object(bubble)
+                reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                return 'OK'
+            tfexcheck()
+
+        elif 'Set' in text_from_user:
+            from urllib.request import Request, urlopen
+            from bs4 import BeautifulSoup as soup 
+
+            def setnow():
+                req = Request('https://www.settrade.com/C13_MarketSummary.jsp?detail=SET', headers={'User-Agent': 'Chrome/78.0'})
+                webopen = urlopen(req).read()
+                data = soup(webopen, 'html.parser')
+                currency = data.findAll('div',{'class':'col-xs-12'})
+
+                set_now = currency[0].text
+                set_now = set_now.replace('\n',' ')
+                set_now = set_now.replace('\r',' ')
+                set_now = set_now.replace('\n',' ')
+                set_now = set_now[3316:]
+                set_now = set_now[0:9]
+                set_now = set_now.replace(',','')
+
+                chg = currency[0].text
+                chg = chg.replace('\n',' ')
+                chg = chg.replace('\r',' ')
+                chg = chg.replace('\n',' ')
+                chg = chg[3325:]
+                chg = chg[0:7]
+
+                chgp = currency[0].text
+                chgp = chgp.replace('\n',' ')
+                chgp = chgp.replace('\r',' ')
+                chgp = chgp.replace('\n',' ')
+                chgp = chgp[3370:]
+                chgp = chgp[0:5]
+                return[set_now,chg,chgp]
+
+            def setcheck():
+                st = setnow()
+                exit_long1 = float(st[0]) * 1.04
+                exit_long1 = '%.2f'%exit_long1
+
+                exit_long2 = float(st[0]) * 1.08
+                exit_long2 = '%.2f'%exit_long2
+
+                exit_long3 = float(st[0]) * 1.12
+                exit_long3 = '%.2f'%exit_long3
+
+                exit_short1 = float(st[0]) * 0.96
+                exit_short1 = '%.2f'%exit_short1
+
+                exit_short2 = float(st[0]) * 0.92
+                exit_short2 = '%.2f'%exit_short2
+
+                exit_short3 = float(st[0]) * 0.88
+                exit_short3 = '%.2f'%exit_short3
+
+                LongY = float(set_value) * 1.005
+                LongY = '%.2f'%LongY
+
+                stop_longY = float(set_value) * 0.995
+                stop_longY = '%.2f'%stop_longY     
+
+                shortY = float(set_value) * 0.995
+                shortY = '%.2f'%shortY
+
+                stop_shortY = float(set_value) * 1.005
+                stop_shortY = '%.2f'%stop_shortY
+
+                price_now = float(st[0])
+                price_now = '%.2f'%price_now
+                price_now = str(price_now)
+                
+                barQ = float(price_now) - float(set_value)
+                chgp = str(st[2])
+
+                text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
+                text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
+
+                alert1 = 'Long'
+                alert2 = 'Short'
+
+                text = text_from_user.upper()
+                change = str(st[1]) 
+
+                if barQ >= 0:
+                    notice = alert1
+                    start = set_value
+                    buy = LongY
+                    stop = stop_longY
+                    target = text1
+                    number = '1'
+                else:
+                    notice = alert2
+                    start = set_value
+                    buy = shortY
+                    stop = stop_shortY
+                    target = text2 
+                    number = '2'
+                
+                word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
+                result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
+                bubble = flex_setcheck(text,price_now,change,chgp,notice,start,buy,stop,target)
+                
+                flex_to_reply = SetMessage_Object(bubble)
+                reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                return 'OK'
+            setcheck()
 
         elif action == "crypto_response":
             from urllib.request import Request, urlopen
@@ -160,7 +709,7 @@ def handle_message(event):
                     exit_long2 = '%.2f'%exit_long2
                     exit_long2 = str(exit_long2)
 
-                    exit_long3 = float(OpenD) * 1.15
+                    exit_long3 = float(OpenD) * 1.12
                     exit_long3 = '%.2f'%exit_long3
                     exit_long3 = str(exit_long3)
 
@@ -220,6 +769,7 @@ def handle_message(event):
                     word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
                     result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
                     print(result)
+                    print(number)
                     bubble = flex_crypto(text,price_now,change,chgp,notice,start,buy,stop,target)
                     
                     flex_to_reply = SetMessage_Object(bubble)
@@ -332,17 +882,33 @@ def handle_message(event):
                     request_val  = '{:,.0f}'.format(request_val)
                     request_val = str(request_val)
                     
-                    exit1 = float(OpenQ) * 1.20
+                    exit1 = float(OpenQ) * 1.12
                     exit1 = '%.2f'%exit1
                     exit1 = str(exit1)
 
-                    exit2 = float(OpenQ) * 1.40
+                    exit2 = float(OpenQ) * 1.24
                     exit2 = '%.2f'%exit2
                     exit2 = str(exit2)
 
-                    exit3 = float(OpenQ) * 1.60
+                    exit3 = float(OpenQ) * 1.36
                     exit3 = '%.2f'%exit3
                     exit3 = str(exit3)
+
+                    buyQ = float(OpenQ) * 1.02
+                    buyQ = '%.2f'%buyQ
+                    buyQ = str(buyQ) 
+
+                    stopQ = float(OpenQ) * 0.985
+                    stopQ = '%.2f'%stopQ
+                    stopQ = str(stopQ) 
+
+                    buyY = float(OpenY) * 1.02
+                    buyY = '%.2f'%buyY
+                    buyY = str(buyY) 
+
+                    stopY = float(OpenY) * 0.985
+                    stopY = '%.2f'%stopY
+                    stopY = str(stopY) 
 
                     max_value = dfY.nlargest(1, columns = 'High')
                     max_value = max_value['High'].iloc[0]
@@ -493,43 +1059,172 @@ def handle_message(event):
                                 avg = re_avg
                         else:
                             if barQ >= 0.00:
-                                if barM > 0.00:
-                                    if 0.00 < float(barQ) < 3.00:
+                                if float(Close) >= float(support1):
+                                    if barM > 0.00:
                                         notice = alert7
-                                        start = OpenQ
-                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
-                                        target = text1
+                                        start = float(support1)
+                                        point1 = float(support1) *1.12
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support1) *1.24
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support1) *1.36
+                                        point3 = '%.2f'%point3
+                                        stop = '{} | {} | {}'.format(point1,point2,point3)
+                                        target = '{} | {} | {}'.format(support3,support2,support1)
                                         avg = re_avg
                                     else:
-                                        notice = alert2
-                                        start = OpenQ
-                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
-                                        target = text1
-                                        avg = re_avg
-                                else:
-                                    if 0.00 < float(barQ) < 3.00:
                                         notice = alert5
-                                        start = OpenQ
-                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
-                                        target = text1
+                                        start = float(support1)
+                                        point1 = float(support1) *1.12
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support1) *1.24
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support1) *1.36
+                                        point3 = '%.2f'%point3
+                                        stop = '{} | {} | {}'.format(point1,point2,point3)
+                                        target = '{} | {} | {}'.format(support3,support2,support1)
+                                        avg = re_avg
+                                elif float(Close) >= float(support2):
+                                    if barM > 0.00:
+                                        notice = alert7
+                                        start = float(support2)
+                                        point1 = float(support2) *1.12
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support2) *1.24
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support2) *1.36
+                                        point3 = '%.2f'%point3
+                                        stop = '{} | {} | {}'.format(point1,point2,point3)
+                                        target = '{} | {} | {}'.format(support4,support3,support2)
+                                        avg = re_avg   
+                                    else:
+                                        notice = alert5
+                                        start = float(support2)
+                                        point1 = float(support2) *1.12
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support2) *1.24
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support2) *1.36
+                                        point3 = '%.2f'%point3
+                                        stop = '{} | {} | {}'.format(point1,point2,point3)
+                                        target = '{} | {} | {}'.format(support4,support3,support2)
+                                        avg = re_avg
+                                elif float(Close) >= float(support3):
+                                    if barM > 0.00:
+                                        notice = alert7
+                                        start = float(support3)
+                                        point1 = float(support3) *1.12
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support3) *1.24
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support3) *1.36
+                                        point3 = '%.2f'%point3
+                                        stop = '{} | {} | {}'.format(point1,point2,point3)
+                                        target = '{} | {} | {}'.format(support5,support4,support3)
                                         avg = re_avg
                                     else:
-                                        notice = alert10
-                                        start = OpenQ
-                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
-                                        target = text1
+                                        notice = alert5
+                                        start = float(support3)
+                                        point1 = float(support3) *1.12
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support3) *1.24
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support3) *1.36
+                                        point3 = '%.2f'%point3
+                                        stop = '{} | {} | {}'.format(point1,point2,point3)
+                                        target = '{} | {} | {}'.format(support5,support4,support3)
+                                        avg = re_avg  
+                                elif float(Close) >= float(support4):
+                                    if barM > 0.00:
+                                        notice = alert7
+                                        start = float(support4)
+                                        point1 = float(support4) *1.12
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support4) *1.24
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support4) *1.36
+                                        point3 = '%.2f'%point3
+                                        stop = '{} | {} | {}'.format(point1,point2,point3)
+                                        target = '{} | {} | {}'.format(support6,support5,support4)
                                         avg = re_avg
+                                    else:
+                                        notice = alert5
+                                        start = float(support4) 
+                                        point1 = float(support4) *1.12
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support4) *1.24
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support4) *1.36
+                                        point3 = '%.2f'%point3
+                                        stop = '{} | {} | {}'.format(point1,point2,point3)
+                                        target = '{} | {} | {}'.format(support6,support5,support4)
+                                        avg = re_avg 
+                                elif float(Close) >= float(support5):
+                                    if barM > 0.00:
+                                        notice = alert7
+                                        start = float(support5)
+                                        point1 = float(support5) *1.12
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support5) *1.24
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support5) *1.36
+                                        point3 = '%.2f'%point3
+                                        stop = '{} | {} | {}'.format(point1,point2,point3)
+                                        target = '{} | {} | {}'.format(support6,support5,support4)
+                                        avg = re_avg
+                                    else:
+                                        notice = alert5
+                                        start = float(support5) 
+                                        point1 = float(support5) *1.12
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support5) *1.24
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support5) *1.36
+                                        point3 = '%.2f'%point3
+                                        stop = '{} | {} | {}'.format(point1,point2,point3)
+                                        target = '{} | {} | {}'.format(support6,support5,support4)
+                                        avg = re_avg 
+                                elif float(Close) >= float(support6):
+                                    if barM > 0.00:
+                                        notice = alert7
+                                        start = float(support6)
+                                        point1 = float(support6) *1.12
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support6) *1.24
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support6) *1.36
+                                        point3 = '%.2f'%point3
+                                        stop = '{} | {} | {}'.format(point1,point2,point3)
+                                        target = '{} | {} | {}'.format(support6,support5,support4)
+                                        avg = re_avg
+                                    else:
+                                        notice = alert5
+                                        start = float(support6) 
+                                        point1 = float(support6) *1.12
+                                        point1 = '%.2f'%point1
+                                        point2 = float(support6) *1.24
+                                        point2 = '%.2f'%point2
+                                        point3 = float(support6) *1.36
+                                        point3 = '%.2f'%point3
+                                        stop = '{} | {} | {}'.format(point1,point2,point3)
+                                        target = '{} | {} | {}'.format(support6,support5,support4)
+                                        avg = re_avg 
+                                else:
+                                    notice = alert4
+                                    start = OpenQ
+                                    stop = 'H {} | L {}'.format(max_Qvalue,min_value)
+                                    target = text1
+                                    avg = re_avg
                             else:
                                 notice = alert4
                                 start = OpenQ
                                 stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                 target = text1
                                 avg = re_avg
-
                     else:
                         notice = alert9
                         start = OpenQ
-                        stop = 'H {} ~ L {}'.format(max_Qvalue,min_value)
+                        stop = 'Hq {} ~ Ly {}'.format(max_Qvalue,min_value)
                         target = text1
                         avg = re_avg 
 
