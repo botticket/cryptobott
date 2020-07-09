@@ -220,7 +220,6 @@ def handle_message(event):
                     word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
                     result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
                     print(result)
-                    print(number)
                     bubble = flex_crypto(text,price_now,change,chgp,notice,start,buy,stop,target)
                     
                     flex_to_reply = SetMessage_Object(bubble)
@@ -494,96 +493,39 @@ def handle_message(event):
                                 avg = re_avg
                         else:
                             if barQ >= 0.00:
-                                if float(Close) >= float(support1):
-                                    if barM > 0.00:
+                                if barM > 0.00:
+                                    if 0.00 < float(barQ) < 3.00:
                                         notice = alert7
-                                        start = float(support1)
-                                        stop = text1
-                                        target = '{} | {} | {}'.format(support3,support2,support1)
+                                        start = OpenQ
+                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
+                                        target = text1
                                         avg = re_avg
                                     else:
-                                        notice = alert5
-                                        start = float(support1)
-                                        stop = text1
-                                        target = '{} | {} | {}'.format(support3,support2,support1)
+                                        notice = alert2
+                                        start = OpenQ
+                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
+                                        target = text1
                                         avg = re_avg
-                                elif float(Close) >= float(support2):
-                                    if barM > 0.00:
-                                        notice = alert7
-                                        start = float(support2)
-                                        stop = text1
-                                        target = '{} | {} | {}'.format(support4,support3,support2)
-                                        avg = re_avg   
-                                    else:
-                                        notice = alert5
-                                        start = float(support2)
-                                        stop = text1
-                                        target = '{} | {} | {}'.format(support4,support3,support2)
-                                        avg = re_avg
-                                elif float(Close) >= float(support3):
-                                    if barM > 0.00:
-                                        notice = alert7
-                                        start = float(support3)
-                                        stop = text1
-                                        target = '{} | {} | {}'.format(support5,support4,support3)
-                                        avg = re_avg
-                                    else:
-                                        notice = alert5
-                                        start = float(support3)
-                                        stop = text1
-                                        target = '{} | {} | {}'.format(support5,support4,support3)
-                                        avg = re_avg  
-                                elif float(Close) >= float(support4):
-                                    if barM > 0.00:
-                                        notice = alert7
-                                        start = float(support4)
-                                        stop = text1
-                                        target = '{} | {} | {}'.format(support6,support5,support4)
-                                        avg = re_avg
-                                    else:
-                                        notice = alert5
-                                        start = float(support4) 
-                                        stop = text1
-                                        target = '{} | {} | {}'.format(support6,support5,support4)
-                                        avg = re_avg 
-                                elif float(Close) >= float(support5):
-                                    if barM > 0.00:
-                                        notice = alert7
-                                        start = float(support5)
-                                        stop = text1
-                                        target = '{} | {} | {}'.format(support6,support5,support4)
-                                        avg = re_avg
-                                    else:
-                                        notice = alert5
-                                        start = float(support5) 
-                                        stop = text1
-                                        target = '{} | {} | {}'.format(support6,support5,support4)
-                                        avg = re_avg 
-                                elif float(Close) >= float(support6):
-                                    if barM > 0.00:
-                                        notice = alert7
-                                        start = float(support6)
-                                        stop = text1
-                                        target = '{} | {} | {}'.format(support6,support5,support4)
-                                        avg = re_avg
-                                    else:
-                                        notice = alert5
-                                        start = float(support6) 
-                                        stop = text1
-                                        target = '{} | {} | {}'.format(support6,support5,support4)
-                                        avg = re_avg 
                                 else:
-                                    notice = alert4
-                                    start = OpenQ
-                                    stop = 'H {} | L {}'.format(max_Qvalue,min_value)
-                                    target = text1
-                                    avg = re_avg
+                                    if 0.00 < float(barQ) < 3.00:
+                                        notice = alert5
+                                        start = OpenQ
+                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
+                                        target = text1
+                                        avg = re_avg
+                                    else:
+                                        notice = alert10
+                                        start = OpenQ
+                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
+                                        target = text1
+                                        avg = re_avg
                             else:
                                 notice = alert4
                                 start = OpenQ
                                 stop = 'H {} | L {}'.format(max_Qvalue,min_value)
                                 target = text1
                                 avg = re_avg
+
                     else:
                         notice = alert9
                         start = OpenQ
