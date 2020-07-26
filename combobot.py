@@ -94,15 +94,7 @@ def handle_message(event):
     print("response : " + str(response))
 
     try:        
-        if action == "Welcome_response":
-            all_text = []
-            for each in response:
-                text = TextSendMessage(text=each)
-                all_text.append(text)
-            line_bot_api.reply_message(reply_token,messages=all_text) #reply messageกลับไป
-            return 'OK'
-
-        elif 'สวัสดี' in text_from_user:    
+        if 'สวัสดี' in text_from_user:    
             text_list = [
                 'สวัสดีจ้า คุณ {} '.format(disname),
                 'สวัสดีจ้า คุณ {} วันนี้จะเล่นตัวไหนดี'.format(disname),
@@ -1008,7 +1000,7 @@ def handle_message(event):
                     price_now = r[1] 
                     change = r[2] 
                     chgp = str(ChgQ)
-                    re_avg = 'Q {} ({}%) | M {}'.format(OpenQ,p_OpenQ,OpenM) + '\n' + 'Y {} ({}%)'.format(OpenY,barY)+ '\n' + 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                    re_avg = 'Q {} ({}%) | M {}'.format(OpenQ,p_OpenQ,OpenM) + '\n' + 'Y {} ({}%)'.format(OpenY,barY) 
 
                     if float(value) > 7500000:
                         if  barY > 0.00:
@@ -1017,214 +1009,64 @@ def handle_message(event):
                                     if 0.00 < float(barY) < 3.00:
                                         notice = alert3
                                         start = OpenY
-                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                         target = text1
                                         avg = re_avg
                                     elif 0.00 < float(barQ) < 3.00:
                                         notice = alert7
                                         start = OpenQ
-                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                         target = text1
                                         avg = re_avg
                                     else:
                                         notice = alert2
                                         start = OpenQ
-                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                         target = text1
                                         avg = re_avg
                                 else:
-                                    if 0.00 < float(barY) < 3.00:
-                                        notice = alert5
-                                        start = OpenY
-                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
-                                        target = text1
-                                        avg = re_avg
-                                    elif 0.00 < float(barQ) < 3.00:
-                                        notice = alert5
-                                        start = OpenQ
-                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
-                                        target = text1
-                                        avg = re_avg
-                                    else:
-                                        notice = alert10
-                                        start = OpenQ
-                                        stop = 'H {} | L {}'.format(max_Qvalue,min_value)
-                                        target = text1
-                                        avg = re_avg
-                            else:
-                                notice = alert4
-                                start = OpenQ
-                                stop = 'H {} | L {}'.format(max_Qvalue,min_value)
-                                target = text1
-                                avg = re_avg
-                        else:
-                            if barQ >= 0.00:
-                                if float(Close) >= float(support1):
-                                    if barM > 0.00:
-                                        notice = alert7
-                                        start = float(support1)
-                                        point1 = float(support1) *1.12
-                                        point1 = '%.2f'%point1
-                                        point2 = float(support1) *1.24
-                                        point2 = '%.2f'%point2
-                                        point3 = float(support1) *1.36
-                                        point3 = '%.2f'%point3
-                                        stop = '{} | {} | {}'.format(point1,point2,point3)
-                                        target = '{} | {} | {}'.format(support3,support2,support1)
-                                        avg = re_avg
-                                    else:
-                                        notice = alert5
-                                        start = float(support1)
-                                        point1 = float(support1) *1.12
-                                        point1 = '%.2f'%point1
-                                        point2 = float(support1) *1.24
-                                        point2 = '%.2f'%point2
-                                        point3 = float(support1) *1.36
-                                        point3 = '%.2f'%point3
-                                        stop = '{} | {} | {}'.format(point1,point2,point3)
-                                        target = '{} | {} | {}'.format(support3,support2,support1)
-                                        avg = re_avg
-                                elif float(Close) >= float(support2):
-                                    if barM > 0.00:
-                                        notice = alert7
-                                        start = float(support2)
-                                        point1 = float(support2) *1.12
-                                        point1 = '%.2f'%point1
-                                        point2 = float(support2) *1.24
-                                        point2 = '%.2f'%point2
-                                        point3 = float(support2) *1.36
-                                        point3 = '%.2f'%point3
-                                        stop = '{} | {} | {}'.format(point1,point2,point3)
-                                        target = '{} | {} | {}'.format(support4,support3,support2)
-                                        avg = re_avg   
-                                    else:
-                                        notice = alert5
-                                        start = float(support2)
-                                        point1 = float(support2) *1.12
-                                        point1 = '%.2f'%point1
-                                        point2 = float(support2) *1.24
-                                        point2 = '%.2f'%point2
-                                        point3 = float(support2) *1.36
-                                        point3 = '%.2f'%point3
-                                        stop = '{} | {} | {}'.format(point1,point2,point3)
-                                        target = '{} | {} | {}'.format(support4,support3,support2)
-                                        avg = re_avg
-                                elif float(Close) >= float(support3):
-                                    if barM > 0.00:
-                                        notice = alert7
-                                        start = float(support3)
-                                        point1 = float(support3) *1.12
-                                        point1 = '%.2f'%point1
-                                        point2 = float(support3) *1.24
-                                        point2 = '%.2f'%point2
-                                        point3 = float(support3) *1.36
-                                        point3 = '%.2f'%point3
-                                        stop = '{} | {} | {}'.format(point1,point2,point3)
-                                        target = '{} | {} | {}'.format(support5,support4,support3)
-                                        avg = re_avg
-                                    else:
-                                        notice = alert5
-                                        start = float(support3)
-                                        point1 = float(support3) *1.12
-                                        point1 = '%.2f'%point1
-                                        point2 = float(support3) *1.24
-                                        point2 = '%.2f'%point2
-                                        point3 = float(support3) *1.36
-                                        point3 = '%.2f'%point3
-                                        stop = '{} | {} | {}'.format(point1,point2,point3)
-                                        target = '{} | {} | {}'.format(support5,support4,support3)
-                                        avg = re_avg  
-                                elif float(Close) >= float(support4):
-                                    if barM > 0.00:
-                                        notice = alert7
-                                        start = float(support4)
-                                        point1 = float(support4) *1.12
-                                        point1 = '%.2f'%point1
-                                        point2 = float(support4) *1.24
-                                        point2 = '%.2f'%point2
-                                        point3 = float(support4) *1.36
-                                        point3 = '%.2f'%point3
-                                        stop = '{} | {} | {}'.format(point1,point2,point3)
-                                        target = '{} | {} | {}'.format(support6,support5,support4)
-                                        avg = re_avg
-                                    else:
-                                        notice = alert5
-                                        start = float(support4) 
-                                        point1 = float(support4) *1.12
-                                        point1 = '%.2f'%point1
-                                        point2 = float(support4) *1.24
-                                        point2 = '%.2f'%point2
-                                        point3 = float(support4) *1.36
-                                        point3 = '%.2f'%point3
-                                        stop = '{} | {} | {}'.format(point1,point2,point3)
-                                        target = '{} | {} | {}'.format(support6,support5,support4)
-                                        avg = re_avg 
-                                elif float(Close) >= float(support5):
-                                    if barM > 0.00:
-                                        notice = alert7
-                                        start = float(support5)
-                                        point1 = float(support5) *1.12
-                                        point1 = '%.2f'%point1
-                                        point2 = float(support5) *1.24
-                                        point2 = '%.2f'%point2
-                                        point3 = float(support5) *1.36
-                                        point3 = '%.2f'%point3
-                                        stop = '{} | {} | {}'.format(point1,point2,point3)
-                                        target = '{} | {} | {}'.format(support6,support5,support4)
-                                        avg = re_avg
-                                    else:
-                                        notice = alert5
-                                        start = float(support5) 
-                                        point1 = float(support5) *1.12
-                                        point1 = '%.2f'%point1
-                                        point2 = float(support5) *1.24
-                                        point2 = '%.2f'%point2
-                                        point3 = float(support5) *1.36
-                                        point3 = '%.2f'%point3
-                                        stop = '{} | {} | {}'.format(point1,point2,point3)
-                                        target = '{} | {} | {}'.format(support6,support5,support4)
-                                        avg = re_avg 
-                                elif float(Close) >= float(support6):
-                                    if barM > 0.00:
-                                        notice = alert7
-                                        start = float(support6)
-                                        point1 = float(support6) *1.12
-                                        point1 = '%.2f'%point1
-                                        point2 = float(support6) *1.24
-                                        point2 = '%.2f'%point2
-                                        point3 = float(support6) *1.36
-                                        point3 = '%.2f'%point3
-                                        stop = '{} | {} | {}'.format(point1,point2,point3)
-                                        target = '{} | {} | {}'.format(support6,support5,support4)
-                                        avg = re_avg
-                                    else:
-                                        notice = alert5
-                                        start = float(support6) 
-                                        point1 = float(support6) *1.12
-                                        point1 = '%.2f'%point1
-                                        point2 = float(support6) *1.24
-                                        point2 = '%.2f'%point2
-                                        point3 = float(support6) *1.36
-                                        point3 = '%.2f'%point3
-                                        stop = '{} | {} | {}'.format(point1,point2,point3)
-                                        target = '{} | {} | {}'.format(support6,support5,support4)
-                                        avg = re_avg 
-                                else:
-                                    notice = alert4
+                                    notice = alert10
                                     start = OpenQ
-                                    stop = 'H {} | L {}'.format(max_Qvalue,min_value)
+                                    stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                     target = text1
                                     avg = re_avg
                             else:
                                 notice = alert4
                                 start = OpenQ
-                                stop = 'H {} | L {}'.format(max_Qvalue,min_value)
+                                stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                target = text1
+                                avg = re_avg
+                        else:
+                            if barQ >= 0.00:
+                                if barM > 0.00:
+                                    if 0.00 < float(barQ) < 3.00:
+                                        notice = alert7
+                                        start = OpenQ
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                        target = text1
+                                        avg = re_avg
+                                    else:
+                                        notice = alert2
+                                        start = OpenQ
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                        target = text1
+                                        avg = re_avg
+                                else:
+                                    notice = alert10
+                                    start = OpenQ
+                                    stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                    target = text1
+                                    avg = re_avg
+                            else:
+                                notice = alert4
+                                start = OpenQ
+                                stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                 target = text1
                                 avg = re_avg
                     else:
                         notice = alert9
                         start = OpenQ
-                        stop = 'Hq {} ~ Ly {}'.format(max_Qvalue,min_value)
+                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                         target = text1
                         avg = re_avg 
 
