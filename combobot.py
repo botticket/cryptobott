@@ -1076,7 +1076,7 @@ def handle_message(event):
                     price_now = r[1] 
                     change = r[2] 
                     chgp = str(ChgQ)
-                    re_avg = send_url
+                    re_avg = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
 
                     if float(value) > 7500000:
                         if  barY > 0.00:
