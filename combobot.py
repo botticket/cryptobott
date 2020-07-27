@@ -984,83 +984,9 @@ def handle_message(event):
                     ChgM = ((float(r[1]) - float(OpenM)) / float(OpenM) )*100
                     ChgM = '%.2f'%ChgM
                     ChgM = float(ChgM)	
-               
-                    from pyrebase import pyrebase
-
-                    config_firebase = {
-                        "apiKey": "AIzaSyC8D2tlkS-qvH27Ivi9W3eKSYC4vzAzwC4",
-                        "authDomain": "worldstock-iardyn.firebaseapp.com",
-                        "databaseURL": "https://worldstock-iardyn.firebaseio.com",
-                        "projectId": "worldstock-iardyn",
-                        "storageBucket": "worldstock-iardyn.appspot.com",
-                        "messagingSenderId": "80320331665",
-                        "appId": "1:80320331665:web:53171e563ead132a03e430"
-                    }		
-
-                    firebase = pyrebase.initialize_app(config_firebase)
-                    storage = firebase.storage()
-                    upload_jpg_firebase = "image/fig.png"	
-
-                    dfQ.dropna(inplace=True)
-
-                    min_value = dfY.nsmallest(1, columns = 'Low')
-                    min_value = min_value['Low'].iloc[0]
-                    min_value = '%.2f'%min_value
-                    min_value = str(min_value) 
                     
-                    dfY['OpenY'] = dfY['Open'].iloc[0]
-                    dfY['OpenQ'] = dfQ['Open'].iloc[0]
-                    dfY['OpenM'] = dfM['Open'].iloc[0]
-                    dfY['limitC'] = dfY['OpenM'] *1.02
+                    text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 
 
-                    dfY['ExitQ1'] = dfY['OpenQ'] *1.20
-                    dfY['ExitQ2'] = dfY['OpenQ'] *1.40
-                    dfY['ExitQ3'] = dfY['OpenQ'] *1.60
-
-                    dfY['fibo_Q1'] = dfY['OpenY'] *0.90
-                    dfY['fibo_Q2']  = dfY['OpenY'] *0.80
-                    dfY['fibo_Q3']  =dfY['OpenY'] *0.70
-                    dfY['fibo_Q4'] = dfY['OpenY'] *0.60
-                    dfY['fibo_Q5'] = dfY['OpenY'] *0.50
-                    dfY['fibo_Q6']  = dfY['OpenY'] *0.40
-                    dfY['min_value'] = float(min_value)
-
-                    fig, ax = plt.subplots(figsize=(14,7))
-
-                    dfY['Close'].plot()
-                    dfY['OpenM'].plot(color="#FFD100")
-                    dfY['OpenQ'].plot(color="#00A22F")
-                    dfY['OpenY'].plot(color="#FF0000")
-
-                    dfY['limitC'].plot(color="#FFD100")
-                    dfY['min_value'].plot(color="#FFD100",linestyle="-.")		
-
-                    dfY['ExitQ1'].plot(color="#553E3E",linestyle="-.") 
-                    dfY['ExitQ2'].plot(color="#553E3E",linestyle="-.") 
-                    dfY['ExitQ3'].plot(color="#553E3E",linestyle="-.") 
-
-                    dfY['fibo_Q1'].plot(color="#AEAEAE",linestyle="dotted")
-                    dfY['fibo_Q2'].plot(color="#AEAEAE",linestyle="dotted")
-                    dfY['fibo_Q3'].plot(color="#AEAEAE",linestyle="dotted")
-                    dfY['fibo_Q4'].plot(color="#AEAEAE",linestyle="dotted")
-                    dfY['fibo_Q5'].plot(color="#AEAEAE",linestyle="dotted")
-                    dfY['fibo_Q6'].plot(color="#AEAEAE",linestyle="dotted")
-                    
-                    for var in (dfY['Close'],dfY['min_value'], dfY['OpenY'], dfY['OpenQ'], dfY['OpenM'],dfY['limitC'], dfY['ExitQ1'], dfY['ExitQ2'], dfY['ExitQ3'], dfY['fibo_Q1'], dfY['fibo_Q2'], dfY['fibo_Q3'], dfY['fibo_Q4'], dfY['fibo_Q5'], dfY['fibo_Q6']):
-                        plt.annotate('%0.2f' % var.iloc[-1], xy=(1, var.iloc[-1]), xytext=(8, 0), 
-                                    xycoords=('axes fraction', 'data'), textcoords='offset points')
-
-                    ax.xaxis.set_major_locator(mdates.MonthLocator())
-                    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
-                    plt.grid(color="#AEAEAE", alpha=.5, linestyle="dotted")
-                    plt.ylabel("Price", fontsize= 12)
-                    plt.title(text_request, fontsize= 15)
-
-                    path_png_local = r'C:\Users\Punnawit\Desktop\clone\source\\fig.png'
-                    plt.savefig(path_png_local)
-                    upload = storage.child(upload_jpg_firebase).put(path_png_local)
-                    send_url = 'https://firebasestorage.googleapis.com/v0/b/worldstock-iardyn.appspot.com/o/image%2Ffig.png?alt=media&token=e794bf2f-9208-4656-b15b-36095ff0877c'
-                   
                     alert2 = 'ไปต่อ'
                     alert3 = 'ซื้อ Y / Q'
                     alert4 = 'เปลี่ยนตัว'
@@ -1069,14 +995,12 @@ def handle_message(event):
                     alert8 = 'ลงต่อ'
                     alert9 = 'Vol น้อย'
                     alert10 = 'ดูตลาด'
-                    
-                    text1 = 'Q {} ({}%) | M {}'.format(OpenQ,p_OpenQ,OpenM)
 
                     text = r[0]
                     price_now = r[1] 
                     change = r[2] 
                     chgp = str(ChgQ)
-                    re_avg = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                    re_avg = 'Q {} ({}%) | M {}'.format(OpenQ,p_OpenQ,OpenM) + '\n' + 'Y {} ({}%)'.format(OpenY,barY) 
 
                     if float(value) > 7500000:
                         if  barY > 0.00:
@@ -1085,31 +1009,31 @@ def handle_message(event):
                                     if 0.00 < float(barY) < 3.00:
                                         notice = alert3
                                         start = OpenY
-                                        stop = 'Y {} ({}%)'.format(OpenY,barY)
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                         target = text1
                                         avg = re_avg
                                     elif 0.00 < float(barQ) < 3.00:
                                         notice = alert7
                                         start = OpenQ
-                                        stop = 'Y {} ({}%)'.format(OpenY,barY)
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                         target = text1
                                         avg = re_avg
                                     else:
                                         notice = alert2
                                         start = OpenQ
-                                        stop = 'Y {} ({}%)'.format(OpenY,barY)
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                         target = text1
                                         avg = re_avg
                                 else:
                                     notice = alert10
                                     start = OpenQ
-                                    stop = 'Y {} ({}%)'.format(OpenY,barY)
+                                    stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                     target = text1
                                     avg = re_avg
                             else:
                                 notice = alert4
                                 start = OpenQ
-                                stop = 'Y {} ({}%)'.format(OpenY,barY)
+                                stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                 target = text1
                                 avg = re_avg
                         else:
@@ -1118,31 +1042,31 @@ def handle_message(event):
                                     if 0.00 < float(barQ) < 3.00:
                                         notice = alert7
                                         start = OpenQ
-                                        stop = 'Y {} ({}%)'.format(OpenY,barY)
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                         target = text1
                                         avg = re_avg
                                     else:
                                         notice = alert2
                                         start = OpenQ
-                                        stop = 'Y {} ({}%)'.format(OpenY,barY)
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                         target = text1
                                         avg = re_avg
                                 else:
                                     notice = alert10
                                     start = OpenQ
-                                    stop = 'Y {} ({}%)'.format(OpenY,barY)
+                                    stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                     target = text1
                                     avg = re_avg
                             else:
                                 notice = alert4
                                 start = OpenQ
-                                stop = 'Y {} ({}%)'.format(OpenY,barY)
+                                stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                 target = text1
                                 avg = re_avg
                     else:
                         notice = alert9
                         start = OpenQ
-                        stop = 'Y {} ({}%)'.format(OpenY,barY)
+                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                         target = text1
                         avg = re_avg 
 
