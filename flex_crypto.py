@@ -270,8 +270,8 @@ def flex_crypto(text,price_now,change,chgp,notice,start,buy,stop,target):
 def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
     Change_color = ['#EE0000' if '-' in str(change) else '#23D500'][0]
     trend = ['#EE0000' if '-' in str(avg) else '#3c3c3c'][0]
-    switch = ['Fibo Support' if '-' in str(avg) else 'Target'][0]
-    chgword = ['Fibo Target' if '-' in str(avg) else 'Quarter'][0]
+    switch = ['Quarter' if '-' in str(avg) else 'Quarter'][0]
+    chgword = ['Year' if '-' in str(avg) else 'Year'][0]
     bubble ={
     "type": "flex",
     "altText": "Flex Message",
@@ -540,7 +540,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "info",
+                    "text": "Graph",
                     "flex": 3,
                     "size": "sm"
                 }
