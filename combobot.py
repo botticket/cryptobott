@@ -21,11 +21,11 @@ channel_access_token = 'hkU+OYWsepq11sc+uM6bAE/ECjFb8+NUiTvjfQI1WUrXzKiUZvHU5YAv
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
-IQXGL = '1576.70'
-IQXWTI = '20.10'
-IQUSTB = '32.77'
-tfex_value = '736.00'
-set_value = '1171.51'
+IQXGL = '1883.05'
+IQXWTI = '39.13'
+IQUSTB = '31.66'
+tfex_value = '778.60'
+set_value = '1237.00'
 #Quarter
 
 today = date.today()
@@ -823,7 +823,6 @@ def handle_message(event):
                     dfY = data.DataReader(f'{list}', data_source="yahoo", start=yearly, end=end)
                     dfQ = data.DataReader(f'{list}', data_source="yahoo", start=quarter, end=end)
                     dfM = data.DataReader(f'{list}', data_source="yahoo", start=monthly, end=end)
-                    # dfM = data.DataReader(f'{list}', data_source="yahoo", start='2020-04-01', end=end)
 
                     list = list.replace('.bk','')
                                 
@@ -874,15 +873,15 @@ def handle_message(event):
                     request_val  = '{:,.0f}'.format(request_val)
                     request_val = str(request_val)
                     
-                    exit1 = float(OpenQ) * 1.12
+                    exit1 = float(OpenQ) * 1.2
                     exit1 = '%.2f'%exit1
                     exit1 = str(exit1)
 
-                    exit2 = float(OpenQ) * 1.24
+                    exit2 = float(OpenQ) * 1.4
                     exit2 = '%.2f'%exit2
                     exit2 = str(exit2)
 
-                    exit3 = float(OpenQ) * 1.36
+                    exit3 = float(OpenQ) * 1.6
                     exit3 = '%.2f'%exit3
                     exit3 = str(exit3)
 
