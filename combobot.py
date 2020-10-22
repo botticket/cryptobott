@@ -47,7 +47,7 @@ else:
 
 def linechat(text):
     
-    ACCESS_TOKEN = "oK2sk4w1eidfRyOVfgIcln38TBS8JmL0PgfbbQ8t0Zv"
+    ACCESS_TOKEN = "12CiN1mDzj3q93N5aTYvtWX63XlQOqDs6FWizTRUx1y"
 
     notify = LineNotify(ACCESS_TOKEN)
 
@@ -1001,17 +1001,17 @@ def handle_message(event):
                     chgp = str(ChgQ)
                     re_avg = 'Q {} ({}%) | M {}'.format(OpenQ,p_OpenQ,OpenM) + '\n' + 'Y {} ({}%)'.format(OpenY,barY) 
 
-                    if float(value) > 7500000:
+                    if float(value) > 5000000:
                         if  barY > 0.00:
-                            if barQ >= 0.00:
+                            if barQ > 0.00:
                                 if barM > 0.00:
-                                    if 0.00 < float(barY) < 3.00:
+                                    if 0.00 < float(barY) < 5.00:
                                         notice = alert3
                                         start = OpenY
                                         stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                         target = text1
                                         avg = re_avg
-                                    elif 0.00 < float(barQ) < 3.00:
+                                    elif 0.00 < float(barQ) < 5.00:
                                         notice = alert7
                                         start = OpenQ
                                         stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
@@ -1036,9 +1036,9 @@ def handle_message(event):
                                 target = text1
                                 avg = re_avg
                         else:
-                            if barQ >= 0.00:
+                            if barQ > 0.00:
                                 if barM > 0.00:
-                                    if 0.00 < float(barQ) < 3.00:
+                                    if 0.00 < float(barQ) < 5.00:
                                         notice = alert7
                                         start = OpenQ
                                         stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
