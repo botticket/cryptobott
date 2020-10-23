@@ -986,84 +986,49 @@ def handle_message(event):
                     
                     text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 
 
-                    alert2 = 'ไปต่อ'
-                    alert3 = 'ซื้อ Y / Q'
-                    alert4 = 'เปลี่ยนตัว'
-                    alert5 = 'ขายแล้วรอ'
-                    alert7 = 'ซื้อ'
-                    alert8 = 'ลงต่อ'
-                    alert9 = 'Vol น้อย'
-                    alert10 = 'ดูตลาด'
+                    alert2 = 'ซื้อ'
+                    alert3 = 'เปลี่ยนตัว'
+                    alert4 = 'ลงต่อ'
 
                     text = r[0]
                     price_now = r[1] 
                     change = r[2] 
                     chgp = str(ChgQ)
+
+                    mValue = (float(r[1]) * float(r[2])) /1000
+                    mValue = str(mValue)
+
                     re_avg = 'Q {} ({}%) | M {}'.format(OpenQ,p_OpenQ,OpenM) + '\n' + 'Y {} ({}%)'.format(OpenY,barY) 
 
-                    if float(value) > 5000000:
+                    if float(mValue) > 0:
                         if  barY > 0.00:
-                            if barQ > 0.00:
-                                if barM > 0.00:
-                                    if 0.00 < float(barY) < 5.00:
-                                        notice = alert3
-                                        start = OpenY
-                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
-                                        target = text1
-                                        avg = re_avg
-                                    elif 0.00 < float(barQ) < 5.00:
-                                        notice = alert7
-                                        start = OpenQ
-                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
-                                        target = text1
-                                        avg = re_avg
-                                    else:
-                                        notice = alert2
-                                        start = OpenQ
-                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
-                                        target = text1
-                                        avg = re_avg
-                                else:
-                                    notice = alert10
-                                    start = OpenQ
-                                    stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
-                                    target = text1
-                                    avg = re_avg
+                            if barM > 0.00:
+                                notice = alert2
+                                start = OpenM
+                                stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                target = text1
+                                avg = re_avg
                             else:
-                                notice = alert4
-                                start = OpenQ
+                                notice = alert3
+                                start = OpenM
                                 stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                 target = text1
                                 avg = re_avg
                         else:
-                            if barQ > 0.00:
-                                if barM > 0.00:
-                                    if 0.00 < float(barQ) < 5.00:
-                                        notice = alert7
-                                        start = OpenQ
-                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
-                                        target = text1
-                                        avg = re_avg
-                                    else:
-                                        notice = alert2
-                                        start = OpenQ
-                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
-                                        target = text1
-                                        avg = re_avg
-                                else:
-                                    notice = alert10
-                                    start = OpenQ
-                                    stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
-                                    target = text1
-                                    avg = re_avg
+                            if barM > 0.00:
+                                notice = alert2
+                                start = OpenQ
+                                stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                target = text1
+                                avg = re_avg
                             else:
-                                notice = alert4
+                                notice = alert3
                                 start = OpenQ
                                 stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                                 target = text1
                                 avg = re_avg
                     else:
-                        notice = alert9
+                        notice = alert4
                         start = OpenQ
                         stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
                         target = text1
