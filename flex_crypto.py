@@ -157,7 +157,6 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                     "type": "text",
                     "text": "{}".format(notice),
                     "flex": 3,
-                    "color": "{}".format(Change_color),
                     "size": "lg"
                 }
                 ],
@@ -254,7 +253,6 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                     "type": "text",
                     "text": "{}".format(target),
                     "flex": 3,
-                    "color": "{}".format(Change_color),
                     "size": "lg",
                     "wrap": True
                 }
@@ -288,7 +286,6 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                     "type": "text",
                     "text": "{}".format(avg),
                     "flex": 3,
-                    "color": "{}".format(Change_color),
                     "size": "lg",
                     "wrap": True
                 }
