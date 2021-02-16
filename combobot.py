@@ -1,25 +1,32 @@
+# https://cryptobott.herokuapp.com/callback
+
 import os
 import sys
 
-from config import line_secret, line_access_token
 from flask import Flask, request, abort, send_from_directory, render_template
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage,FollowEvent,QuickReply,QuickReplyButton,MessageAction
 from line_notify import LineNotify
+from reply import reply_msg , SetMessage_Object
+from flex_crypto import *
+from dialogflow_uncle import detect_intent_texts
 from datetime import datetime,date
-import warnings
-warnings.filterwarnings("ignore")
 
 app = Flask(__name__)
 
-line_secret = "11116494ef78727c367cab0cd4584b9c"
-line_access_token = "dOt/F1F30Np2lf95rvGpYlj7w6WVVWKfK66IKtwL1jbD/sMCYcqOeRUiUuO/P6zWGvCr+v3Nf6mfYihfARJyUKvA32Jt/LCL7Im373bQABD0PttiBLkUnVYMp1SVKrYe7FoKEcvsjhkJD/j4hMXZ6wdB04t89/1O/w1cDnyilFU="
+channel_secret = 'afe7ec6bede0dde581d0a61b6447653b'
+channel_access_token = 'hkU+OYWsepq11sc+uM6bAE/ECjFb8+NUiTvjfQI1WUrXzKiUZvHU5YAv+AEG4I6ZZuJPflQ/v5Gp2XH5m5TtLeUkPpX3JUjqTKFWahSOIqWheppXpKvFyE+olbJyAGvg9f8pciPntSGZnLbfyAIoyQdB04t89/1O/w1cDnyilFU='
 
-channel_secret = line_secret
-channel_access_token = line_access_token
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
+
+IQXGL = '1576.70'
+IQXWTI = '20.10'
+IQUSTB = '32.77'
+tfex_value = '736.00'
+set_value = '1171.51'
+#Quarter
 
 today = date.today()
 yearly = '{}-01-01'.format(today.year)
@@ -40,51 +47,54 @@ else:
 
 def linechat(text):
     
-    ACCESS_TOKEN = "12CiN1mDzj3q93N5aTYvtWX63XlQOqDs6FWizTRUx1y"
+    ACCESS_TOKEN = "oK2sk4w1eidfRyOVfgIcln38TBS8JmL0PgfbbQ8t0Zv"
+
     notify = LineNotify(ACCESS_TOKEN)
+
     notify.send(text)
 
-def sendimage(filename):
-    file = {'imageFile':open(filename,'rb')}
-    payload = {'message': 'update'}
-    return _lineNotify(payload,file)
-
-def _lineNotify(payload,file=None):
-    import requests
-    url = 'https://notify-api.line.me/api/notify'
-    token = 'fzU5NggivM0rgd8sDfJjdAP3kMCzU0JzmvbPJGLxZMZ'	#EDIT
-    headers = {'Authorization':'Bearer '+token}
-    return requests.post(url, headers=headers , data = payload, files=file)
-
-@app.route("/webhook", methods=['POST'])
+@app.route("/callback", methods=['POST'])
 def callback():
-    # get X-Line-Signature header value
-    signature = request.headers['X-Line-Signature']
-    # get request body as text
-    body = request.get_data(as_text=True)
-    app.logger.info("Request body: " + body)
-    # handle webhook body
-    try:
-        handler.handle(body, signature)
-    except InvalidSignatureError:
-        abort(400)
-    return 'OK'
+	# get X-Line-Signature header value
+	signature = request.headers['X-Line-Signature']
+
+	# get request body as text
+	body = request.get_data(as_text=True)
+	app.logger.info("Request body: " + body)
+	# handle webhook body
+	try:
+		handler.handle(body, signature)
+	except InvalidSignatureError:
+		abort(400)
+
+	return 'OK'
 
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     text_from_user = event.message.text
-    Reply_token = event.reply_token
-
+    reply_token = event.reply_token
     userid = event.source.user_id
-    disname = line_bot_api.get_profile(user_id=userid).display_name
-    request_text= (' bullbot' + '\n' + '>> {} : {}').format(disname,text_from_user)
     
+    disname = line_bot_api.get_profile(user_id=userid).display_name
+    request_text= ('mybot'+'\n' + '>> {} : {}').format(disname,text_from_user)
+
     print(request_text)
     linechat(request_text)
 
-    try:
-        if 'Hello Bot' in text_from_user:    
+    result_from_dialogflow = detect_intent_texts(project_id="worldstock-iardyn",
+                                        session_id=userid ,
+                                        text=text_from_user , 
+                                        language_code="th")
+    
+    action = result_from_dialogflow["action"]
+    response = result_from_dialogflow["fulfillment_messages"] #as list
+
+    print("action : " + action)
+    print("response : " + str(response))
+
+    try:        
+        if 'สวัสดี' in text_from_user:    
             text_list = [
                 'สวัสดีจ้า คุณ {} '.format(disname),
                 'สวัสดีจ้า คุณ {} วันนี้จะเล่นตัวไหนดี'.format(disname),
@@ -99,6 +109,668 @@ def handle_message(event):
                 )
             return 'OK'
 
+        elif 'Usd' in text_from_user:        
+            from urllib.request import Request, urlopen
+            from bs4 import BeautifulSoup as soup
+
+            def thbscrapt():
+                req = Request('https://th.investing.com/currencies/usd-thb', headers={'User-Agent': 'Chrome/78.0'})
+                webopen = urlopen(req).read()
+                data = soup(webopen, 'html.parser')
+
+                thb_now = data.findAll('div',{'class':'top bold inlineblock'})
+                thb_now = thb_now[0].text
+                thb_now = thb_now.replace('\n',' ')
+                thb_now = thb_now.replace(',','')
+                thb_now = thb_now.replace(' ','')
+                thb_now = thb_now.replace('\xa0','')
+                thb_now = thb_now[0:6]
+
+                thb_chg = data.findAll('div',{'class':'top bold inlineblock'})
+                thb_chg = thb_chg[0].text
+                thb_chg = thb_chg.replace('\n',' ')
+                thb_chg = thb_chg.replace(',','')
+                thb_chg = thb_chg.replace(' ','')
+                thb_chg = thb_chg.replace('\xa0','')
+                thb_chg = thb_chg[6:12]
+
+                thb_pchg = data.findAll('div',{'class':'top bold inlineblock'})
+                thb_pchg = thb_pchg[0].text
+                thb_pchg = thb_pchg.replace('\n',' ')
+                thb_pchg = thb_pchg.replace(',','')
+                thb_pchg = thb_pchg.replace(' ','')
+                thb_pchg = thb_pchg.replace('\xa0','')
+                thb_pchg = thb_pchg[13:18]
+                
+                return[thb_now,thb_chg,thb_pchg]
+
+            def usdcheck():
+                thb = thbscrapt()
+
+                exit_long1 = float(thb[0]) * 1.015
+                exit_long1 = '%.2f'%exit_long1
+
+                exit_long2 = float(thb[0]) * 1.03
+                exit_long2 = '%.2f'%exit_long2
+
+                exit_long3 = float(thb[0]) * 1.045
+                exit_long3 = '%.2f'%exit_long3      
+
+                exit_short1 = float(thb[0]) * 0.985
+                exit_short1 = '%.2f'%exit_short1
+
+                exit_short2 = float(thb[0]) * 0.97
+                exit_short2 = '%.2f'%exit_short2
+
+                exit_short3 = float(thb[0]) * 0.955
+                exit_short3 = '%.2f'%exit_short3
+
+                LongY = float(IQUSTB) * 1.005
+                LongY = '%.2f'%LongY
+
+                stop_longY = float(IQUSTB) * 0.995
+                stop_longY = '%.2f'%stop_longY     
+
+                shortY = float(IQUSTB) * 0.995
+                shortY = '%.2f'%shortY
+
+                stop_shortY = float(IQUSTB) * 1.005
+                stop_shortY = '%.2f'%stop_shortY
+
+                price_now = float(thb[0])
+                price_now = '%.2f'%price_now
+                price_now = str(price_now)
+                
+                barM = float(price_now) - float(IQUSTB)
+                chgp = str(thb[2])
+
+                text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
+                text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
+
+                alert1 = 'Long'
+                alert2 = 'Short'
+
+                text = 'IQXUSTB'
+                change = str(thb[1]) 
+
+                if barM >= 0:
+                    notice = alert1
+                    start = IQUSTB
+                    buy = LongY
+                    stop = stop_longY
+                    target = text1
+                    number = '1'
+                else:
+                    notice = alert2
+                    start = IQUSTB
+                    buy = shortY
+                    stop = stop_shortY
+                    target = text2 
+                    number = '2'
+                
+                word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
+                result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
+                print(word_to_reply)
+                print(number)
+
+                bubble = flex_usdcheck(text,price_now,change,chgp,notice,start,buy,stop,target)
+                flex_to_reply = SetMessage_Object(bubble)
+                reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                return 'OK'
+            usdcheck()
+
+        elif 'Xgl' in text_from_user:
+            from urllib.request import Request, urlopen
+            from bs4 import BeautifulSoup as soup 
+
+            def goldscrapt():
+                req = Request('https://th.investing.com/currencies/xau-usd', headers={'User-Agent': 'Chrome/78.0'})
+                webopen = urlopen(req).read()
+                data = soup(webopen, 'html.parser')
+
+                gold_now = data.findAll('div',{'class':'top bold inlineblock'})
+                gold_now = gold_now[0].text
+                gold_now = gold_now.replace('\n',' ')
+                gold_now = gold_now.replace(',','')
+                gold_now = gold_now[1:]
+                gold_now = gold_now[0:8]
+
+                goldchange = data.findAll('div',{'class':'top bold inlineblock'})
+                goldchange = goldchange[0].text
+                goldchange = goldchange.replace('\n',' ')
+                goldchange = goldchange.replace(',','')
+                goldchange = goldchange[9:]
+                goldchange = goldchange[0:5]
+
+                chgp = data.findAll('div',{'class':'top bold inlineblock'})
+                chgp = chgp[0].text
+                chgp = chgp.replace('\n',' ')
+                chgp = chgp.replace(',','')
+                chgp = chgp[18:]
+
+                return[gold_now,goldchange,chgp]
+
+            def goldcheck():
+                gg = goldscrapt()
+
+                exit_long1 = float(gg[0]) * 1.015
+                exit_long1 = '%.2f'%exit_long1
+
+                exit_long2 = float(gg[0]) * 1.03
+                exit_long2 = '%.2f'%exit_long2
+
+                exit_long3 = float(gg[0]) * 1.045
+                exit_long3 = '%.2f'%exit_long3      
+
+                exit_short1 = float(gg[0]) * 0.985
+                exit_short1 = '%.2f'%exit_short1
+
+                exit_short2 = float(gg[0]) * 0.97
+                exit_short2 = '%.2f'%exit_short2
+
+                exit_short3 = float(gg[0]) * 0.955
+                exit_short3 = '%.2f'%exit_short3
+
+                LongY = float(IQXGL) * 1.005
+                LongY = '%.2f'%LongY
+
+                stop_longY = float(IQXGL) * 0.995
+                stop_longY = '%.2f'%stop_longY     
+
+                shortY = float(IQXGL) * 0.995
+                shortY = '%.2f'%shortY
+
+                stop_shortY = float(IQXGL) * 1.005
+                stop_shortY = '%.2f'%stop_shortY
+
+                price_now = float(gg[0])
+                price_now = '%.2f'%price_now
+                price_now = str(price_now)
+                
+                barM = float(price_now) - float(IQXGL)
+                chgp = str(gg[2])
+
+                text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
+                text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
+
+                alert1 = 'Long'
+                alert2 = 'Short'
+
+                text = 'IQXGL'
+                change = str(gg[1]) 
+
+                if barM >= 0:
+                    notice = alert1
+                    start = IQXGL
+                    buy = LongY
+                    stop = stop_longY
+                    target = text1
+                    number = '1'
+                else:
+                    notice = alert2
+                    start = IQXGL
+                    buy = shortY
+                    stop = stop_shortY
+                    target = text2 
+                    number = '2'
+                
+                word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
+                result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
+                bubble = flex_goldcheck(text,price_now,change,chgp,notice,start,buy,stop,target)
+                
+                flex_to_reply = SetMessage_Object(bubble)
+                reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                return 'OK'
+            goldcheck()
+
+        elif 'Wti' in text_from_user:
+            from urllib.request import Request, urlopen
+            from bs4 import BeautifulSoup as soup 
+
+            def wtiscrapt():
+                req = Request('https://th.investing.com/commodities/crude-oil', headers={'User-Agent': 'Chrome/78.0'})
+                webopen = urlopen(req).read()
+                data = soup(webopen, 'html.parser')
+
+                wti_now = data.findAll('div',{'class':'top bold inlineblock'})
+                wti_now = wti_now[0].text
+                wti_now = wti_now.replace('\n',' ')
+                wti_now = wti_now.replace(',','')
+                wti_now = wti_now[1:]
+                wti_now = wti_now[0:6]
+
+                wtichange = data.findAll('div',{'class':'top bold inlineblock'})
+                wtichange = wtichange[0].text
+                wtichange = wtichange.replace('\n',' ')
+                wtichange = wtichange.replace(',','')
+                wtichange = wtichange[1:]
+                wtichange = wtichange[6:11]
+
+                chgp = data.findAll('div',{'class':'top bold inlineblock'})
+                chgp = chgp[0].text
+                chgp = chgp.replace('\n',' ')
+                chgp = chgp.replace(',','')
+                chgp = chgp[16:]
+                return[wti_now,wtichange,chgp]
+
+            def wticheck():
+                wti = wtiscrapt()
+
+                exit_long1 = float(wti[0]) * 1.04
+                exit_long1 = '%.2f'%exit_long1
+
+                exit_long2 = float(wti[0]) * 1.08
+                exit_long2 = '%.2f'%exit_long2
+
+                exit_long3 = float(wti[0]) * 1.12
+                exit_long3 = '%.2f'%exit_long3      
+
+                exit_short1 = float(wti[0]) * 0.96
+                exit_short1 = '%.2f'%exit_short1
+
+                exit_short2 = float(wti[0]) * 0.92
+                exit_short2 = '%.2f'%exit_short2
+
+                exit_short3 = float(wti[0]) * 0.88
+                exit_short3 = '%.2f'%exit_short3
+
+                LongY = float(IQXWTI) * 1.01
+                LongY = '%.2f'%LongY
+
+                stop_longY = float(IQXWTI) * 0.985
+                stop_longY = '%.2f'%stop_longY     
+
+                shortY = float(IQXWTI) * 0.985
+                shortY = '%.2f'%shortY
+
+                stop_shortY = float(IQXWTI) * 1.01
+                stop_shortY = '%.2f'%stop_shortY
+
+                price_now = float(wti[0])
+                price_now = '%.2f'%price_now
+                price_now = str(price_now)
+                
+                barQ = float(price_now) - float(IQXWTI)
+                chgp = str(wti[2])
+
+                text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
+                text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
+
+                alert1 = 'Long'
+                alert2 = 'Short'
+
+                text = 'IQWTI'
+                change = str(wti[1]) 
+
+                if barQ >= 0:
+                    notice = alert1
+                    start = IQXWTI
+                    buy = LongY
+                    stop = stop_longY
+                    target = text1
+                    number = '1'
+                else:
+                    notice = alert2
+                    start = IQXWTI
+                    buy = shortY
+                    stop = stop_shortY
+                    target = text2 
+                    number = '2'
+                
+                word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
+                result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
+                bubble = flex_wticheck(text,price_now,change,chgp,notice,start,buy,stop,target)
+                
+                flex_to_reply = SetMessage_Object(bubble)
+                reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                return 'OK'
+            wticheck()
+
+        elif 'Tfex' in text_from_user:
+            from urllib.request import Request, urlopen
+            from bs4 import BeautifulSoup as soup 
+
+            def tfexupdate():
+
+                req = Request('https://www.tfex.co.th/tfex/dailySeriesQuotation.html?locale=th_TH&symbol={}'.format(tfex_code), headers={'User-Agent': 'Chrome/78.0'})
+                webopen = urlopen(req).read()
+                data = soup(webopen, 'html.parser')
+                main = data.findAll('span',{'class':'h2'})
+                
+                tx = main[0].text
+                tx = tx.replace('\n','')
+                tx = tx.replace('\r','')
+                tx = tx.replace(' ','')
+                tx = tx.replace(',','')
+
+                sub = data.findAll('span',{'class':'h3'})
+                ux = sub[0].text
+                ux = ux.replace('\n','')
+                ux = ux.replace('\r','')
+                ux = ux.replace(' ','')
+
+                cx = sub[1].text
+                cx = cx.replace('\n','')
+                cx = cx.replace('\r','')
+                cx = cx.replace(' ','')
+                cx = cx.replace(')','')
+                cx = cx.replace('(','')
+                return[tx,ux,cx]
+
+            def tfexcheck():
+                tff = tfexupdate()
+
+                exit_long1 = float(tff[0]) * 1.04
+                exit_long1 = '%.2f'%exit_long1
+
+                exit_long2 = float(tff[0]) * 1.08
+                exit_long2 = '%.2f'%exit_long2
+
+                exit_long3 = float(tff[0]) * 1.12
+                exit_long3 = '%.2f'%exit_long3
+
+                exit_short1 = float(tff[0]) * 0.96
+                exit_short1 = '%.2f'%exit_short1
+
+                exit_short2 = float(tff[0]) * 0.92
+                exit_short2 = '%.2f'%exit_short2
+
+                exit_short3 = float(tff[0]) * 0.88
+                exit_short3 = '%.2f'%exit_short3
+
+                LongY = float(tfex_value) * 1.005
+                LongY = '%.2f'%LongY
+
+                stop_longY = float(tfex_value) * 0.995
+                stop_longY = '%.2f'%stop_longY     
+
+                shortY = float(tfex_value) * 0.995
+                shortY = '%.2f'%shortY
+
+                stop_shortY = float(tfex_value) * 1.005
+                stop_shortY = '%.2f'%stop_shortY
+
+                price_now = float(tff[0])
+                price_now = '%.2f'%price_now
+                price_now = str(price_now)
+                
+                barM = float(price_now) - float(tfex_value)
+                chgp = str(tff[2])
+
+                text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
+                text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
+
+                alert1 = 'Long'
+                alert2 = 'Short'
+
+                text = '{}'.format(tfex_code)
+                change = str(tff[1]) 
+
+                if barM >= 0:
+                    notice = alert1
+                    start = tfex_value
+                    buy = LongY
+                    stop = stop_longY
+                    target = text1
+                    number = '1'
+                else:
+                    notice = alert2
+                    start = tfex_value
+                    buy = shortY
+                    stop = stop_shortY
+                    target = text2 
+                    number = '2'
+                
+                word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
+                result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
+                bubble = flex_tfexcheck(text,price_now,change,chgp,notice,start,buy,stop,target)
+                
+                flex_to_reply = SetMessage_Object(bubble)
+                reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                return 'OK'
+            tfexcheck()
+
+        elif 'Set' in text_from_user:
+            from urllib.request import Request, urlopen
+            from bs4 import BeautifulSoup as soup 
+
+            def setnow():
+                req = Request('https://www.settrade.com/C13_MarketSummary.jsp?detail=SET', headers={'User-Agent': 'Chrome/78.0'})
+                webopen = urlopen(req).read()
+                data = soup(webopen, 'html.parser')
+                currency = data.findAll('div',{'class':'col-xs-12'})
+
+                set_now = currency[0].text
+                set_now = set_now.replace('\n',' ')
+                set_now = set_now.replace('\r',' ')
+                set_now = set_now.replace('\n',' ')
+                set_now = set_now[3316:]
+                set_now = set_now[0:9]
+                set_now = set_now.replace(',','')
+
+                chg = currency[0].text
+                chg = chg.replace('\n',' ')
+                chg = chg.replace('\r',' ')
+                chg = chg.replace('\n',' ')
+                chg = chg[3325:]
+                chg = chg[0:7]
+
+                chgp = currency[0].text
+                chgp = chgp.replace('\n',' ')
+                chgp = chgp.replace('\r',' ')
+                chgp = chgp.replace('\n',' ')
+                chgp = chgp[3370:]
+                chgp = chgp[0:5]
+                return[set_now,chg,chgp]
+
+            def setcheck():
+                st = setnow()
+                exit_long1 = float(st[0]) * 1.04
+                exit_long1 = '%.2f'%exit_long1
+
+                exit_long2 = float(st[0]) * 1.08
+                exit_long2 = '%.2f'%exit_long2
+
+                exit_long3 = float(st[0]) * 1.12
+                exit_long3 = '%.2f'%exit_long3
+
+                exit_short1 = float(st[0]) * 0.96
+                exit_short1 = '%.2f'%exit_short1
+
+                exit_short2 = float(st[0]) * 0.92
+                exit_short2 = '%.2f'%exit_short2
+
+                exit_short3 = float(st[0]) * 0.88
+                exit_short3 = '%.2f'%exit_short3
+
+                LongY = float(set_value) * 1.005
+                LongY = '%.2f'%LongY
+
+                stop_longY = float(set_value) * 0.995
+                stop_longY = '%.2f'%stop_longY     
+
+                shortY = float(set_value) * 0.995
+                shortY = '%.2f'%shortY
+
+                stop_shortY = float(set_value) * 1.005
+                stop_shortY = '%.2f'%stop_shortY
+
+                price_now = float(st[0])
+                price_now = '%.2f'%price_now
+                price_now = str(price_now)
+                
+                barQ = float(price_now) - float(set_value)
+                chgp = str(st[2])
+
+                text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
+                text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
+
+                alert1 = 'Long'
+                alert2 = 'Short'
+
+                text = text_from_user.upper()
+                change = str(st[1]) 
+
+                if barQ >= 0:
+                    notice = alert1
+                    start = set_value
+                    buy = LongY
+                    stop = stop_longY
+                    target = text1
+                    number = '1'
+                else:
+                    notice = alert2
+                    start = set_value
+                    buy = shortY
+                    stop = stop_shortY
+                    target = text2 
+                    number = '2'
+                
+                word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
+                result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
+                bubble = flex_setcheck(text,price_now,change,chgp,notice,start,buy,stop,target)
+                
+                flex_to_reply = SetMessage_Object(bubble)
+                reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                return 'OK'
+            setcheck()
+
+        elif action == "crypto_response":
+            from urllib.request import Request, urlopen
+            from bs4 import BeautifulSoup as soup 
+            from pandas_datareader import data
+            from datetime import datetime
+            
+            text_from_user = text_from_user.upper()
+            code = [text_from_user]
+            codes = list(map(lambda e: e + '-USD', code))
+
+            class crypto:
+                def __init__(self,code):
+                    self.code = code
+                def ticket(self):
+                    end = datetime.now()
+                    start = datetime(end.year,end.month,end.day)
+                    list = self.code
+
+                    dfY = data.DataReader(f'{list}', data_source="yahoo", start=yearly, end=end)
+                    dfM = data.DataReader(f'{list}', data_source="yahoo", start=monthly, end=end)
+                    #2020-01-01 = Y M D
+
+                    OpenY = dfY['Open'].iloc[1]
+                    OpenY  = '%.2f'%OpenY
+                    OpenY = str(OpenY)
+
+                    OpenM = dfM['Open'].iloc[1]
+                    OpenM  = '%.2f'%OpenM
+                    OpenM = str(OpenM)
+
+                    OpenD = dfY['Open'].iloc[-1]
+                    OpenD  = '%.2f'%OpenD
+                    OpenD = str(OpenD)
+
+                    Close = dfY['Close'].iloc[-1]
+                    Close  = '%.2f'%Close
+                    Close = str(Close)
+
+                    Prev = dfY['Close'].iloc[-2]
+                    Prev  = '%.2f'%Prev
+                    Prev = str(Prev)
+                    
+                    barY = ((float(Close) - float(OpenY)) / float(OpenY) )*100
+                    barY = '%.2f'%barY
+                    barY = float(barY)
+
+                    barM = ((float(Close) - float(OpenM)) / float(OpenM) )*100
+                    barM = '%.2f'%barM
+                    barM = float(barM)
+
+                    LongY = float(OpenM) * 1.01
+                    LongY = '%.2f'%LongY
+                    LongY = str(LongY) 
+
+                    stop_longY = float(OpenM) * 0.985
+                    stop_longY = '%.2f'%stop_longY
+                    stop_longY = str(stop_longY)
+
+                    exit_long1 = float(OpenD) * 1.04
+                    exit_long1 = '%.2f'%exit_long1
+                    exit_long1 = str(exit_long1)
+
+                    exit_long2 = float(OpenD) * 1.08
+                    exit_long2 = '%.2f'%exit_long2
+                    exit_long2 = str(exit_long2)
+
+                    exit_long3 = float(OpenD) * 1.12
+                    exit_long3 = '%.2f'%exit_long3
+                    exit_long3 = str(exit_long3)
+
+                    shortY = float(OpenM) * 0.985
+                    shortY = '%.2f'%shortY
+                    shortY = str(shortY) 
+
+                    stop_shortY = float(OpenM) * 1.01
+                    stop_shortY = '%.2f'%stop_shortY
+                    stop_shortY = str(stop_shortY)
+
+                    exit_short1 = float(OpenD) * 0.96
+                    exit_short1 = '%.2f'%exit_short1
+                    exit_short1 = str(exit_short1)
+
+                    exit_short2 = float(OpenD) * 0.92
+                    exit_short2 = '%.2f'%exit_short2
+                    exit_short2 = str(exit_short2)
+
+                    exit_short3 = float(OpenD) * 0.88
+                    exit_short3 = '%.2f'%exit_short3
+                    exit_short3 = str(exit_short3)
+                
+                    change = float(Close) - float(Prev)
+                    change = '%.2f'%change
+                    change = str(change) 
+
+                    chgp = (float(change) / float(Prev))*100
+                    chgp = '%.2f'%chgp
+                    chgp = str(chgp) 		
+                    
+                    text1 = exit_long1 + ' | ' + exit_long2 + ' | ' + exit_long3 
+                    text2 = exit_short1 + ' | ' + exit_short2 + ' | ' + exit_short3 
+
+                    alert1 = 'Long'
+                    alert2 = 'Short'
+
+                    text = code
+                    price_now = float(Close) 
+                    change = str(change) 
+
+                    if barM >= 0:
+                        notice = alert1
+                        start = OpenM
+                        buy = LongY
+                        stop = stop_longY
+                        target = text1
+                        number = '1'
+                    else:
+                        notice = alert2
+                        start = OpenM
+                        buy = shortY
+                        stop = stop_shortY
+                        target = text2 
+                        number = '2'
+
+                    word_to_reply = '{}'.format(text) + '\n' + 'now {} {} ({}%)'.format(price_now,change,chgp)
+                    result = 'Position: {}'.format(notice) + '\n' + 'Range: {} - {} '.format(start,buy) + '\n' + 'Stop: {}'.format(stop) + '\n' + 'Target: {}'.format(target)
+                    print(result)
+                    print(number)
+                    bubble = flex_crypto(text,price_now,change,chgp,notice,start,buy,stop,target)
+                    
+                    flex_to_reply = SetMessage_Object(bubble)
+                    reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                    return 'OK'
+
+            for code in codes:
+                crypto(code).ticket()
+
         else:
             from bs4 import BeautifulSoup as soup
             from urllib.request import urlopen as req
@@ -109,385 +781,329 @@ def handle_message(event):
             ticket = [text_from_user]
             symbols = list(map(lambda e: e + '.bk', ticket))
                         
-            def checkmarket(code):
-                url = 'https://www.settrade.com/C04_01_stock_quote_p1.jsp?txtSymbol={}&ssoPageId=9&selectPage=1'.format(code)
+            def request(code):
+                url = 'https://www.settrade.com/C04_02_stock_historical_p1.jsp?txtSymbol={}&ssoPageId=10&selectPage=2'.format(code)
                 webopen = req(url)
                 page_html = webopen.read()
                 webopen.close()
 
                 data = soup(page_html, 'html.parser')
                 price = data.findAll('div',{'class':'col-xs-6'})
-
                 title = price[0].text
                 stockprice = price[2].text
-                stockprice = stockprice.replace('\n','')
+
                 change = price[3].text
                 change = change.replace('\n','')
                 change = change.replace('\r','')
-                change = change[87:]	
-                comvlue = data.findAll('div',{'class':'col-xs-4'})
-                comvlue = comvlue[6].text
-                comvlue = comvlue.replace(',','')
-                comvlue = format(float(comvlue),'')
-                comvluee = format(float(comvlue),',')
-                return [title,stockprice,change,comvlue,comvluee]
+                change = change.replace('\t','')
+                change = change.replace(' ','')
+                change = change[11:]
 
-            class ticket:
+                pchange = price[4].text
+                pchange = pchange.replace('\n','')
+                pchange = pchange.replace('\r','')
+                pchange = pchange.replace(' ','')
+                pchange = pchange[12:]
+
+                update = data.findAll('span',{'class':'stt-remark'})
+                stockupdate = update[0].text
+                stockupdate = stockupdate[13:]
+                return [title,stockprice,change,pchange,stockupdate]
+
+            r = request(code)
+
+            class stock:
                 def __init__(self,stock):
                     self.stock = stock
+                def ticket(self):
+                    end = datetime.now()
+                    start = datetime(end.year,end.month,end.day)
                     list = self.stock
-                def bull(self):
-                    list = self.stock
 
-                    dfall = data.DataReader(f'{list}', data_source="yahoo",start=start_year, end=end)
-
-                    try:
-                        dfY = data.DataReader(f'{list}', data_source="yahoo", start=yearly, end=end)
-                    except ValueError:
-                        dfY = data.DataReader(f'{list}', data_source="yahoo", start=start_year, end=end)
-
-                    try:
-                        dfM = data.DataReader(f'{list}', data_source="yahoo", start=monthly, end=end)
-                    except ValueError:
-                        dfM = data.DataReader(f'{list}', data_source="yahoo", start=start_year, end=end)
+                    dfY = data.DataReader(f'{list}', data_source="yahoo", start=yearly, end=end)
+                    dfQ = data.DataReader(f'{list}', data_source="yahoo", start=quarter, end=end)
+                    dfM = data.DataReader(f'{list}', data_source="yahoo", start=monthly, end=end)
+                    # dfM = data.DataReader(f'{list}', data_source="yahoo", start='2020-04-01', end=end)
 
                     list = list.replace('.bk','')
-                    stock = f'{list}'
-                    dfall.dropna(inplace=True)
-
-                    st = checkmarket(stock)
                                 
-                    try:
-                        Close = float(st[1])
-                    except ValueError:
-                        Close = dfall['Close'].iloc[-1]
-
-                    Close  = '%.2f'%Close
-                    Close = str(Close) 
-
-                    Open_all = dfall['Open'].iloc[0]
-                    Open_all  = '%.2f'%Open_all
-                    Open_all = str(Open_all)
-
-                    Chg_all = ((float(Close) - float(Open_all))/ float(Open_all))*100
-                    Chg_all = '%.2f'%Chg_all
-                    Chg_all = str(Chg_all)
-
                     OpenY = dfY['Open'].iloc[0]
                     OpenY  = '%.2f'%OpenY
                     OpenY = str(OpenY)
 
-                    CloseY = dfY['Close'].iloc[0]
-                    CloseY  = '%.2f'%CloseY
-                    CloseY = str(CloseY)
+                    OpenQ = dfQ['Open'].iloc[0]
+                    OpenQ  = '%.2f'%OpenQ
+                    OpenQ = str(OpenQ)
 
-                    ChgY = ((float(Close) - float(OpenY)) / float(OpenY) )*100
-                    ChgY = '%.2f'%ChgY
-                    ChgY = str(ChgY)
-
-                    Chg_closeY = ((float(Close) - float(CloseY)) / float(CloseY) )*100
-                    Chg_closeY = '%.2f'%Chg_closeY
-                    Chg_closeY = str(Chg_closeY)
+                    p_OpenQ = ((float(OpenQ) - float(OpenY)) / float(OpenY))*100
+                    p_OpenQ  = '%.2f'%p_OpenQ
+                    p_OpenQ = str(p_OpenQ)
 
                     OpenM = dfM['Open'].iloc[0]
                     OpenM  = '%.2f'%OpenM
                     OpenM = str(OpenM)
 
-                    CloseM = dfM['Close'].iloc[0]
-                    CloseM  = '%.2f'%CloseM
-                    CloseM = str(CloseM)
+                    Close = float(f'{r[1]}')
+                    Close  = '%.2f'%Close
+                    Close = str(Close)
 
-                    ChgM = ((float(Close) - float(CloseM)) / float(CloseM) )*100
-                    ChgM = '%.2f'%ChgM
-                    ChgM = str(ChgM)
+                    barY = ((float(Close) - float(OpenY)) / float(OpenY) )*100
+                    barY = '%.2f'%barY
+                    barY = float(barY)
 
-                    try:
-                        today_chg = float(st[2])
-                    except ValueError:
-                        today_chg = float(dfall['Close'].iloc[-1]) - float(dfall['Close'].iloc[-2])
+                    barQ = ((float(Close) - float(OpenQ)) / float(OpenQ) )*100
+                    barQ = '%.2f'%barQ
+                    barQ = float(barQ)
 
-                    today_chg  = '%.2f'%today_chg
-                    today_chg = str(today_chg)
+                    barM = ((float(Close) - float(OpenM)) / float(OpenM) )*100
+                    barM = '%.2f'%barM
+                    barM = float(barM)
 
-                    def computeRSI (data, time_window):
-                        diff = data.diff(1).dropna()
-                        up_chg = 0 * diff
-                        down_chg = 0 * diff
+                    Volume1 = dfY['Volume'].iloc[-1]
+                    Volume2 = dfY['Volume'].iloc[-2]
 
-                        up_chg[diff > 0] = diff[ diff>0 ]    
-                        down_chg[diff < 0] = diff[ diff < 0 ]
-
-                        up_chg_avg   = up_chg.ewm(com=time_window-1 , min_periods=time_window).mean()
-                        down_chg_avg = down_chg.ewm(com=time_window-1 , min_periods=time_window).mean()
-
-                        rs = abs(up_chg_avg/down_chg_avg)
-                        rsi = 100 - 100/(1+rs)
-                        return rsi
-
-                    dfall['RSI'] = computeRSI(dfall['Close'], 14)
-                    m_RSI = dfall['RSI'].iloc[-1]
-                    m_RSI = '%.2f'%m_RSI
-                    m_RSI = str(m_RSI)
-                            
-                    #copy dataframeY
-                    dfall = dfall.copy()
-                    dfall['date_id'] = ((dfall.index.date - dfall.index.date.min())).astype('timedelta64[D]')
-                    dfall['date_id'] = dfall['date_id'].dt.days + 1
-
-                    # high trend lineY
-                    dfall_mod = dfall.copy()
-
-                    while len(dfall_mod)>3:
-
-                        reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
-                        dfall_mod = dfall_mod.loc[dfall_mod['Close'] > reg[0] * dfall_mod['date_id'] + reg[1]]
-
-                    reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
-                    dfall['high_trend'] = reg[0] * dfall['date_id'] + reg[1]
-
-                    high_trend = dfall['high_trend'].iloc[-1]
-                    high_trend = '%.2f'%high_trend
-                    high_trend = str(high_trend)
-
-                    # low trend lineY
-                    dfall_mod = dfall.copy()
-
-                    while len(dfall_mod)>3:
-
-                        reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
-                        dfall_mod = dfall_mod.loc[dfall_mod['Close'] < reg[0] * dfall_mod['date_id'] + reg[1]]
-
-                    reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
-                    dfall['low_trend'] = reg[0] * dfall['date_id'] + reg[1]
-                    
-                    min_Y = dfall.nsmallest(1, columns='Low')
-                    min_Y = min_Y['Low'].iloc[-1]
-                    min_Y = '%.2f'%min_Y
-                    min_Y = str(min_Y)
-
-                    max_Y = dfall.nlargest(1, columns='High')
-                    max_Y = max_Y['High'].iloc[-1]
-                    max_Y = '%.2f'%max_Y
-                    max_Y = str(max_Y)
-
-                    dfall['min_Y'] = float(min_Y)
-                    dfall['max_Y'] = float(max_Y)
-                    
-                    #copy dataframe prevQ
-                    dfY = dfY.copy()
-                    dfY['date_id'] = ((dfY.index.date - dfY.index.date.min())).astype('timedelta64[D]')
-                    dfY['date_id'] = dfY['date_id'].dt.days + 1
-
-                    # high trend line prevQ
-                    dfY_mod = dfY.copy()
-
-                    while len(dfY_mod)>3:
-
-                        reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['Close'],)
-                        dfY_mod = dfY_mod.loc[dfY_mod['Close'] > reg[0] * dfY_mod['date_id'] + reg[1]]
-
-                    reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['Close'],)
-                    dfY['high_trendQ'] = reg[0] * dfY['date_id'] + reg[1]
-
-                    # low trend line prevQ
-                    dfY_mod = dfY.copy()
-
-                    while len(dfY_mod)>3:
-
-                        reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['Close'],)
-                        dfY_mod = dfY_mod.loc[dfY_mod['Close'] < reg[0] * dfY_mod['date_id'] + reg[1]]
-
-                    reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['Close'],)
-                    dfY['low_trendQ'] = reg[0] * dfY['date_id'] + reg[1]
-                    dfY['low_trendQ'] = dfY['low_trendQ'].replace(np.nan, dfY['Close'].iloc[0])
-
-                    candle_start = dfY['low_trendQ'].iloc[0]
-                    candle_start = '%.2f'%candle_start
-                    candle_start = str(candle_start)
-
-                    candle_end = dfY['low_trendQ'].iloc[-1]
-                    candle_end = '%.2f'%candle_end
-                    candle_end = str(candle_end)
-
-                    if float(candle_start) > float(candle_end):
-                        pattern = 'Lower low'
-                    else:
-                        pattern = 'Lower high'
-
-                    Volume = dfY['Volume'].iloc[-1]
+                    Volume = (float(Volume1)+float(Volume2))/2
+                    Volume  = '%.0f'%Volume
                     Volume = str(Volume)
 
-                    vol_buy = (float(budget) / float(OpenY))
-                    vol_buy = round(vol_buy,-2)
+                    value = float(Volume) * float(Close)
+                    value  = '%.2f'%value
+                    value = str(value)
 
-                    vol_key = float(vol_buy) / 2
-                    vol_key = round(vol_key,-2)
-                    vol_key = str(int(vol_key))
-
-                    trade_val = float(Close) * float(Volume)
-                    trade_val = int(float(trade_val))
-                    trade_value = '{:,}'.format(trade_val)
-
-                    dfall['Open_all'] = dfall['Open'].iloc[0]
-                    dfall['high_trendQ'] = dfY['high_trendQ']
-                    dfall['low_trendQ'] = dfY['low_trendQ']
-                    dfall['ema'] = dfall['Close'].rolling(35).mean()
-
-                    dfY['OpenY'] = dfY['Open'].iloc[0]
-                    dfY['CloseY'] = dfY['Close'].iloc[0]
-                    dfM['CloseM'] = dfM['Close'].iloc[0]
-
-                    ema = dfall['ema'].iloc[-1]			
-                    ema = '%.2f'%ema
-                    ema = str(ema)
-
-                    pema = ((float(Close) - float(ema)) / float(ema))*100
-                    pema = '%.2f'%pema
-                    pema = str(pema)
-
-                    high_trend = dfall['high_trend'].iloc[-1]
-                    high_trend = '%.2f'%high_trend
-                    high_trend = str(high_trend)
-
-                    high_trendQ = dfall['high_trendQ'].iloc[-1]
-                    high_trendQ = '%.2f'%high_trendQ
-                    high_trendQ = str(high_trendQ)
-
-                    comvlue = float(st[3])
-                    comvluee = str(st[4])
-
-                    if float(ChgM) >= 0.0 :
-                        trendM = ' '
-                    else:
-                        trendM = 'X'
-
-                    if float(ChgY) >= 0 :
-                        trendAll = '▲'
-                        if float(Close) >= float(CloseM) :
-                            if float(CloseM) >= float(ema):
-                                if float(candle_end) >= float(candle_start):
-                                    trendY = '©'
-                                else:
-                                    trendY = ' '
-                            else:
-                                trendY = ' '
-                        else:
-                            trendY = ' '
-                    else:
-                        trendAll = '▼'
-                        if float(Close) >= float(CloseM) :
-                            if float(CloseM) >= float(ema):
-                                if float(candle_end) >= float(candle_start):
-                                    trendY = '℗'
-                                else:
-                                    trendY = ' '
-                            else:
-                                trendY = ' '
-                        else:
-                            trendY = ' '
-			        
-                    text = f'{trendY}{trendM} {list} cY{CloseY} {trendAll} {Chg_closeY}% | e {ema} {pema}% | cM{CloseM} > {Close} ({today_chg})'
+                    request_val = float(value) 
+                    request_val  = '{:,.0f}'.format(request_val)
+                    request_val = str(request_val)
                     
-                    if float(Close) > float(CloseY):
-                        if float(Close) >= float(CloseM) :
-                            if float(CloseY) >= float(ema):
-                                notice = 'Buy CloseY >> {}'.format(high_trend)
-                                start = 'oM {}'.format(OpenM)
-                                buy = 'cM {} | cY{}'.format(CloseM,CloseY)
-                                stop = 'e {} {}%'.format(ema,pema)
-                                target = 'H {} | L {}'.format(max_Y,min_Y)
-                                avg = '$ {} \nr{} | {}'.format(comvluee,m_RSI,pattern)
-                            elif float(CloseM) >= float(ema):
-                                if float(candle_end) >= float(candle_start):
-                                    notice = 'Buy CloseM >> {}'.format(high_trend)
-                                    start = 'oM {}'.format(OpenM)
-                                    buy = 'cY{} | cM {}'.format(CloseY,CloseM)
-                                    stop = 'e {} {}%'.format(ema,pema)
-                                    target = 'H {} | L {}'.format(max_Y,min_Y)
-                                    avg = '$ {} \nr{} | {}'.format(comvluee,m_RSI,pattern)
+                    exit1 = float(OpenQ) * 1.12
+                    exit1 = '%.2f'%exit1
+                    exit1 = str(exit1)
+
+                    exit2 = float(OpenQ) * 1.24
+                    exit2 = '%.2f'%exit2
+                    exit2 = str(exit2)
+
+                    exit3 = float(OpenQ) * 1.36
+                    exit3 = '%.2f'%exit3
+                    exit3 = str(exit3)
+
+                    buyQ = float(OpenQ) * 1.02
+                    buyQ = '%.2f'%buyQ
+                    buyQ = str(buyQ) 
+
+                    stopQ = float(OpenQ) * 0.985
+                    stopQ = '%.2f'%stopQ
+                    stopQ = str(stopQ) 
+
+                    buyY = float(OpenY) * 1.02
+                    buyY = '%.2f'%buyY
+                    buyY = str(buyY) 
+
+                    stopY = float(OpenY) * 0.985
+                    stopY = '%.2f'%stopY
+                    stopY = str(stopY) 
+
+                    max_value = dfY.nlargest(1, columns = 'High')
+                    max_value = max_value['High'].iloc[0]
+                    max_value = '%.2f'%max_value
+                    max_value = str(max_value) 
+                    
+                    max_Qvalue = dfQ.nlargest(1, columns = 'High')
+                    max_Qvalue = max_Qvalue['High'].iloc[0]
+                    max_Qvalue = '%.2f'%max_Qvalue
+                    max_Qvalue = str(max_Qvalue) 
+
+                    pmax_value = ((float(max_value) - float(OpenY)) / float(OpenY)) * 100
+                    pmax_value = '%.2f'%pmax_value
+                    pmax_value = str(pmax_value)  
+
+                    min_value = dfY.nsmallest(1, columns = 'Low')
+                    min_value = min_value['Low'].iloc[0]
+                    min_value = '%.2f'%min_value
+                    min_value = str(min_value) 
+
+                    pmin_value = ((float(min_value) - float(OpenY)) / float(OpenY)) * 100
+                    pmin_value = '%.2f'%pmin_value
+                    pmin_value = str(pmin_value)
+
+                    support1 = float(OpenY) * 0.90
+                    support1 = '%.2f'%support1
+                    support1 = str(support1)
+
+                    pfibo_Q1 = (((float(Close) - float(support1))/float(support1)))*100  
+                    pfibo_Q1  = '%.2f'%pfibo_Q1
+                    pfibo_Q1 = str(pfibo_Q1) 
+
+                    support2 = float(OpenY) * 0.80
+                    support2 = '%.2f'%support2
+                    support2 = str(support2)
+
+                    pfibo_Q2 = (((float(Close) - float(support2))/float(support2)))*100     
+                    pfibo_Q2 = '%.2f'%pfibo_Q2
+                    pfibo_Q2 = str(pfibo_Q2) 
+
+                    support3 = float(OpenY) * 0.70
+                    support3 = '%.2f'%support3
+                    support3 = str(support3)
+
+                    pfibo_Q3 = (((float(Close) - float(support3))/float(support3)))*100     
+                    pfibo_Q3  = '%.2f'%pfibo_Q3
+                    pfibo_Q3 = str(pfibo_Q3) 
+
+                    support4 = float(OpenY) * 0.60
+                    support4 = '%.2f'%support4
+                    support4 = str(support4)
+
+                    pfibo_Q4 = (((float(Close) - float(support4))/float(support4)))*100     
+                    pfibo_Q4  = '%.2f'%pfibo_Q4
+                    pfibo_Q4 = str(pfibo_Q4)
+
+                    support5 = float(OpenY) * 0.50
+                    support5 = '%.2f'%support5
+                    support5 = str(support5)
+
+                    pfibo_Q5 = (((float(Close) - float(support5))/float(support5)))*100     
+                    pfibo_Q5  = '%.2f'%pfibo_Q5
+                    pfibo_Q5 = str(pfibo_Q5)
+
+                    support6 = float(OpenY) * 0.40
+                    support6 = '%.2f'%support6
+                    support6 = str(support6)
+
+                    pfibo_Q6 = (((float(Close) - float(support6))/float(support6)))*100     
+                    pfibo_Q6  = '%.2f'%pfibo_Q6
+                    pfibo_Q6 = str(pfibo_Q6)
+
+                    ChgY = ((float(r[1]) - float(OpenY))/ float(OpenY))*100
+                    ChgY  = '%.2f'%ChgY
+                    ChgY = str(ChgY)
+
+                    ChgQ = ((float(r[1]) - float(OpenQ))/ float(OpenQ))*100
+                    ChgQ  = '%.2f'%ChgQ
+                    ChgQ = str(ChgQ)
+
+                    ChgM = ((float(r[1]) - float(OpenM)) / float(OpenM) )*100
+                    ChgM = '%.2f'%ChgM
+                    ChgM = float(ChgM)	
+                    
+                    text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 
+
+                    alert2 = 'ไปต่อ'
+                    alert3 = 'ซื้อ Y / Q'
+                    alert4 = 'เปลี่ยนตัว'
+                    alert5 = 'ขายแล้วรอ'
+                    alert7 = 'ซื้อ'
+                    alert8 = 'ลงต่อ'
+                    alert9 = 'Vol น้อย'
+                    alert10 = 'ดูตลาด'
+
+                    text = r[0]
+                    price_now = r[1] 
+                    change = r[2] 
+                    chgp = str(ChgQ)
+                    re_avg = 'Q {} ({}%) | M {}'.format(OpenQ,p_OpenQ,OpenM) + '\n' + 'Y {} ({}%)'.format(OpenY,barY) 
+
+                    if float(value) > 7500000:
+                        if  barY > 0.00:
+                            if barQ >= 0.00:
+                                if barM > 0.00:
+                                    if 0.00 < float(barY) < 3.00:
+                                        notice = alert3
+                                        start = OpenY
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                        target = text1
+                                        avg = re_avg
+                                    elif 0.00 < float(barQ) < 3.00:
+                                        notice = alert7
+                                        start = OpenQ
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                        target = text1
+                                        avg = re_avg
+                                    else:
+                                        notice = alert2
+                                        start = OpenQ
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                        target = text1
+                                        avg = re_avg
                                 else:
-                                    notice = 'LowerL'
-                                    start = 'oM {}'.format(OpenM)
-                                    buy = 'cY{} | cM {}'.format(CloseY,CloseM)
-                                    stop = 'e {} {}%'.format(ema,pema)
-                                    target = 'H {} | L {}'.format(max_Y,min_Y)
-                                    avg = '$ {} \nr{} | {}'.format(comvluee,m_RSI,pattern)
+                                    notice = alert10
+                                    start = OpenQ
+                                    stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                    target = text1
+                                    avg = re_avg
                             else:
-                                notice = 'UnderEma'
-                                start = 'oM {}'.format(OpenM)
-                                buy = 'cY{} | cM {}'.format(CloseY,CloseM)
-                                stop = 'e {} {}%'.format(ema,pema)
-                                target = 'H {} | L {}'.format(max_Y,min_Y)
-                                avg = '$ {} \nr{} | {}'.format(comvluee,m_RSI,pattern)
+                                notice = alert4
+                                start = OpenQ
+                                stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                target = text1
+                                avg = re_avg
                         else:
-                            notice = 'LowM'
-                            start = 'oM {}'.format(OpenM)
-                            buy = 'cY{} | cM {}'.format(CloseY,CloseM)
-                            stop = 'e {} {}%'.format(ema,pema)
-                            target = 'H {} | L {}'.format(max_Y,min_Y)
-                            avg = '$ {} \nr{} | {}'.format(comvluee,m_RSI,pattern)   
-                    elif float(Close) >= float(CloseM) :
-                        if float(CloseM) >= float(ema):
-                            if float(candle_end) >= float(candle_start):
-                                notice = 'Buy CloseM >> {}'.format(high_trend)
-                                start = 'oM {}'.format(OpenM)
-                                buy = 'cY{} | cM {}'.format(CloseY,CloseM)
-                                stop = 'e {} {}%'.format(ema,pema)
-                                target = 'H {} | L {}'.format(max_Y,min_Y)
-                                avg = '$ {} \nr{} | {}'.format(comvluee,m_RSI,pattern)
+                            if barQ >= 0.00:
+                                if barM > 0.00:
+                                    if 0.00 < float(barQ) < 3.00:
+                                        notice = alert7
+                                        start = OpenQ
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                        target = text1
+                                        avg = re_avg
+                                    else:
+                                        notice = alert2
+                                        start = OpenQ
+                                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                        target = text1
+                                        avg = re_avg
+                                else:
+                                    notice = alert10
+                                    start = OpenQ
+                                    stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                    target = text1
+                                    avg = re_avg
                             else:
-                                notice = 'Lower Low'
-                                start = 'oM {}'.format(OpenM)
-                                buy = 'cY{} | cM {}'.format(CloseY,CloseM)
-                                stop = 'e {} {}%'.format(ema,pema)
-                                target = 'H {} | L {}'.format(max_Y,min_Y)
-                                avg = '$ {} \nr{} | {}'.format(comvluee,m_RSI,pattern)
-                        else:
-                            notice = 'UnderEma'
-                            start = 'oM {}'.format(OpenM)
-                            buy = 'cY{} | cM {}'.format(CloseY,CloseM)
-                            stop = 'e {} {}%'.format(ema,pema)
-                            target = 'H {} | L {}'.format(max_Y,min_Y)
-                            avg = '$ {} \nr{} | {}'.format(comvluee,m_RSI,pattern)
+                                notice = alert4
+                                start = OpenQ
+                                stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                                target = text1
+                                avg = re_avg
                     else:
-                        notice = 'LowM'
-                        start = 'oM {}'.format(OpenM)
-                        buy = 'cY{} | cM {}'.format(CloseY,CloseM)
-                        stop = 'e {} {}%'.format(ema,pema)
-                        target = 'H {} | L {}'.format(max_Y,min_Y)
-                        avg = '$ {} \nr{} | {}'.format(comvluee,m_RSI,pattern)
+                        notice = alert9
+                        start = OpenQ
+                        stop = 'H {} | L {}({}%)'.format(max_Qvalue,min_value,pmin_value)
+                        target = text1
+                        avg = re_avg 
 
-                    word_to_reply = str('{}'.format(text))
-                    linechat(word_to_reply)
-
+                    word_to_reply = str('{} {}'.format(text,notice))
+                    print(word_to_reply)
                     bubbles = []
-                    bubble = flex_stock(text,Close,today_chg,trendAll,Chg_closeY,notice,start,buy,stop,target,avg)
+                    bubble = flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg)
                     
                     flex_to_reply = SetMessage_Object(bubble)
                     reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
                     return 'OK'
-            
-            for code in codes:
-                ticket(code).bull()
+
+            for symbol in symbols:
+                stock(symbol).ticket()
+
     except:
         text_list = [
-            '{} ไม่มีในฐานข้อมูล {} ลองใหม่อีกครั้ง'.format(text_from_user,disname),
-            '{} พิมพ์ชื่อหุ้น {} ไม่ถูกต้อง ลองใหม่อีกครั้ง'.format(disname, text_from_user)]
+            'คุณ {} กำลังค้นหา {} ในฐานข้อมูล'.format(disname, text_from_user),
+            '{} สะกด {} ไม่ถูกต้อง'.format(disname, text_from_user),
+        ]
 
         from random import choice
-        word_to_reply = choice(text_list)        
+        word_to_reply = choice(text_list)
         text_to_reply = TextSendMessage(text = word_to_reply)
-
         line_bot_api.reply_message(
                 event.reply_token,
-                messages=[text_to_reply])
+                messages=[text_to_reply]
+            )
 
 @handler.add(FollowEvent)
 def RegisRichmenu(event):
     userid = event.source.user_id
     disname = line_bot_api.get_profile(user_id=userid).display_name
-    line_bot_api.link_rich_menu_to_user(userid,'richmenu-073dc85eff8bb8351e8d53769c025029')
-
+    line_bot_api.link_rich_menu_to_user(userid,'richmenu-9c78b01825c3f97ebebc0c400e74ffe7')
+            
 if __name__ == '__main__':
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "Credentials.json"
+    os.environ["DIALOGFLOW_PROJECT_ID"] = "worldstock-iardyn"
     port = int(os.getenv('PORT', 2000))
     app.run(debug=False, port=port, host='0.0.0.0', threaded=True)
