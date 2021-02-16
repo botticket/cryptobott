@@ -12,6 +12,7 @@ from reply import reply_msg , SetMessage_Object
 from flex_crypto import *
 from dialogflow_uncle import detect_intent_texts
 from datetime import datetime,date
+from scipy.stats import linregress
 
 app = Flask(__name__)
 
