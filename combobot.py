@@ -375,7 +375,7 @@ def handle_message(event):
                     text = st[0]
                     price_now = str(Close) 
                     change = str(today_chg)
-                    chgp = str(Chg_closeY)
+                    chgp = f'{trendAll} {Chg_closeY}''
                     re_avg = f'max {max_Y} | min {min_Y} \nr {m_RSI} >> {pattern} \n$ {comvluee}'
 
                     if float(Close) > float(CloseY):
@@ -384,50 +384,50 @@ def handle_message(event):
                                 notice = f'Buy Y'
                                 start = f'cY {CloseY}'
                                 stop = f'e {ema} {pema}% | cM {CloseM}'
-                                target = f'# {high_trend}'
+                                target = f'{high_trend}'
                             elif float(CloseM) >= float(ema):
                                 if float(candle_end) >= float(candle_start):
                                     notice = f'BUY M'
                                     start = f'cY {CloseY} | cM {CloseM}'
                                     stop = f'e {ema} {pema}%'
-                                    target = f'# {high_trend}'
+                                    target = f'{high_trend}'
                                 else:
                                     notice = f'Alert M'
                                     start = f'cY {CloseY} | cM {CloseM}'
                                     stop = f'e {ema} {pema}%'
-                                    target = f'# {high_trend}'
+                                    target = f'{high_trend}'
                             else:
                                 notice = f'LowerE'
                                 start = f'cY {CloseY} | cM {CloseM}'
                                 stop = f'e {ema} {pema}%'
-                                target = f'# {high_trend}'
+                                target = f'{high_trend}'
                         else:
                             notice = f'LowerM'
                             start = f'cY {CloseY} | cM {CloseM}'
                             stop = f'e {ema} {pema}%'
-                            target = f'# {high_trend}'
+                            target = f'{high_trend}'
                     elif float(Close) >= float(CloseM) :
                         if float(CloseM) >= float(ema):
                             if float(candle_end) >= float(candle_start):
                                 notice = f'BUY M'
                                 start = f'cY {CloseY} | cM {CloseM}'
                                 stop = f'e {ema} {pema}%'
-                                target = f'# {high_trend}'
+                                target = f'{high_trend}'
                             else:
                                 notice = f'Alert M'
                                 start = f'cY {CloseY} | cM {CloseM}'
                                 stop = f'e {ema} {pema}%'
-                                target = f'# {high_trend}'
+                                target = f'{high_trend}'
                         else:
                             notice = f'LowerE'
                             start = f'cY {CloseY} | cM {CloseM}'
                             stop = f'e {ema} {pema}%'
-                            target = f'# {high_trend}'
+                            target = f'{high_trend}'
                     else:
                         notice = f'LowerM'
                         start = f'cY {CloseY} | cM {CloseM}'
                         stop = f'e {ema} {pema}%'
-                        target = f'# {high_trend}'
+                        target = f'{high_trend}'
 
                     word_to_reply = str('{}'.format(text_return))
                     print(word_to_reply)
