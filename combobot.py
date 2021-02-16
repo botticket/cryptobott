@@ -375,7 +375,7 @@ def handle_message(event):
                     text = st[0]
                     price_now = str(Close) 
                     change = str(today_chg)
-                    chgp = f'{trendAll} {Chg_closeY}''
+                    chgp = str(Chg_closeY)
                     re_avg = f'max {max_Y} | min {min_Y} \nr {m_RSI} >> {pattern} \n$ {comvluee}'
 
                     if float(Close) > float(CloseY):
