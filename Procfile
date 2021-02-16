@@ -1,1 +1,1 @@
-web: gunicorn ticketapp:app
+web: gunicorn app:app
