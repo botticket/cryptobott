@@ -1,8 +1,8 @@
 def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
     Change_color = ['#EE0000' if '-' in str(change) else '#23D500'][0]
     trend = ['#EE0000' if '-' in str(avg) else '#3c3c3c'][0]
-    chgword = ['tLine' if '-' in str(avg) else 'tLine'][0]
-    switch = ['cPoint' if '-' in str(avg) else 'cPoint'][0]
+    chgword = ['>>' if '-' in str(avg) else '>>'][0]
+    switch = ['>>' if '-' in str(avg) else '>>'][0]
 
     bubble ={
     "type": "flex",
@@ -141,7 +141,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "dashboard",
+                    "text": ">>",
                     "flex": 3,
                     "size": "sm"
                 }
@@ -174,7 +174,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "in",
+                    "text": ">>",
                     "flex": 3,
                     "size": "sm"
                 }

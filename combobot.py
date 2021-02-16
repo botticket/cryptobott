@@ -31,8 +31,7 @@ yearly = '{}-01-01'.format(today.year)
 monthly = '{}-{}-01'.format(today.year,today.month)
 
 def linechat(text):
-    
-    ACCESS_TOKEN = "oK2sk4w1eidfRyOVfgIcln38TBS8JmL0PgfbbQ8t0Zv"
+    ACCESS_TOKEN = "12CiN1mDzj3q93N5aTYvtWX63XlQOqDs6FWizTRUx1y"
     notify = LineNotify(ACCESS_TOKEN)
     notify.send(text)
 
@@ -374,10 +373,10 @@ def handle_message(event):
                     text_return = f'\n{list} {trendY}{trendM} cY{CloseY} {trendAll} {Chg_closeY}%  \ncM{CloseM} > {Close} ({today_chg}) \ne {ema} ({pema}%) \nr {m_RSI} \n{pattern}'
 
                     text = st[0]
-                    price_now = str(Close) 
-                    change = str(today_chg)
-                    chgp = str(Chg_closeY)
-                    re_avg = 'max {} | min {}'.format(max_Y,min_Y) + '\nr {} >> {} \n$ {} '.format(comvluee,m_RSI,pattern) 
+                    price_now = f'{Close}' 
+                    change = f'{today_chg)}'
+                    chgp = f'{trendAll} {Chg_closeY}'
+                    re_avg = f'max {max_Y} | min {min_Y} \nr {m_RSI} >> {pattern} \n$ {comvluee}'
 
                     if float(Close) > float(CloseY):
                         if float(Close) >= float(CloseM) :
