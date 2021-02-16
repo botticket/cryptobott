@@ -371,7 +371,7 @@ def handle_message(event):
                     else:
                         trendY = ' '
 
-                text_return = f'\n{today} {current_time} \n{list} {trendY}{trendM} cY{CloseY} {trendAll} {Chg_closeY}%  \ncM{CloseM} > {Close} ({today_chg}) \ne {ema} ({pema}%) \nr {m_RSI} \n{pattern}'
+                text_return = f'\n{list} {trendY}{trendM} cY{CloseY} {trendAll} {Chg_closeY}%  \ncM{CloseM} > {Close} ({today_chg}) \ne {ema} ({pema}%) \nr {m_RSI} \n{pattern}'
 
                 text = st[0]
                 price_now = str(Close) 
