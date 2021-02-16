@@ -301,9 +301,9 @@ def handle_message(event):
                     candle_end = str(candle_end)
 
                     if float(candle_start) > float(candle_end):
-                        pattern = 'lower low'
+                        pattern = 'Lower low'
                     else:
-                        pattern = 'lower high'
+                        pattern = 'Lower high'
 
                     Volume = dfY['Volume'].iloc[-1]
                     Volume = str(Volume)
@@ -376,7 +376,7 @@ def handle_message(event):
                     price_now = str(Close) 
                     change = str(today_chg)
                     chgp = str(Chg_closeY)
-                    re_avg = f'max {max_Y} | min {min_Y} \nr {m_RSI} >> {pattern} \n$ {comvluee}'
+                    re_avg = f'H {max_Y} | L {min_Y} \nR {m_RSI} // {pattern} \n$ {comvluee}'
 
                     if float(Close) > float(CloseY):
                         if float(Close) >= float(CloseM) :

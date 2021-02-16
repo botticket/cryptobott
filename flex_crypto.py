@@ -1,8 +1,6 @@
 def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
     Change_color = ['#EE0000' if '-' in str(change) else '#23D500'][0]
-    trend = ['#EE0000' if '-' in str(avg) else '#3c3c3c'][0]
-    chgword = ['--' if '-' in str(avg) else '--'][0]
-    switch = ['...' if '-' in str(avg) else '...'][0]
+    subheader = ['...' if '-' in str(avg) else '...'][0]
 
     bubble ={
     "type": "flex",
@@ -82,7 +80,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                     "contents": [
                     {
                         "type": "text",
-                        "text": "now {}".format(price_now),
+                        "text": "{}".format(price_now),
                         "align": "end",
                         "color": "{}".format(Change_color),
                         "gravity": "center",
@@ -100,7 +98,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                     "contents": [
                     {
                         "type": "text",
-                        "text": "chg {}".format(change),
+                        "text": "{}".format(change),
                         "align": "end",
                         "color": "{}".format(Change_color),
                         "gravity": "center",
@@ -120,7 +118,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                         "type": "text",
                         "text": "{} %".format(chgp),
                         "align": "end",
-                        "color": "#F8F9F9",
+                        "color": "{}".format(Change_color),
                         "gravity": "center",
                         "size": "md",
                         "wrap": True
@@ -159,7 +157,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                     "type": "text",
                     "text": "{}".format(notice),
                     "flex": 3,
-                    "color": "{}".format(trend),
+                    "color": "{}".format(Change_color),
                     "size": "lg"
                 }
                 ],
@@ -174,7 +172,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": ">>",
+                    "text": "{}".format(subheader),
                     "flex": 3,
                     "size": "sm"
                 }
@@ -206,7 +204,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(chgword),
+                    "text": "{}".format(subheader),
                     "flex": 3,
                     "size": "sm"
                 }
@@ -238,7 +236,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(switch),
+                    "text": "{}".format(subheader),
                     "flex": 3,
                     "size": "sm"
                 }
@@ -256,7 +254,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                     "type": "text",
                     "text": "{}".format(target),
                     "flex": 3,
-                    "color": "{}".format(trend),
+                    "color": "{}".format(Change_color),
                     "size": "lg",
                     "wrap": True
                 }
@@ -272,7 +270,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": " ",
+                    "text": "{}".format(subheader),
                     "flex": 3,
                     "size": "sm"
                 }
@@ -290,7 +288,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                     "type": "text",
                     "text": "{}".format(avg),
                     "flex": 3,
-                    "color": "{}".format(trend),
+                    "color": "{}".format(Change_color),
                     "size": "lg",
                     "wrap": True
                 }
