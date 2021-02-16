@@ -361,22 +361,12 @@ def handle_message(event):
                                 trendY = '℗'
                             else:
                                 trendY = ' '
+                        else:
+                            trendY = ' '
                     else:
                         trendY = ' '
-                else:
-                    trendY = ' '
 
                 text_return = f'\n{today} {current_time} \n{list} {trendY}{trendM} cY{CloseY} {trendAll} {Chg_closeY}%  \ncM{CloseM} > {Close} ({today_chg}) \ne {ema} ({pema}%) \nr {m_RSI} \n{pattern}'
-
-                text1 = exit1 + ' | ' + exit2 + ' | ' + exit3 
-                alert2 = 'ไปต่อ'
-                alert3 = 'ซื้อ Y / Q'
-                alert4 = 'เปลี่ยนตัว'
-                alert5 = 'ขายแล้วรอ'
-                alert7 = 'ซื้อ'
-                alert8 = 'ลงต่อ'
-                alert9 = 'Vol น้อย'
-                alert10 = 'ดูตลาด'
 
                 text = st[0]
                 price_now = str(Close) 
