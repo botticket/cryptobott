@@ -12,7 +12,7 @@ from reply import reply_msg , SetMessage_Object
 from flex_crypto import *
 from dialogflow_uncle import detect_intent_texts
 from datetime import datetime,date
-from scipy.stats import linregress
+
 
 app = Flask(__name__)
 
@@ -95,7 +95,11 @@ def handle_message(event):
         from urllib.request import urlopen as req
         from pandas_datareader import data
         from datetime import datetime, date
-                
+        from scipy.stats import linregress
+        import math
+        import numpy as np
+        import pandas as pd 
+        
         code = text_from_user
         ticket = [text_from_user]
         symbols = list(map(lambda e: e + '.bk', ticket))
