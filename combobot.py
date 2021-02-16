@@ -373,9 +373,9 @@ def handle_message(event):
                     text_return = f'\n{list} {trendY}{trendM} cY{CloseY} {trendAll} {Chg_closeY}%  \ncM{CloseM} > {Close} ({today_chg}) \ne {ema} ({pema}%) \nr {m_RSI} \n{pattern}'
 
                     text = st[0]
-                    price_now = f'{Close}' 
-                    change = f'{today_chg)}'
-                    chgp = f'{trendAll} {Chg_closeY}'
+                    price_now = str(Close) 
+                    change = str(today_chg)
+                    chgp = str(Chg_closeY)
                     re_avg = f'max {max_Y} | min {min_Y} \nr {m_RSI} >> {pattern} \n$ {comvluee}'
 
                     if float(Close) > float(CloseY):
