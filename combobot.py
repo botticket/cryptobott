@@ -108,7 +108,6 @@ def handle_message(event):
                 webopen = req(url)
                 page_html = webopen.read()
                 webopen.close()
-
                 data = soup(page_html, 'html.parser')
                 price = data.findAll('div',{'class':'col-xs-6'})
                 title = price[0].text
@@ -124,8 +123,19 @@ def handle_message(event):
                 comvlue = format(float(comvlue),'')
                 comvluee = format(float(comvlue),',')
                 return [title,stockprice,change,comvlue,comvluee]
-
-            st = checkmarket(code)
+            def free(code):
+                url = 'https://www.settrade.com/C04_05_stock_majorshareholder_p1.jsp?txtSymbol={}&ssoPageId=14&selectPage=5'.format(code)
+                webopen = req(url)
+                page_html = webopen.read()
+                webopen.close()
+                data = soup(page_html, 'html.parser')
+                freefloat = data.findAll('div',{'class':'row separate-content'})
+                freefloat = freefloat[0].text
+                freefloat = freefloat.replace('\n','')
+                freefloat = freefloat.replace('\r','')
+                freefloat = freefloat[-6:]
+                freefloat = freefloat.replace('%','')
+                return [freefloat]
 
             class stock:
                 def __init__(self,stock):
@@ -148,7 +158,11 @@ def handle_message(event):
                         dfM = data.DataReader(f'{list}', data_source="yahoo", start=start_year, end=end)
 
                     list = list.replace('.bk','')
-                    
+
+                    st = checkmarket(code)
+                    fr = free(stock)
+                    freefloat = fr[0]
+
                     stock = f'{list}'
                     dfall.dropna(inplace=True)
         
@@ -315,17 +329,52 @@ def handle_message(event):
                     dfall['Open_all'] = dfall['Open'].iloc[0]
                     dfall['high_trendQ'] = dfY['high_trendQ']
                     dfall['low_trendQ'] = dfY['low_trendQ']
-                    dfall['ema'] = dfall['Close'].rolling(35).mean()
 
                     dfY['OpenY'] = dfY['Open'].iloc[0]
                     dfY['CloseY'] = dfY['Close'].iloc[0]
                     dfM['CloseM'] = dfM['Close'].iloc[0]
 
+                    dfall['ema'] = dfall['Close'].rolling(35).mean()
+                    dfall['ema'] = dfall['ema'].replace(np.nan, dfY['Close'].iloc[0])
+                    dfall['emas'] = dfall['Close'].rolling(15).mean()
+                    dfall['emas'] = dfall['emas'].replace(np.nan, dfY['Close'].iloc[0])
+
                     ema = dfall['ema'].iloc[-1]
+                    ema = float(ema)
+
+                    if ema >= 100:
+                        ema = (round(ema/0.5) * 0.5)
+                    elif ema >= 25:
+                        ema = (round(ema/0.25) * 0.25)
+                    elif ema >= 10:
+                        ema = (round(ema/0.1) * 0.1)
+                    elif ema >= 5:
+                        ema = (round(ema/0.05) * 0.05)
+                    else:
+                        ema = (round(ema/0.02) * 0.02)
+
                     ema = '%.2f'%ema
                     ema = str(ema)
 
-                    pema = ((float(Close) - float(ema)) / float(ema))*100
+                    emas = dfall['emas'].iloc[-1]
+                    emas = float(emas)
+
+                    if emas >= 100:
+                        emas = (round(emas/0.5) * 0.5)
+                    elif emas >= 25:
+                        emas = (round(emas/0.25) * 0.25)
+                    elif emas >= 10:
+                        emas = (round(emas/0.1) * 0.1)
+                    elif emas >= 5:
+                        emas = (round(emas/0.05) * 0.05)
+                    else:
+                        emas = (round(emas/0.02) * 0.02)
+
+                    emas = '%.2f'%emas
+                    emas = str(emas)
+
+                    pema = dfall['ema'].iloc[-1]
+                    pema = ((float(Close) - float(pema)) / float(pema))*100
                     pema = '%.2f'%pema
                     pema = str(pema)
 
@@ -348,11 +397,8 @@ def handle_message(event):
                     if float(ChgY) >= 0 :
                         trendAll = '▲'
                         if float(Close) >= float(CloseM) :
-                            if float(CloseM) >= float(ema):
-                                if float(candle_end) >= float(candle_start):
-                                    trendY = '©'
-                                else:
-                                    trendY = ' '
+                            if float(Close) >= float(ema):
+                                trendY = '©'
                             else:
                                 trendY = ' '
                         else:
@@ -360,11 +406,8 @@ def handle_message(event):
                     else:
                         trendAll = '▼'
                         if float(Close) >= float(CloseM) :
-                            if float(CloseM) >= float(ema):
-                                if float(candle_end) >= float(candle_start):
-                                    trendY = '℗'
-                                else:
-                                    trendY = ' '
+                            if float(Close) >= float(ema):
+                                trendY = '℗'
                             else:
                                 trendY = ' '
                         else:
@@ -376,56 +419,39 @@ def handle_message(event):
                     price_now = str(Close) 
                     change = str(today_chg)
                     chgp = str(Chg_closeY)
-                    re_avg = f'H {max_Y} | L {min_Y} \nR {m_RSI} // {pattern} \n$ {comvluee}'
+                    re_avg = f'H {max_Y} | L {min_Y} \nR {m_RSI} # ff {freefloat}% \n$ {comvluee}'
 
                     if float(Close) > float(CloseY):
                         if float(Close) >= float(CloseM) :
-                            if float(CloseY) >= float(ema):
-                                notice = f'Buy Y'
-                                start = f'cY {CloseY}'
-                                stop = f'e {ema} {pema}% | cM {CloseM}'
+                            if float(Close) >= float(ema):
+                                notice = f'BuyM {trendY}{trendM}'
+                                start = f'cM {CloseM} # {emas}'
+                                stop = f'e {ema} {pema}%'
                                 target = f'{high_trend}'
-                            elif float(CloseM) >= float(ema):
-                                if float(candle_end) >= float(candle_start):
-                                    notice = f'BUY M'
-                                    start = f'cY {CloseY} | cM {CloseM}'
-                                    stop = f'e {ema} {pema}%'
-                                    target = f'{high_trend}'
-                                else:
-                                    notice = f'Alert M'
-                                    start = f'cY {CloseY} | cM {CloseM}'
-                                    stop = f'e {ema} {pema}%'
-                                    target = f'{high_trend}'
                             else:
-                                notice = f'LowerE'
-                                start = f'cY {CloseY} | cM {CloseM}'
+                                notice = f'LowerE {trendY}{trendM}'
+                                start = f'cM {CloseM} # {emas}'
                                 stop = f'e {ema} {pema}%'
                                 target = f'{high_trend}'
                         else:
-                            notice = f'LowerM'
-                            start = f'cY {CloseY} | cM {CloseM}'
+                            notice = f'LowerM {trendY}{trendM}'
+                            start = f'cM {CloseM} # {emas}'
                             stop = f'e {ema} {pema}%'
                             target = f'{high_trend}'
                     elif float(Close) >= float(CloseM) :
-                        if float(CloseM) >= float(ema):
-                            if float(candle_end) >= float(candle_start):
-                                notice = f'BUY M'
-                                start = f'cY {CloseY} | cM {CloseM}'
-                                stop = f'e {ema} {pema}%'
-                                target = f'{high_trend}'
-                            else:
-                                notice = f'Alert M'
-                                start = f'cY {CloseY} | cM {CloseM}'
-                                stop = f'e {ema} {pema}%'
-                                target = f'{high_trend}'
+                        if float(Close) >= float(ema):
+                            notice = f'BUY M {trendY}{trendM}'
+                            start = f'cM {CloseM} # {emas}'
+                            stop = f'e {ema} {pema}%'
+                            target = f'{high_trend}'
                         else:
-                            notice = f'LowerE'
-                            start = f'cY {CloseY} | cM {CloseM}'
+                            notice = f'LowerE {trendY}{trendM}'
+                            start = f'cM {CloseM} # {emas}'
                             stop = f'e {ema} {pema}%'
                             target = f'{high_trend}'
                     else:
-                        notice = f'LowerM'
-                        start = f'cY {CloseY} | cM {CloseM}'
+                        notice = f'LowerM {trendY}{trendM}'
+                        start = f'cM {CloseM} # {emas}'
                         stop = f'e {ema} {pema}%'
                         target = f'{high_trend}'
 
