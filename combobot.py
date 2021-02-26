@@ -73,374 +73,358 @@ def handle_message(event):
     print("action : " + action)
     print("response : " + str(response))
 
-    try:        
-        if 'สวัสดี' in text_from_user:    
-            text_list = [
-                'สวัสดีจ้า คุณ {} '.format(disname),
-                'สวัสดีจ้า คุณ {} วันนี้จะเล่นตัวไหนดี'.format(disname),
-            ]
+    # try:        
+    if 'สวัสดี' in text_from_user:    
+        text_list = [
+            'สวัสดีจ้า คุณ {} '.format(disname),
+            'สวัสดีจ้า คุณ {} วันนี้จะเล่นตัวไหนดี'.format(disname),
+        ]
 
-            from random import choice
-            word_to_reply = choice(text_list)
-            text_to_reply = TextSendMessage(text = word_to_reply)
-            line_bot_api.reply_message(
-                    event.reply_token,
-                    messages=[text_to_reply]
-                )
-            return 'OK'
+        from random import choice
+        word_to_reply = choice(text_list)
+        text_to_reply = TextSendMessage(text = word_to_reply)
+        line_bot_api.reply_message(
+                event.reply_token,
+                messages=[text_to_reply]
+            )
+        return 'OK'
 
-        else:
-            from bs4 import BeautifulSoup as soup
-            from urllib.request import urlopen as req
-            from pandas_datareader import data
-            from datetime import datetime, date
-            from scipy.stats import linregress
-            import math
-            import numpy as np
-            import pandas as pd 
-            
-            code = text_from_user
-            ticket = [text_from_user]
-            symbols = list(map(lambda e: e + '.bk', ticket))
-                        
-            def checkmarket(code):
-                url = 'https://www.settrade.com/C04_01_stock_quote_p1.jsp?txtSymbol={}&ssoPageId=9&selectPage=1'.format(code)
-                webopen = req(url)
-                page_html = webopen.read()
-                webopen.close()
-                data = soup(page_html, 'html.parser')
-                price = data.findAll('div',{'class':'col-xs-6'})
-                title = price[0].text
-                stockprice = price[2].text
-                stockprice = stockprice.replace('\n','')
-                change = price[3].text
-                change = change.replace('\n','')
-                change = change.replace('\r','')
-                change = change[87:]	
-                comvlue = data.findAll('div',{'class':'col-xs-4'})
-                comvlue = comvlue[6].text
-                comvlue = comvlue.replace(',','')
-                comvlue = format(float(comvlue),'')
-                comvluee = format(float(comvlue),',')
-                return [title,stockprice,change,comvlue,comvluee]
-            def free(code):
-                url = 'https://www.settrade.com/C04_05_stock_majorshareholder_p1.jsp?txtSymbol={}&ssoPageId=14&selectPage=5'.format(code)
-                webopen = req(url)
-                page_html = webopen.read()
-                webopen.close()
-                data = soup(page_html, 'html.parser')
-                freefloat = data.findAll('div',{'class':'row separate-content'})
-                freefloat = freefloat[0].text
-                freefloat = freefloat.replace('\n','')
-                freefloat = freefloat.replace('\r','')
-                freefloat = freefloat[-6:]
-                freefloat = freefloat.replace('%','')
-                return [freefloat]
-
-            class stock:
-                def __init__(self,stock):
-                    self.stock = stock
-                def ticket(self):
-                    end = datetime.now()
-                    start = datetime(end.year,end.month,end.day)
-                    list = self.stock
-
-                    dfall = data.DataReader(f'{list}', data_source="yahoo",start=start_year, end=end)
-
-                    try:
-                        dfY = data.DataReader(f'{list}', data_source="yahoo", start=yearly, end=end)
-                    except ValueError:
-                        dfY = data.DataReader(f'{list}', data_source="yahoo", start=start_year, end=end)
-
-                    try:
-                        dfM = data.DataReader(f'{list}', data_source="yahoo", start=monthly, end=end)
-                    except ValueError:
-                        dfM = data.DataReader(f'{list}', data_source="yahoo", start=start_year, end=end)
-
-                    list = list.replace('.bk','')
-
-                    st = checkmarket(code)
-                    fr = free(stock)
-                    freefloat = fr[0]
-
-                    stock = f'{list}'
-                    dfall.dropna(inplace=True)
+    else:
+        from bs4 import BeautifulSoup as soup
+        from urllib.request import urlopen as req
+        from pandas_datareader import data
+        from datetime import datetime, date
+        from scipy.stats import linregress
+        import math
+        import numpy as np
+        import pandas as pd 
         
-                    try:
-                        Close = float(st[1])
-                    except ValueError:
-                        Close = dfall['Close'].iloc[-1]
+        code = text_from_user
+        ticket = [text_from_user]
+        symbols = list(map(lambda e: e + '.bk', ticket))
+                    
+        def checkmarket(code):
+            url = 'https://www.settrade.com/C04_01_stock_quote_p1.jsp?txtSymbol={}&ssoPageId=9&selectPage=1'.format(code)
+            webopen = req(url)
+            page_html = webopen.read()
+            webopen.close()
+            data = soup(page_html, 'html.parser')
+            price = data.findAll('div',{'class':'col-xs-6'})
+            title = price[0].text
+            stockprice = price[2].text
+            stockprice = stockprice.replace('\n','')
+            change = price[3].text
+            change = change.replace('\n','')
+            change = change.replace('\r','')
+            change = change[87:]	
+            comvlue = data.findAll('div',{'class':'col-xs-4'})
+            comvlue = comvlue[6].text
+            comvlue = comvlue.replace(',','')
+            comvlue = format(float(comvlue),'')
+            comvluee = format(float(comvlue),',')
+            return [title,stockprice,change,comvlue,comvluee]
+        def free(code):
+            url = 'https://www.settrade.com/C04_05_stock_majorshareholder_p1.jsp?txtSymbol={}&ssoPageId=14&selectPage=5'.format(code)
+            webopen = req(url)
+            page_html = webopen.read()
+            webopen.close()
+            data = soup(page_html, 'html.parser')
+            freefloat = data.findAll('div',{'class':'row separate-content'})
+            freefloat = freefloat[0].text
+            freefloat = freefloat.replace('\n','')
+            freefloat = freefloat.replace('\r','')
+            freefloat = freefloat[-6:]
+            freefloat = freefloat.replace('%','')
+            return [freefloat]
 
-                    Close  = '%.2f'%Close
-                    Close = str(Close) 
+        class stock:
+            def __init__(self,stock):
+                self.stock = stock
+            def ticket(self):
+                end = datetime.now()
+                start = datetime(end.year,end.month,end.day)
+                list = self.stock
 
-                    Open_all = dfall['Open'].iloc[0]
-                    Open_all  = '%.2f'%Open_all
-                    Open_all = str(Open_all)
+                dfall = data.DataReader(f'{list}', data_source="yahoo",start=start_year, end=end)
 
-                    Chg_all = ((float(Close) - float(Open_all))/ float(Open_all))*100
-                    Chg_all = '%.2f'%Chg_all
-                    Chg_all = str(Chg_all)
+                try:
+                    dfY = data.DataReader(f'{list}', data_source="yahoo", start=yearly, end=end)
+                except ValueError:
+                    dfY = data.DataReader(f'{list}', data_source="yahoo", start=start_year, end=end)
 
-                    OpenY = dfY['Open'].iloc[0]
-                    OpenY  = '%.2f'%OpenY
-                    OpenY = str(OpenY)
+                try:
+                    dfM = data.DataReader(f'{list}', data_source="yahoo", start=monthly, end=end)
+                except ValueError:
+                    dfM = data.DataReader(f'{list}', data_source="yahoo", start=start_year, end=end)
 
-                    CloseY = dfY['Close'].iloc[0]
-                    CloseY  = '%.2f'%CloseY
-                    CloseY = str(CloseY)
+                list = list.replace('.bk','')
 
-                    ChgY = ((float(Close) - float(OpenY)) / float(OpenY) )*100
-                    ChgY = '%.2f'%ChgY
-                    ChgY = str(ChgY)
+                st = checkmarket(code)
+                fr = free(stock)
+                freefloat = fr[0]
 
-                    Chg_closeY = ((float(Close) - float(CloseY)) / float(CloseY) )*100
-                    Chg_closeY = '%.2f'%Chg_closeY
-                    Chg_closeY = str(Chg_closeY)
+                stock = f'{list}'
+                dfall.dropna(inplace=True)
+    
+                try:
+                    Close = float(st[1])
+                except ValueError:
+                    Close = dfall['Close'].iloc[-1]
 
-                    OpenM = dfM['Open'].iloc[0]
-                    OpenM  = '%.2f'%OpenM
-                    OpenM = str(OpenM)
+                Close  = '%.2f'%Close
+                Close = str(Close) 
 
-                    CloseM = dfM['Close'].iloc[0]
-                    CloseM  = '%.2f'%CloseM
-                    CloseM = str(CloseM)
+                Open_all = dfall['Open'].iloc[0]
+                Open_all  = '%.2f'%Open_all
+                Open_all = str(Open_all)
 
-                    ChgM = ((float(Close) - float(CloseM)) / float(CloseM) )*100
-                    ChgM = '%.2f'%ChgM
-                    ChgM = str(ChgM)
+                Chg_all = ((float(Close) - float(Open_all))/ float(Open_all))*100
+                Chg_all = '%.2f'%Chg_all
+                Chg_all = str(Chg_all)
 
-                    try:
-                        today_chg = float(st[2])
-                    except ValueError:
-                        today_chg = float(dfall['Close'].iloc[-1]) - float(dfall['Close'].iloc[-2])
+                OpenY = dfY['Open'].iloc[0]
+                OpenY  = '%.2f'%OpenY
+                OpenY = str(OpenY)
 
-                    today_chg  = '%.2f'%today_chg
-                    today_chg = str(today_chg)
+                CloseY = dfY['Close'].iloc[0]
+                CloseY  = '%.2f'%CloseY
+                CloseY = str(CloseY)
 
-                    def computeRSI (data, time_window):
-                        diff = data.diff(1).dropna()
-                        up_chg = 0 * diff
-                        down_chg = 0 * diff
+                ChgY = ((float(Close) - float(OpenY)) / float(OpenY) )*100
+                ChgY = '%.2f'%ChgY
+                ChgY = str(ChgY)
 
-                        up_chg[diff > 0] = diff[ diff>0 ]    
-                        down_chg[diff < 0] = diff[ diff < 0 ]
+                Chg_closeY = ((float(Close) - float(CloseY)) / float(CloseY) )*100
+                Chg_closeY = '%.2f'%Chg_closeY
+                Chg_closeY = str(Chg_closeY)
 
-                        up_chg_avg   = up_chg.ewm(com=time_window-1 , min_periods=time_window).mean()
-                        down_chg_avg = down_chg.ewm(com=time_window-1 , min_periods=time_window).mean()
+                OpenM = dfM['Open'].iloc[0]
+                OpenM  = '%.2f'%OpenM
+                OpenM = str(OpenM)
 
-                        rs = abs(up_chg_avg/down_chg_avg)
-                        rsi = 100 - 100/(1+rs)
-                        return rsi
+                CloseM = dfM['Close'].iloc[0]
+                CloseM  = '%.2f'%CloseM
+                CloseM = str(CloseM)
 
-                    dfall['RSI'] = computeRSI(dfall['Close'], 14)
-                    m_RSI = dfall['RSI'].iloc[-1]
-                    m_RSI = '%.2f'%m_RSI
-                    m_RSI = str(m_RSI)
+                ChgM = ((float(Close) - float(CloseM)) / float(CloseM) )*100
+                ChgM = '%.2f'%ChgM
+                ChgM = str(ChgM)
 
-                    #copy dataframeY
-                    dfall = dfall.copy()
-                    dfall['date_id'] = ((dfall.index.date - dfall.index.date.min())).astype('timedelta64[D]')
-                    dfall['date_id'] = dfall['date_id'].dt.days + 1
+                try:
+                    today_chg = float(st[2])
+                except ValueError:
+                    today_chg = float(dfall['Close'].iloc[-1]) - float(dfall['Close'].iloc[-2])
 
-                    # high trend lineY
-                    dfall_mod = dfall.copy()
+                today_chg  = '%.2f'%today_chg
+                today_chg = str(today_chg)
 
-                    while len(dfall_mod)>3:
+                def computeRSI (data, time_window):
+                    diff = data.diff(1).dropna()
+                    up_chg = 0 * diff
+                    down_chg = 0 * diff
 
-                        reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
-                        dfall_mod = dfall_mod.loc[dfall_mod['Close'] > reg[0] * dfall_mod['date_id'] + reg[1]]
+                    up_chg[diff > 0] = diff[ diff>0 ]    
+                    down_chg[diff < 0] = diff[ diff < 0 ]
+
+                    up_chg_avg   = up_chg.ewm(com=time_window-1 , min_periods=time_window).mean()
+                    down_chg_avg = down_chg.ewm(com=time_window-1 , min_periods=time_window).mean()
+
+                    rs = abs(up_chg_avg/down_chg_avg)
+                    rsi = 100 - 100/(1+rs)
+                    return rsi
+
+                dfall['RSI'] = computeRSI(dfall['Close'], 14)
+                m_RSI = dfall['RSI'].iloc[-1]
+                m_RSI = '%.2f'%m_RSI
+                m_RSI = str(m_RSI)
+
+                #copy dataframeY
+                dfall = dfall.copy()
+                dfall['date_id'] = ((dfall.index.date - dfall.index.date.min())).astype('timedelta64[D]')
+                dfall['date_id'] = dfall['date_id'].dt.days + 1
+
+                # high trend lineY
+                dfall_mod = dfall.copy()
+
+                while len(dfall_mod)>3:
 
                     reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
-                    dfall['high_trend'] = reg[0] * dfall['date_id'] + reg[1]
+                    dfall_mod = dfall_mod.loc[dfall_mod['Close'] > reg[0] * dfall_mod['date_id'] + reg[1]]
 
-                    # low trend lineY
-                    dfall_mod = dfall.copy()
+                reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
+                dfall['high_trend'] = reg[0] * dfall['date_id'] + reg[1]
 
-                    while len(dfall_mod)>3:
+                # low trend lineY
+                dfall_mod = dfall.copy()
 
-                        reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
-                        dfall_mod = dfall_mod.loc[dfall_mod['Close'] < reg[0] * dfall_mod['date_id'] + reg[1]]
+                while len(dfall_mod)>3:
 
                     reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
-                    dfall['low_trend'] = reg[0] * dfall['date_id'] + reg[1]
+                    dfall_mod = dfall_mod.loc[dfall_mod['Close'] < reg[0] * dfall_mod['date_id'] + reg[1]]
 
-                    min_Y = dfall.nsmallest(1, columns='Low')
-                    min_Y = min_Y['Low'].iloc[-1]
-                    min_Y = '%.2f'%min_Y
-                    min_Y = str(min_Y)
+                reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
+                dfall['low_trend'] = reg[0] * dfall['date_id'] + reg[1]
 
-                    max_Y = dfall.nlargest(1, columns='High')
-                    max_Y = max_Y['High'].iloc[-1]
-                    max_Y = '%.2f'%max_Y
-                    max_Y = str(max_Y)
+                min_Y = dfall.nsmallest(1, columns='Low')
+                min_Y = min_Y['Low'].iloc[-1]
+                min_Y = '%.2f'%min_Y
+                min_Y = str(min_Y)
 
-                    dfall['min_Y'] = float(min_Y)
-                    dfall['max_Y'] = float(max_Y)
+                max_Y = dfall.nlargest(1, columns='High')
+                max_Y = max_Y['High'].iloc[-1]
+                max_Y = '%.2f'%max_Y
+                max_Y = str(max_Y)
 
-                    #copy dataframe prevQ
-                    dfY = dfY.copy()
-                    dfY['date_id'] = ((dfY.index.date - dfY.index.date.min())).astype('timedelta64[D]')
-                    dfY['date_id'] = dfY['date_id'].dt.days + 1
+                dfall['min_Y'] = float(min_Y)
+                dfall['max_Y'] = float(max_Y)
 
-                    # high trend line prevQ
-                    dfY_mod = dfY.copy()
+                #copy dataframe prevQ
+                dfY = dfY.copy()
+                dfY['date_id'] = ((dfY.index.date - dfY.index.date.min())).astype('timedelta64[D]')
+                dfY['date_id'] = dfY['date_id'].dt.days + 1
 
-                    while len(dfY_mod)>3:
+                # high trend line prevQ
+                dfY_mod = dfY.copy()
 
-                        reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['High'],)
-                        dfY_mod = dfY_mod.loc[dfY_mod['High'] > reg[0] * dfY_mod['date_id'] + reg[1]]
+                while len(dfY_mod)>3:
 
                     reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['High'],)
-                    dfY['high_trendQ'] = reg[0] * dfY['date_id'] + reg[1]
+                    dfY_mod = dfY_mod.loc[dfY_mod['High'] > reg[0] * dfY_mod['date_id'] + reg[1]]
 
-                    # low trend line prevQ
-                    dfY_mod = dfY.copy()
+                reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['High'],)
+                dfY['high_trendQ'] = reg[0] * dfY['date_id'] + reg[1]
 
-                    while len(dfY_mod)>3:
+                # low trend line prevQ
+                dfY_mod = dfY.copy()
 
-                        reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['Low'],)
-                        dfY_mod = dfY_mod.loc[dfY_mod['Low'] < reg[0] * dfY_mod['date_id'] + reg[1]]
+                while len(dfY_mod)>3:
 
                     reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['Low'],)
-                    dfY['low_trendQ'] = reg[0] * dfY['date_id'] + reg[1]
-                    dfY['low_trendQ'] = dfY['low_trendQ'].replace(np.nan, dfY['Close'].iloc[0])
+                    dfY_mod = dfY_mod.loc[dfY_mod['Low'] < reg[0] * dfY_mod['date_id'] + reg[1]]
 
-                    candle_start = dfY['low_trendQ'].iloc[0]
-                    candle_start = '%.2f'%candle_start
-                    candle_start = str(candle_start)
+                reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['Low'],)
+                dfY['low_trendQ'] = reg[0] * dfY['date_id'] + reg[1]
+                dfY['low_trendQ'] = dfY['low_trendQ'].replace(np.nan, dfY['Close'].iloc[0])
 
-                    candle_end = dfY['low_trendQ'].iloc[-1]
-                    candle_end = '%.2f'%candle_end
-                    candle_end = str(candle_end)
+                candle_start = dfY['low_trendQ'].iloc[0]
+                candle_start = '%.2f'%candle_start
+                candle_start = str(candle_start)
 
-                    if float(candle_start) > float(candle_end):
-                        pattern = 'Lower low'
-                    else:
-                        pattern = 'Lower high'
+                candle_end = dfY['low_trendQ'].iloc[-1]
+                candle_end = '%.2f'%candle_end
+                candle_end = str(candle_end)
 
-                    Volume = dfY['Volume'].iloc[-1]
-                    Volume = str(Volume)
+                if float(candle_start) > float(candle_end):
+                    pattern = 'Lower low'
+                else:
+                    pattern = 'Lower high'
 
-                    trade_val = float(Close) * float(Volume)
-                    trade_val = int(float(trade_val))
-                    trade_value = '{:,}'.format(trade_val)
+                Volume = dfY['Volume'].iloc[-1]
+                Volume = str(Volume)
 
-                    dfall['Open_all'] = dfall['Open'].iloc[0]
-                    dfall['high_trendQ'] = dfY['high_trendQ']
-                    dfall['low_trendQ'] = dfY['low_trendQ']
+                trade_val = float(Close) * float(Volume)
+                trade_val = int(float(trade_val))
+                trade_value = '{:,}'.format(trade_val)
 
-                    dfY['OpenY'] = dfY['Open'].iloc[0]
-                    dfY['CloseY'] = dfY['Close'].iloc[0]
-                    dfM['CloseM'] = dfM['Close'].iloc[0]
+                dfall['Open_all'] = dfall['Open'].iloc[0]
+                dfall['high_trendQ'] = dfY['high_trendQ']
+                dfall['low_trendQ'] = dfY['low_trendQ']
 
-                    dfall['ema'] = dfall['Close'].rolling(35).mean()
-                    dfall['ema'] = dfall['ema'].replace(np.nan, dfY['Close'].iloc[0])
-                    dfall['emas'] = dfall['Close'].rolling(15).mean()
-                    dfall['emas'] = dfall['emas'].replace(np.nan, dfY['Close'].iloc[0])
+                dfY['OpenY'] = dfY['Open'].iloc[0]
+                dfY['CloseY'] = dfY['Close'].iloc[0]
+                dfM['CloseM'] = dfM['Close'].iloc[0]
 
-                    ema = dfall['ema'].iloc[-1]
-                    ema = float(ema)
+                dfall['ema'] = dfall['Close'].rolling(35).mean()
+                dfall['ema'] = dfall['ema'].replace(np.nan, dfY['Close'].iloc[0])
+                dfall['emas'] = dfall['Close'].rolling(15).mean()
+                dfall['emas'] = dfall['emas'].replace(np.nan, dfY['Close'].iloc[0])
 
-                    if ema >= 100:
-                        ema = (round(ema/0.5) * 0.5)
-                    elif ema >= 25:
-                        ema = (round(ema/0.25) * 0.25)
-                    elif ema >= 10:
-                        ema = (round(ema/0.1) * 0.1)
-                    elif ema >= 5:
-                        ema = (round(ema/0.05) * 0.05)
-                    else:
-                        ema = (round(ema/0.02) * 0.02)
+                ema = dfall['ema'].iloc[-1]
+                ema = float(ema)
 
-                    ema = '%.2f'%ema
-                    ema = str(ema)
+                if ema >= 100:
+                    ema = (round(ema/0.5) * 0.5)
+                elif ema >= 25:
+                    ema = (round(ema/0.25) * 0.25)
+                elif ema >= 10:
+                    ema = (round(ema/0.1) * 0.1)
+                elif ema >= 5:
+                    ema = (round(ema/0.05) * 0.05)
+                else:
+                    ema = (round(ema/0.02) * 0.02)
 
-                    emas = dfall['emas'].iloc[-1]
-                    emas = float(emas)
+                ema = '%.2f'%ema
+                ema = str(ema)
 
-                    if emas >= 100:
-                        emas = (round(emas/0.5) * 0.5)
-                    elif emas >= 25:
-                        emas = (round(emas/0.25) * 0.25)
-                    elif emas >= 10:
-                        emas = (round(emas/0.1) * 0.1)
-                    elif emas >= 5:
-                        emas = (round(emas/0.05) * 0.05)
-                    else:
-                        emas = (round(emas/0.02) * 0.02)
+                emas = dfall['emas'].iloc[-1]
+                emas = float(emas)
 
-                    emas = '%.2f'%emas
-                    emas = str(emas)
+                if emas >= 100:
+                    emas = (round(emas/0.5) * 0.5)
+                elif emas >= 25:
+                    emas = (round(emas/0.25) * 0.25)
+                elif emas >= 10:
+                    emas = (round(emas/0.1) * 0.1)
+                elif emas >= 5:
+                    emas = (round(emas/0.05) * 0.05)
+                else:
+                    emas = (round(emas/0.02) * 0.02)
 
-                    pema = dfall['ema'].iloc[-1]
-                    pema = ((float(Close) - float(pema)) / float(pema))*100
-                    pema = '%.2f'%pema
-                    pema = str(pema)
+                emas = '%.2f'%emas
+                emas = str(emas)
 
-                    high_trend = dfall['high_trend'].iloc[-1]
-                    high_trend = '%.2f'%high_trend
-                    high_trend = str(high_trend)
+                pema = dfall['ema'].iloc[-1]
+                pema = ((float(Close) - float(pema)) / float(pema))*100
+                pema = '%.2f'%pema
+                pema = str(pema)
 
-                    high_trendQ = dfall['high_trendQ'].iloc[-1]
-                    high_trendQ = '%.2f'%high_trendQ
-                    high_trendQ = str(high_trendQ)
+                high_trend = dfall['high_trend'].iloc[-1]
+                high_trend = '%.2f'%high_trend
+                high_trend = str(high_trend)
 
-                    comvlue = float(st[3])
-                    comvluee = str(st[4])
+                high_trendQ = dfall['high_trendQ'].iloc[-1]
+                high_trendQ = '%.2f'%high_trendQ
+                high_trendQ = str(high_trendQ)
 
-                    if float(ChgM) >= 0.0 :
-                        trendM = ' '
-                    else:
-                        trendM = 'X'
+                comvlue = float(st[3])
+                comvluee = str(st[4])
 
-                    if float(ChgY) >= 0 :
-                        trendAll = '▲'
-                        if float(Close) >= float(CloseM) :
-                            if float(Close) >= float(ema):
-                                trendY = '©'
-                            else:
-                                trendY = ' '
-                        else:
-                            trendY = ' '
-                    else:
-                        trendAll = '▼'
-                        if float(Close) >= float(CloseM) :
-                            if float(Close) >= float(ema):
-                                trendY = '℗'
-                            else:
-                                trendY = ' '
-                        else:
-                            trendY = ' '
+                if float(ChgM) >= 0.0 :
+                    trendM = ' '
+                else:
+                    trendM = 'X'
 
-                    text_return = f'\n{list} {trendY}{trendM} cY{CloseY} {trendAll} {Chg_closeY}%  \ncM{CloseM} > {Close} ({today_chg}) \ne {ema} ({pema}%) \nr {m_RSI} \n{pattern}'
-
-                    text = st[0]
-                    price_now = str(Close) 
-                    change = str(today_chg)
-                    chgp = str(Chg_closeY)
-                    re_avg = f'H {max_Y} | L {min_Y} \nR {m_RSI} # ff {freefloat}% \n$ {comvluee}'
-
-                    if float(Close) > float(CloseY):
-                        if float(Close) >= float(CloseM) :
-                            if float(Close) >= float(ema):
-                                notice = f'BuyM {trendY}{trendM}'
-                                start = f'cM {CloseM} # {emas}'
-                                stop = f'e {ema} {pema}%'
-                                target = f'{high_trend}'
-                            else:
-                                notice = f'LowerE {trendY}{trendM}'
-                                start = f'cM {CloseM} # {emas}'
-                                stop = f'e {ema} {pema}%'
-                                target = f'{high_trend}'
-                        else:
-                            notice = f'LowerM {trendY}{trendM}'
-                            start = f'cM {CloseM} # {emas}'
-                            stop = f'e {ema} {pema}%'
-                            target = f'{high_trend}'
-                    elif float(Close) >= float(CloseM) :
+                if float(ChgY) >= 0 :
+                    trendAll = '▲'
+                    if float(Close) >= float(CloseM) :
                         if float(Close) >= float(ema):
-                            notice = f'BUY M {trendY}{trendM}'
+                            trendY = '©'
+                        else:
+                            trendY = ' '
+                    else:
+                        trendY = ' '
+                else:
+                    trendAll = '▼'
+                    if float(Close) >= float(CloseM) :
+                        if float(Close) >= float(ema):
+                            trendY = '℗'
+                        else:
+                            trendY = ' '
+                    else:
+                        trendY = ' '
+
+                text_return = f'\n{list} {trendY}{trendM} cY{CloseY} {trendAll} {Chg_closeY}%  \ncM{CloseM} > {Close} ({today_chg}) \ne {ema} ({pema}%) \nr {m_RSI} \n{pattern}'
+
+                text = st[0]
+                price_now = str(Close) 
+                change = str(today_chg)
+                chgp = str(Chg_closeY)
+                re_avg = f'H {max_Y} | L {min_Y} \nR {m_RSI} # ff {freefloat}% \n$ {comvluee}'
+
+                if float(Close) > float(CloseY):
+                    if float(Close) >= float(CloseM) :
+                        if float(Close) >= float(ema):
+                            notice = f'BuyM {trendY}{trendM}'
                             start = f'cM {CloseM} # {emas}'
                             stop = f'e {ema} {pema}%'
                             target = f'{high_trend}'
@@ -454,32 +438,48 @@ def handle_message(event):
                         start = f'cM {CloseM} # {emas}'
                         stop = f'e {ema} {pema}%'
                         target = f'{high_trend}'
+                elif float(Close) >= float(CloseM) :
+                    if float(Close) >= float(ema):
+                        notice = f'BUY M {trendY}{trendM}'
+                        start = f'cM {CloseM} # {emas}'
+                        stop = f'e {ema} {pema}%'
+                        target = f'{high_trend}'
+                    else:
+                        notice = f'LowerE {trendY}{trendM}'
+                        start = f'cM {CloseM} # {emas}'
+                        stop = f'e {ema} {pema}%'
+                        target = f'{high_trend}'
+                else:
+                    notice = f'LowerM {trendY}{trendM}'
+                    start = f'cM {CloseM} # {emas}'
+                    stop = f'e {ema} {pema}%'
+                    target = f'{high_trend}'
 
-                    word_to_reply = str('{}'.format(text_return))
-                    print(word_to_reply)
-                    bubbles = []
-                    bubble = flex_stock(text,price_now,change,chgp,notice,start,stop,target,re_avg)
-                    
-                    flex_to_reply = SetMessage_Object(bubble)
-                    reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
-                    return 'OK'
+                word_to_reply = str('{}'.format(text_return))
+                print(word_to_reply)
+                bubbles = []
+                bubble = flex_stock(text,price_now,change,chgp,notice,start,stop,target,re_avg)
+                
+                flex_to_reply = SetMessage_Object(bubble)
+                reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
+                return 'OK'
 
-            for symbol in symbols:
-                stock(symbol).ticket()
+        for symbol in symbols:
+            stock(symbol).ticket()
 
-    except:
-        text_list = [
-            'คุณ {} กำลังค้นหา {} ในฐานข้อมูลไม่ถูกต้อง'.format(disname, text_from_user),
-            '{} สะกด {} ไม่ถูกต้อง'.format(disname, text_from_user),
-        ]
+    # except:
+    #     text_list = [
+    #         'คุณ {} กำลังค้นหา {} ในฐานข้อมูลไม่ถูกต้อง'.format(disname, text_from_user),
+    #         '{} สะกด {} ไม่ถูกต้อง'.format(disname, text_from_user),
+    #     ]
 
-        from random import choice
-        word_to_reply = choice(text_list)
-        text_to_reply = TextSendMessage(text = word_to_reply)
-        line_bot_api.reply_message(
-                event.reply_token,
-                messages=[text_to_reply]
-            )
+    #     from random import choice
+    #     word_to_reply = choice(text_list)
+    #     text_to_reply = TextSendMessage(text = word_to_reply)
+    #     line_bot_api.reply_message(
+    #             event.reply_token,
+    #             messages=[text_to_reply]
+    #         )
 
 @handler.add(FollowEvent)
 def RegisRichmenu(event):
