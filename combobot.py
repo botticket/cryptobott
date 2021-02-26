@@ -123,6 +123,7 @@ def handle_message(event):
             comvlue = format(float(comvlue),'')
             comvluee = format(float(comvlue),',')
             return [title,stockprice,change,comvlue,comvluee]
+
         def free(code):
             url = 'https://www.settrade.com/C04_05_stock_majorshareholder_p1.jsp?txtSymbol={}&ssoPageId=14&selectPage=5'.format(code)
             webopen = req(url)
@@ -160,7 +161,7 @@ def handle_message(event):
                 list = list.replace('.bk','')
 
                 st = checkmarket(code)
-                fr = free(stock)
+                fr = free(code)
                 freefloat = fr[0]
 
                 stock = f'{list}'
@@ -169,7 +170,7 @@ def handle_message(event):
                 try:
                     Close = float(st[1])
                 except ValueError:
-                    Close = dfall['Close'].iloc[-1]
+                    Close = dfM['Close'].iloc[-1]
 
                 Close  = '%.2f'%Close
                 Close = str(Close) 
