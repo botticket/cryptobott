@@ -266,15 +266,23 @@ def handle_message(event):
                     reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
                     dfall['low_trend'] = reg[0] * dfall['date_id'] + reg[1]
 
-                    min_Y = dfall.nsmallest(1, columns='Low')
-                    min_Y = min_Y['Low'].iloc[-1]
+                    min_Y = dfall.nsmallest(1, columns='Close')
+                    min_Y = min_Y['Close'].iloc[-1]
                     min_Y = '%.2f'%min_Y
                     min_Y = str(min_Y)
+
+                    min_Yp = ((float(min_Y) - float(Close))/float(Close))*100
+                    min_Yp = '%.2f'%min_Yp
+                    min_Yp = str(min_Yp)
 
                     max_Y = dfall.nlargest(1, columns='High')
                     max_Y = max_Y['High'].iloc[-1]
                     max_Y = '%.2f'%max_Y
                     max_Y = str(max_Y)
+
+                    max_Yp = ((float(max_Y) - float(Close))/float(Close))*100
+                    max_Yp = '%.2f'%max_Yp
+                    max_Yp = str(max_Yp)
 
                     dfall['min_Y'] = float(min_Y)
                     dfall['max_Y'] = float(max_Y)
@@ -374,6 +382,47 @@ def handle_message(event):
                     emas = '%.2f'%emas
                     emas = str(emas)
 
+                    max_ema = dfall.nlargest(1, columns='ema')
+                    max_ema = max_ema['ema'].iloc[-1]
+                    if max_ema >= 100:
+                        max_ema = (round(max_ema/0.5) * 0.5)
+                    elif max_ema >= 25:
+                        max_ema = (round(max_ema/0.25) * 0.25)
+                    elif max_ema >= 10:
+                        max_ema = (round(max_ema/0.1) * 0.1)
+                    elif max_ema >= 5:
+                        max_ema = (round(max_ema/0.05) * 0.05)
+                    else:
+                        max_ema = (round(max_ema/0.02) * 0.02)
+                    max_ema = '%.2f'%max_ema
+
+                    min_ema = dfall.nsmallest(1, columns='ema')
+                    min_ema = min_ema['ema'].iloc[-1]
+                    if min_ema >= 100:
+                        min_ema = (round(min_ema/0.5) * 0.5)
+                    elif min_ema >= 25:
+                        min_ema = (round(min_ema/0.25) * 0.25)
+                    elif min_ema >= 10:
+                        min_ema = (round(min_ema/0.1) * 0.1)
+                    elif min_ema >= 5:
+                        min_ema = (round(min_ema/0.05) * 0.05)
+                    else:
+                        min_ema = (round(min_ema/0.02) * 0.02)
+                    min_ema = '%.2f'%min_ema
+
+                    avg_ema = (float(max_ema) + float(min_ema))/2
+                    if avg_ema >= 100:
+                        avg_ema = (round(avg_ema/0.5) * 0.5)
+                    elif avg_ema >= 25:
+                        avg_ema = (round(avg_ema/0.25) * 0.25)
+                    elif avg_ema >= 10:
+                        avg_ema = (round(avg_ema/0.1) * 0.1)
+                    elif avg_ema >= 5:
+                        avg_ema = (round(avg_ema/0.05) * 0.05)
+                    else:
+                        avg_ema = (round(avg_ema/0.02) * 0.02)
+                    avg_ema = '%.2f'%avg_ema
+
                     pema = dfall['ema'].iloc[-1]
                     pema = ((float(Close) - float(pema)) / float(pema))*100
                     pema = '%.2f'%pema
@@ -414,48 +463,48 @@ def handle_message(event):
                         else:
                             trendY = ' '
 
-                    text_return = f'\n{list} {trendY}{trendM} cY{CloseY} {trendAll} {Chg_closeY}%  \ncM{CloseM} > {Close} ({today_chg}) \ne {ema} ({pema}%) | eS {emas} \nr {m_RSI} \n{pattern}'
+                    text_return = f'\n{list} {trendY}{trendM} oY {OpenY} {trendAll} {ChgY}%  \noM {OpenM} > {Close} ({today_chg}) \ne {ema} ({pema}%)'
                     linechat(text_return)
 
                     text = st[0]
                     price_now = str(Close) 
                     change = str(today_chg)
                     chgp = str(Chg_closeY)
-                    re_avg = f'H {max_Y} | L {min_Y} \nR {m_RSI} | Free {freefloat}% \n$ {comvluee}'
+                    re_avg = f'H {max_Y} {max_Yp}% | L {min_Y} {min_Yp}% \nR {m_RSI} | Free {freefloat}%'
 
                     if float(Close) > float(CloseY):
                         if float(Close) >= float(CloseM) :
                             if float(Close) >= float(ema):
-                                notice = f'BuyM {trendY}{trendM}'
-                                start = f'cM {CloseM} | eS {emas}'
-                                stop = f'e {ema} ({pema}%)'
-                                target = f'Target {high_trend}'
+                                notice = f'e {ema} ({pema}%)'
+                                start = f'm {max_ema} a {avg_ema} m {min_ema}'
+                                stop = f'oY {OpenY} {trendAll} {ChgY}%'
+                                target = f'TP {high_trend}'
                             else:
-                                notice = f'LowerE {trendY}{trendM}'
-                                start = f'cM {CloseM} | eS {emas}'
-                                stop = f'e {ema} ({pema}%)'
-                                target = f'Target {high_trend}'
+                                notice = f'หลุด e {ema} ({pema}%)'
+                                start = f'm {max_ema} a {avg_ema} m {min_ema}'
+                                stop = f'oY {OpenY} {trendAll} {ChgY}%'
+                                target = f'TP {high_trend}'
                         else:
-                            notice = f'LowerM {trendY}{trendM}'
-                            start = f'cM {CloseM} | eS {emas}'
-                            stop = f'e {ema} ({pema}%)'
-                            target = f'Target {high_trend}'
+                            notice = f'หลุดM e {ema} ({pema}%)'
+                            start = f'm {max_ema} a {avg_ema} m {min_ema}'
+                            stop = f'oY {OpenY} {trendAll} {ChgY}%'
+                            target = f'TP {high_trend}'
                     elif float(Close) >= float(CloseM) :
                         if float(Close) >= float(ema):
-                            notice = f'BUY M {trendY}{trendM}'
-                            start = f'cM {CloseM} | eS {emas}'
-                            stop = f'e {ema} ({pema}%)'
-                            target = f'Target {high_trend}'
+                            notice = f'e {ema} ({pema}%)'
+                            start = f'm {max_ema} a {avg_ema} m {min_ema}'
+                            stop = f'oY {OpenY} {trendAll} {ChgY}%'
+                            target = f'TP {high_trend}'
                         else:
-                            notice = f'LowerE {trendY}{trendM}'
-                            start = f'cM {CloseM} | eS {emas}'
-                            stop = f'e {ema} ({pema}%)'
-                            target = f'Target {high_trend}'
+                            notice = f'หลุด e {ema} ({pema}%)'
+                            start = f'm {max_ema} a {avg_ema} m {min_ema}'
+                            stop = f'oY {OpenY} {trendAll} {ChgY}%'
+                            target = f'TP {high_trend}'
                     else:
-                        notice = f'LowerM {trendY}{trendM}'
-                        start = f'cM {CloseM} | eS {emas}'
-                        stop = f'e {ema} ({pema}%)'
-                        target = f'Target {high_trend}'
+                        notice = f'หลุดM e {ema} ({pema}%)'
+                        start = f'm {max_ema} a {avg_ema} m {min_ema}'
+                        stop = f'oY {OpenY} {trendAll} {ChgY}%'
+                        target = f'TP {high_trend}'
 
                     word_to_reply = str('{}'.format(text_return))
                     print(word_to_reply)
@@ -471,7 +520,7 @@ def handle_message(event):
 
     except:
         text_list = [
-            'คุณ {} กำลังค้นหา {} ในฐานข้อมูลไม่ถูกต้อง'.format(disname, text_from_user),
+            'หุ้น {} ไม่แสดงข้อมูล'.format(text_from_user),
             '{} สะกด {} ไม่ถูกต้อง'.format(disname, text_from_user),
         ]
 
