@@ -336,21 +336,15 @@ def handle_message(event):
                     trade_value = '{:,}'.format(trade_val)
 
                     dfall['Open_all'] = dfall['Open'].iloc[0]
-                    dfall['high_trendQ'] = dfY['high_trendQ']
-                    dfall['low_trendQ'] = dfY['low_trendQ']
-
                     dfY['OpenY'] = dfY['Open'].iloc[0]
                     dfY['CloseY'] = dfY['Close'].iloc[0]
                     dfM['CloseM'] = dfM['Close'].iloc[0]
 
                     dfall['ema'] = dfall['Close'].rolling(35).mean()
                     dfall['ema'] = dfall['ema'].replace(np.nan, dfY['Close'].iloc[0])
-                    dfall['emas'] = dfall['Close'].rolling(15).mean()
-                    dfall['emas'] = dfall['emas'].replace(np.nan, dfY['Close'].iloc[0])
 
                     ema = dfall['ema'].iloc[-1]
                     ema = float(ema)
-
                     if ema >= 100:
                         ema = (round(ema/0.5) * 0.5)
                     elif ema >= 25:
@@ -361,26 +355,7 @@ def handle_message(event):
                         ema = (round(ema/0.05) * 0.05)
                     else:
                         ema = (round(ema/0.02) * 0.02)
-
                     ema = '%.2f'%ema
-                    ema = str(ema)
-
-                    emas = dfall['emas'].iloc[-1]
-                    emas = float(emas)
-
-                    if emas >= 100:
-                        emas = (round(emas/0.5) * 0.5)
-                    elif emas >= 25:
-                        emas = (round(emas/0.25) * 0.25)
-                    elif emas >= 10:
-                        emas = (round(emas/0.1) * 0.1)
-                    elif emas >= 5:
-                        emas = (round(emas/0.05) * 0.05)
-                    else:
-                        emas = (round(emas/0.02) * 0.02)
-
-                    emas = '%.2f'%emas
-                    emas = str(emas)
 
                     max_ema = dfall.nlargest(1, columns='ema')
                     max_ema = max_ema['ema'].iloc[-1]
@@ -429,12 +404,17 @@ def handle_message(event):
                     pema = str(pema)
 
                     high_trend = dfall['high_trend'].iloc[-1]
+                    if high_trend >= 100:
+                        high_trend = (round(high_trend/0.5) * 0.5)
+                    elif high_trend >= 25:
+                        high_trend = (round(high_trend/0.25) * 0.25)
+                    elif high_trend >= 10:
+                        high_trend = (round(high_trend/0.1) * 0.1)
+                    elif high_trend >= 5:
+                        high_trend = (round(high_trend/0.05) * 0.05)
+                    else:
+                        high_trend = (round(high_trend/0.02) * 0.02)
                     high_trend = '%.2f'%high_trend
-                    high_trend = str(high_trend)
-
-                    high_trendQ = dfall['high_trendQ'].iloc[-1]
-                    high_trendQ = '%.2f'%high_trendQ
-                    high_trendQ = str(high_trendQ)
 
                     comvlue = float(st[3])
                     comvluee = str(st[4])
@@ -470,7 +450,7 @@ def handle_message(event):
                     price_now = str(Close) 
                     change = str(today_chg)
                     chgp = str(Chg_closeY)
-                    re_avg = f'H {max_Y} {max_Yp}% | L {min_Y} {min_Yp}% \nR {m_RSI} | Free {freefloat}%'
+                    re_avg = f'H {max_Y} {max_Yp}% \nL {min_Y} {min_Yp}% \nrsi {m_RSI} | free {freefloat}%'
 
                     if float(Close) > float(CloseY):
                         if float(Close) >= float(CloseM) :
