@@ -191,10 +191,6 @@ def handle_message(event):
                 ChgY = '%.2f'%ChgY
                 ChgY = str(ChgY)
 
-                Chg_closeY = ((float(Close) - float(CloseY)) / float(CloseY) )*100
-                Chg_closeY = '%.2f'%Chg_closeY
-                Chg_closeY = str(Chg_closeY)
-
                 OpenM = dfM['Open'].iloc[0]
                 OpenM  = '%.2f'%OpenM
                 OpenM = str(OpenM)
@@ -391,7 +387,7 @@ def handle_message(event):
                 text = st[0]
                 price_now = str(Close) 
                 change = str(today_chg)
-                chgp = str(Chg_closeY)
+                chgp = str(ChgY)
                 re_avg = f'High {max_Y} {max_Yp}% \nLow {min_Y} {min_Yp}% \nRsi {m_RSI} | Free {freefloat}%'
 
                 if float(Close) > float(OpenY):
