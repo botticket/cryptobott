@@ -195,7 +195,7 @@ def handle_message(event):
                 OpenM  = '%.2f'%OpenM
                 OpenM = str(OpenM)
 
-                ChgM = ((float(Close) - float(CloseM)) / float(CloseM) )*100
+                ChgM = ((float(Close) - float(OpenM)) / float(OpenM) )*100
                 ChgM = '%.2f'%ChgM
                 ChgM = str(ChgM)
 
@@ -364,7 +364,7 @@ def handle_message(event):
 
                 if float(ChgY) >= 0 :
                     trendAll = '▲'
-                    if float(Close) >= float(CloseM) :
+                    if float(Close) >= float(OpenM) :
                         if float(Close) >= float(ema):
                             trendY = '©'
                         else:
@@ -373,7 +373,7 @@ def handle_message(event):
                         trendY = ' '
                 else:
                     trendAll = '▼'
-                    if float(Close) >= float(CloseM) :
+                    if float(Close) >= float(OpenM) :
                         if float(Close) >= float(ema):
                             trendY = '℗'
                         else:
