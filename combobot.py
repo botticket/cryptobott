@@ -187,10 +187,6 @@ def handle_message(event):
                     OpenY  = '%.2f'%OpenY
                     OpenY = str(OpenY)
 
-                    CloseY = dfY['Close'].iloc[0]
-                    CloseY  = '%.2f'%CloseY
-                    CloseY = str(CloseY)
-
                     ChgY = ((float(Close) - float(OpenY)) / float(OpenY) )*100
                     ChgY = '%.2f'%ChgY
                     ChgY = str(ChgY)
@@ -202,10 +198,6 @@ def handle_message(event):
                     OpenM = dfM['Open'].iloc[0]
                     OpenM  = '%.2f'%OpenM
                     OpenM = str(OpenM)
-
-                    CloseM = dfM['Close'].iloc[0]
-                    CloseM  = '%.2f'%CloseM
-                    CloseM = str(CloseM)
 
                     ChgM = ((float(Close) - float(CloseM)) / float(CloseM) )*100
                     ChgM = '%.2f'%ChgM
@@ -234,7 +226,7 @@ def handle_message(event):
                         rsi = 100 - 100/(1+rs)
                         return rsi
 
-                    dfall['RSI'] = computeRSI(dfall['Close'], 14)
+                    dfall['RSI'] = computeRSI(dfall['Close'], 75)
                     m_RSI = dfall['RSI'].iloc[-1]
                     m_RSI = '%.2f'%m_RSI
                     m_RSI = str(m_RSI)
@@ -286,62 +278,12 @@ def handle_message(event):
 
                     dfall['min_Y'] = float(min_Y)
                     dfall['max_Y'] = float(max_Y)
-
-                    #copy dataframe prevQ
-                    dfY = dfY.copy()
-                    dfY['date_id'] = ((dfY.index.date - dfY.index.date.min())).astype('timedelta64[D]')
-                    dfY['date_id'] = dfY['date_id'].dt.days + 1
-
-                    # high trend line prevQ
-                    dfY_mod = dfY.copy()
-
-                    while len(dfY_mod)>3:
-
-                        reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['High'],)
-                        dfY_mod = dfY_mod.loc[dfY_mod['High'] > reg[0] * dfY_mod['date_id'] + reg[1]]
-
-                    reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['High'],)
-                    dfY['high_trendQ'] = reg[0] * dfY['date_id'] + reg[1]
-
-                    # low trend line prevQ
-                    dfY_mod = dfY.copy()
-
-                    while len(dfY_mod)>3:
-
-                        reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['Low'],)
-                        dfY_mod = dfY_mod.loc[dfY_mod['Low'] < reg[0] * dfY_mod['date_id'] + reg[1]]
-
-                    reg = linregress(x=dfY_mod['date_id'],y=dfY_mod['Low'],)
-                    dfY['low_trendQ'] = reg[0] * dfY['date_id'] + reg[1]
-                    dfY['low_trendQ'] = dfY['low_trendQ'].replace(np.nan, dfY['Close'].iloc[0])
-
-                    candle_start = dfY['low_trendQ'].iloc[0]
-                    candle_start = '%.2f'%candle_start
-                    candle_start = str(candle_start)
-
-                    candle_end = dfY['low_trendQ'].iloc[-1]
-                    candle_end = '%.2f'%candle_end
-                    candle_end = str(candle_end)
-
-                    if float(candle_start) > float(candle_end):
-                        pattern = 'Lower low'
-                    else:
-                        pattern = 'Lower high'
-
-                    Volume = dfY['Volume'].iloc[-1]
-                    Volume = str(Volume)
-
-                    trade_val = float(Close) * float(Volume)
-                    trade_val = int(float(trade_val))
-                    trade_value = '{:,}'.format(trade_val)
-
                     dfall['Open_all'] = dfall['Open'].iloc[0]
                     dfY['OpenY'] = dfY['Open'].iloc[0]
-                    dfY['CloseY'] = dfY['Close'].iloc[0]
-                    dfM['CloseM'] = dfM['Close'].iloc[0]
-
-                    dfall['ema'] = dfall['Close'].rolling(35).mean()
-                    dfall['ema'] = dfall['ema'].replace(np.nan, dfY['Close'].iloc[0])
+                    
+                    dfall['ema35'] = dfall['Close'].rolling(35).mean()
+                    dfall['ema'] = dfall['Close'].rolling(75).mean()
+                    dfall['ema'] = dfall['ema'].replace(np.nan, dfall['Open'].iloc[0])
 
                     ema = dfall['ema'].iloc[-1]
                     ema = float(ema)
@@ -385,6 +327,9 @@ def handle_message(event):
                         min_ema = (round(min_ema/0.02) * 0.02)
                     min_ema = '%.2f'%min_ema
 
+                    min_pema = ((float(min_ema) - float(Close)) / float(Close))*100
+                    min_pema = '%.2f'%min_pema
+
                     avg_ema = (float(max_ema) + float(min_ema))/2
                     if avg_ema >= 100:
                         avg_ema = (round(avg_ema/0.5) * 0.5)
@@ -416,9 +361,6 @@ def handle_message(event):
                         high_trend = (round(high_trend/0.02) * 0.02)
                     high_trend = '%.2f'%high_trend
 
-                    comvlue = float(st[3])
-                    comvluee = str(st[4])
-
                     if float(ChgM) >= 0.0 :
                         trendM = ' '
                     else:
@@ -443,17 +385,17 @@ def handle_message(event):
                         else:
                             trendY = ' '
 
-                    text_return = f'\n{list} {trendY}{trendM} oY {OpenY} {trendAll} {ChgY}%  \noM {OpenM} > {Close} ({today_chg}) \ne {ema} ({pema}%)'
+                    text_return = f'\n{list} {trendY}{trendM} oY {OpenY} {trendAll} {ChgY}%  \ne {ema} ({pema}%) > {Close} ({today_chg}) \nmin {min_ema} ({min_pema}%)'
                     linechat(text_return)
 
                     text = st[0]
                     price_now = str(Close) 
                     change = str(today_chg)
                     chgp = str(Chg_closeY)
-                    re_avg = f'H {max_Y} {max_Yp}% \nL {min_Y} {min_Yp}% \nrsi {m_RSI} | free {freefloat}%'
+                    re_avg = f'High {max_Y} {max_Yp}% \nLow {min_Y} {min_Yp}% \nRsi {m_RSI} | Free {freefloat}%'
 
-                    if float(Close) > float(CloseY):
-                        if float(Close) >= float(CloseM) :
+                    if float(Close) > float(OpenY):
+                        if float(Close) >= float(OpenM) :
                             if float(Close) >= float(ema):
                                 notice = f'e {ema} ({pema}%)'
                                 start = f'm {max_ema} a {avg_ema} m {min_ema}'
@@ -469,7 +411,7 @@ def handle_message(event):
                             start = f'm {max_ema} a {avg_ema} m {min_ema}'
                             stop = f'oY {OpenY} {trendAll} {ChgY}%'
                             target = f'TP {high_trend}'
-                    elif float(Close) >= float(CloseM) :
+                    elif float(Close) >= float(OpenM) :
                         if float(Close) >= float(ema):
                             notice = f'e {ema} ({pema}%)'
                             start = f'm {max_ema} a {avg_ema} m {min_ema}'
