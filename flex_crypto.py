@@ -139,7 +139,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "stat",
+                    "text": "info",
                     "flex": 3,
                     "size": "sm"
                 }
