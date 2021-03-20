@@ -142,20 +142,6 @@ def handle_message(event):
                 comvluee = format(float(comvlue),',')
                 return [title,stockprice,change,comvlue,comvluee]
 
-            def free(code):
-                url = 'https://www.settrade.com/C04_05_stock_majorshareholder_p1.jsp?txtSymbol={}&ssoPageId=14&selectPage=5'.format(code)
-                webopen = req(url)
-                page_html = webopen.read()
-                webopen.close()
-                data = soup(page_html, 'html.parser')
-                freefloat = data.findAll('div',{'class':'row separate-content'})
-                freefloat = freefloat[0].text
-                freefloat = freefloat.replace('\n','')
-                freefloat = freefloat.replace('\r','')
-                freefloat = freefloat[-6:]
-                freefloat = freefloat.replace('%','')
-                return [freefloat]
-            
             set50 = ['ADVANC','AOT','AWC', 'BAM', 'BBL', 'BDMS', 'BEM','BGRIM','BH','BJC','BTS','CBG',
                     'COM7', 'CPALL','CPF','CPN','CRC','DELTA','DTAC','EA', 'EGCO','GLOBAL', 'GPSC',
                     'GULF','HMPRO', 'INTUCH','IVL','KBANK','KTB','KTC','LH','MINT', 'MTC','OR',
@@ -176,18 +162,10 @@ def handle_message(event):
                     start = datetime(end.year,end.month,end.day)
                     list = self.stock
 
-                    dfall = data.DataReader(f'{list}', data_source="yahoo",start=start_year, end=end)
-
                     try:
                         dfY = data.DataReader(f'{list}', data_source="yahoo", start=yearly, end=end)
                     except ValueError:
                         dfY = data.DataReader(f'{list}', data_source="yahoo", start=start_year, end=end)
-
-                    try:
-                        dfM = data.DataReader(f'{list}', data_source="yahoo", start=monthly, end=end)
-                    except ValueError:
-                        dfM = data.DataReader(f'{list}', data_source="yahoo", start=start_year, end=end)
-
                     try:
                         preM = data.DataReader(f'{list}', data_source="yahoo", start=prevm, end=endvm)
                     except ValueError:
@@ -196,11 +174,8 @@ def handle_message(event):
                     list = list.replace('.bk','')
 
                     st = checkmarket(code)
-                    fr = free(code)
-                    freefloat = fr[0]
-
                     stock = f'{list}'
-                    dfall.dropna(inplace=True)
+                    dfY.dropna(inplace=True)
         
                     try:
                         Close = float(st[1])
@@ -208,23 +183,14 @@ def handle_message(event):
                         Close = dfY['Close'].iloc[-1]
                     Close  = '%.2f'%Close
 
-                    Open_all = dfall['Open'].iloc[0]
-                    Open_all  = '%.2f'%Open_all
-
-                    Chg_all = ((float(Close) - float(Open_all))/ float(Open_all))*100
-                    Chg_all = '%.2f'%Chg_all
-
                     OpenY = dfY['Open'].iloc[0]
                     OpenY  = '%.2f'%OpenY
 
                     ChgY = ((float(Close) - float(OpenY)) / float(OpenY) )*100
                     ChgY = '%.2f'%ChgY
 
-                    OpenM = dfM['Open'].iloc[0]
-                    OpenM  = '%.2f'%OpenM
-
-                    ChgM = ((float(Close) - float(OpenM)) / float(OpenM) )*100
-                    ChgM = '%.2f'%ChgM
+                    OpenD = dfY['Open'].iloc[-1]
+                    OpenD  = '%.2f'%OpenD
 
                     try:
                         today_chg = float(st[2])
@@ -279,85 +245,8 @@ def handle_message(event):
                     HpreMp = ((float(Close) - float(HpreM))/float(HpreM))*100
                     HpreMp = '%.2f'%HpreMp
 
-                    def computeRSI (data, time_window):
-                        diff = data.diff(1).dropna()
-                        up_chg = 0 * diff
-                        down_chg = 0 * diff
-
-                        up_chg[diff > 0] = diff[ diff>0 ]    
-                        down_chg[diff < 0] = diff[ diff < 0 ]
-
-                        up_chg_avg   = up_chg.ewm(com=time_window-1 , min_periods=time_window).mean()
-                        down_chg_avg = down_chg.ewm(com=time_window-1 , min_periods=time_window).mean()
-
-                        rs = abs(up_chg_avg/down_chg_avg)
-                        rsi = 100 - 100/(1+rs)
-                        return rsi
-
-                    dfall['RSI'] = computeRSI(dfall['Close'], 75)
-                    m_RSI = dfall['RSI'].iloc[-1]
-                    m_RSI = '%.2f'%m_RSI
-
-                    dfall['ema35'] = dfall['Close'].rolling(35).mean()
-                    dfall['ema'] = dfall['Close'].rolling(75).mean()
-                    dfall['ema'] = dfall['ema'].replace(np.nan, dfall['Open'].iloc[0])
-
-                    ema = dfall['ema'].iloc[-1]
-                    ema = float(ema)
-                    if ema >= 100:
-                        ema = (round(ema/0.5) * 0.5)
-                    elif ema >= 25:
-                        ema = (round(ema/0.25) * 0.25)
-                    elif ema >= 10:
-                        ema = (round(ema/0.1) * 0.1)
-                    elif ema >= 5:
-                        ema = (round(ema/0.05) * 0.05)
-                    else:
-                        ema = (round(ema/0.02) * 0.02)
-                    ema = '%.2f'%ema
-
-                    pema = dfall['ema'].iloc[-1]
-                    pema = ((float(Close) - float(pema)) / float(pema))*100
-                    pema = '%.2f'%pema
-
-                    max_ema = dfall.nlargest(1, columns='ema')
-                    max_ema = max_ema['ema'].iloc[-1]
-                    if max_ema >= 100:
-                        max_ema = (round(max_ema/0.5) * 0.5)
-                    elif max_ema >= 25:
-                        max_ema = (round(max_ema/0.25) * 0.25)
-                    elif max_ema >= 10:
-                        max_ema = (round(max_ema/0.1) * 0.1)
-                    elif max_ema >= 5:
-                        max_ema = (round(max_ema/0.05) * 0.05)
-                    else:
-                        max_ema = (round(max_ema/0.02) * 0.02)
-                    max_ema = '%.2f'%max_ema
-
-                    max_pema = ((float(max_ema) - float(Close)) / float(Close))*100
-                    max_pema = '%.2f'%max_pema
-
-                    min_ema = dfall.nsmallest(1, columns='ema')
-                    min_ema = min_ema['ema'].iloc[-1]
-                    if min_ema >= 100:
-                        min_ema = (round(min_ema/0.5) * 0.5)
-                    elif min_ema >= 25:
-                        min_ema = (round(min_ema/0.25) * 0.25)
-                    elif min_ema >= 10:
-                        min_ema = (round(min_ema/0.1) * 0.1)
-                    elif min_ema >= 5:
-                        min_ema = (round(min_ema/0.05) * 0.05)
-                    else:
-                        min_ema = (round(min_ema/0.02) * 0.02)
-                    min_ema = '%.2f'%min_ema
-
-                    min_pema = ((float(min_ema) - float(Close)) / float(Close))*100
-                    min_pema = '%.2f'%min_pema
-
                     dfall['max_Y'] = float(max_Y)
                     dfall['min_Y'] = float(min_Y)
-                    dfY['max_ema'] = float(max_ema)
-                    dfY['min_ema'] = float(min_ema)
                     dfY['HpreM'] = float(HpreM)
 
                     if (stock in set50):
@@ -367,25 +256,12 @@ def handle_message(event):
                     else:
                         inline = ' '
 
-                    if float(ChgM) >= 0.0 :
-                        trendM = ' '
-                    else:
-                        trendM = 'X'
-
                     if float(ChgY) >= 0 :
                         trendAll = '▲'
-                        if float(Close) >= float(HpreM) :
-                            trendY = '©'
-                        else:
-                            trendY = ' '
                     else:
                         trendAll = '▼'
-                        if float(Close) >= float(HpreM) :
-                            trendY = '©'
-                        else:
-                            trendY = ' '
                                 
-                    text_return = f'{trendY}{trendM} {list} Y {OpenY} {trendAll} {ChgY}% | e {ema} ({pema}%) | H {HpreM} ({HpreMp}%) > {Close} ({today_chg})'
+                    text_return = f'{list} H {HpreM} ({HpreMp}%) > {Close} ({today_chg}) \nOpen {OpenD}'
                     linechat(text_return)
 
                     text = st[0]
@@ -394,38 +270,21 @@ def handle_message(event):
                     chgp = str(ChgY)
                     re_avg = f'Hp {max_Y} {max_Yp}% \nLp {min_Y} {min_Yp}%'
 
-                    if float(Close) > float(OpenY):
-                        if float(Close) >= float(OpenM) :
-                            if float(Close) >= float(ema):
-                                notice = f'H {HpreM} ({HpreMp}%)'
-                                start = f'Y {OpenY} {trendAll} {ChgY}%'
-                                stop = f'e {ema} ({pema}%)'
-                                target = f'{inline}'
-                            else:
-                                notice = f'H {HpreM} ({HpreMp}%)'
-                                start = f'Y {OpenY} {trendAll} {ChgY}%'
-                                stop = f'e {ema} ({pema}%)'
-                                target = f'{inline}'
-                        else:
+                    if float(Close) > float(HpreM):
+                        if float(OpenD) >= float(HpreM) :
                             notice = f'H {HpreM} ({HpreMp}%)'
-                            start = f'Y {OpenY} {trendAll} {ChgY}%'
-                            stop = f'e {ema} ({pema}%)'
-                            target = f'{inline}'
-                    elif float(Close) >= float(OpenM) :
-                        if float(Close) >= float(ema):
-                            notice = f'H {HpreM} ({HpreMp}%)'
-                            start = f'Y {OpenY} {trendAll} {ChgY}%'
-                            stop = f'e {ema} ({pema}%)'
+                            start = f'OD {OpenD}'
+                            stop = f' '
                             target = f'{inline}'
                         else:
                             notice = f'H {HpreM} ({HpreMp}%)'
-                            start = f'Y {OpenY} {trendAll} {ChgY}%'
-                            stop = f'e {ema} ({pema}%)'
+                            start = f'OD {OpenD}'
+                            stop = f' '
                             target = f'{inline}'
                     else:
                         notice = f'H {HpreM} ({HpreMp}%)'
-                        start = f'Y {OpenY} {trendAll} {ChgY}%'
-                        stop = f'e {ema} ({pema}%)'
+                        start = f'OD {OpenD}'
+                        stop = f' '
                         target = f'{inline}'
 
                     word_to_reply = str('{}'.format(text_return))
@@ -443,16 +302,12 @@ def handle_message(event):
     except:
         text_list = [
             'หุ้น {} ไม่แสดงข้อมูล'.format(text_from_user),
-            '{} สะกด {} ไม่ถูกต้อง'.format(disname, text_from_user),
-        ]
+            '{} สะกด {} ไม่ถูกต้อง'.format(disname, text_from_user),]
 
         from random import choice
         word_to_reply = choice(text_list)
         text_to_reply = TextSendMessage(text = word_to_reply)
-        line_bot_api.reply_message(
-                event.reply_token,
-                messages=[text_to_reply]
-            )
+        line_bot_api.reply_message(event.reply_token, messages=[text_to_reply])
 
 @handler.add(FollowEvent)
 def RegisRichmenu(event):
