@@ -1,7 +1,5 @@
 def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
     Change_color = ['#EE0000' if '-' in str(change) else '#23D500'][0]
-    subheader = ['...' if '-' in str(avg) else '...'][0]
-
     bubble ={
     "type": "flex",
     "altText": "Flex Message",
