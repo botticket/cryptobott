@@ -62,7 +62,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                     "contents": [
                     {
                         "type": "text",
-                        "text": "{}".format(text),
+                        "text": "{}".format(stockname),
                         "weight": "bold",
                         "color": "#F8F9F9",
                         "wrap": True,
@@ -116,9 +116,9 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                     "contents": [
                     {
                         "type": "text",
-                        "text": "{} %".format(chgp),
+                        "text": " ",
                         "align": "end",
-                        "color": "{}".format(Change_color),
+                        "color": " ",
                         "gravity": "center",
                         "size": "md",
                         "wrap": True
@@ -139,23 +139,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "info",
-                    "flex": 3,
-                    "size": "sm"
-                }
-                ],
-                "position": "absolute",
-                "offsetTop": "31%",
-                "offsetStart": "5%",
-                "width": "100%"
-            },
-            {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                {
-                    "type": "text",
-                    "text": "{}".format(notice),
+                    "text": "{}".format(HpreM),
                     "flex": 3,
                     "size": "lg"
                 }
@@ -171,9 +155,9 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(subheader),
+                    "text": "{}".format(LpreM),
                     "flex": 3,
-                    "size": "sm"
+                    "size": "lg"
                 }
                 ],
                 "position": "absolute",
@@ -187,7 +171,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(start),
+                    "text": "{}".format(OpenD),
                     "flex": 3,
                     "size": "lg"
                 }
@@ -203,9 +187,9 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(subheader),
+                    "text": "{}".format(target),
                     "flex": 3,
-                    "size": "sm"
+                    "size": "lg"
                 }
                 ],
                 "position": "absolute",
@@ -219,7 +203,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(stop),
+                    "text": "{}".format(re_avg),
                     "flex": 3,
                     "size": "lg"
                 }
@@ -228,72 +212,6 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "offsetTop": "59%",
                 "offsetStart": "5%",
                 "width": "100%"
-            },
-            {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                {
-                    "type": "text",
-                    "text": "{}".format(subheader),
-                    "flex": 3,
-                    "size": "sm"
-                }
-                ],
-                "position": "absolute",
-                "offsetTop": "66%",
-                "offsetStart": "5%",
-                "width": "100%"
-            },
-            {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                {
-                    "type": "text",
-                    "text": "{}".format(target),
-                    "flex": 3,
-                    "size": "lg",
-                    "wrap": True
-                }
-                ],
-                "position": "absolute",
-                "offsetTop": "71%",
-                "offsetStart": "5%",
-                "width": "95%"
-            },
-            {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                {
-                    "type": "text",
-                    "text": "{}".format(subheader),
-                    "flex": 3,
-                    "size": "sm"
-                }
-                ],
-                "position": "absolute",
-                "offsetTop": "77%",
-                "offsetStart": "5%",
-                "width": "100%"
-            },
-            {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                {
-                    "type": "text",
-                    "text": "{}".format(avg),
-                    "flex": 3,
-                    "size": "lg",
-                    "wrap": True
-                }
-                ],
-                "position": "absolute",
-                "offsetTop": "81%",
-                "offsetStart": "5%",
-                "width": "95%"
             }
             ],
             "height": "400px",

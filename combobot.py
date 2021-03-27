@@ -175,19 +175,13 @@ def handle_message(event):
                     list = list.replace('.bk','')
                     st = checkmarket(code)
                     stock = f'{list}'
-                    dfY.dropna(inplace=True)
+                    list = list.upper() 
         
                     try:
                         Close = float(st[1])
                     except ValueError:
                         Close = dfY['Close'].iloc[-1]
                     Close  = '%.2f'%Close
-
-                    OpenY = dfY['Open'].iloc[0]
-                    OpenY  = '%.2f'%OpenY
-
-                    ChgY = ((float(Close) - float(OpenY)) / float(OpenY) )*100
-                    ChgY = '%.2f'%ChgY
 
                     OpenD = dfY['Open'].iloc[-1]
                     OpenD  = '%.2f'%OpenD
@@ -205,7 +199,6 @@ def handle_message(event):
 
                     # high trend lineY
                     dfall_mod = dfall.copy()
-
                     while len(dfall_mod)>3:
                         reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
                         dfall_mod = dfall_mod.loc[dfall_mod['Close'] > reg[0] * dfall_mod['date_id'] + reg[1]]
@@ -214,37 +207,49 @@ def handle_message(event):
 
                     # low trend lineY
                     dfall_mod = dfall.copy()
-
                     while len(dfall_mod)>3:
                         reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
                         dfall_mod = dfall_mod.loc[dfall_mod['Close'] < reg[0] * dfall_mod['date_id'] + reg[1]]
                     reg = linregress(x=dfall_mod['date_id'],y=dfall_mod['Close'],)
                     dfall['low_trend'] = reg[0] * dfall['date_id'] + reg[1]
 
-                    min_Y = dfall.nsmallest(1, columns='Close')
-                    min_Y = min_Y['Close'].iloc[-1]
-                    min_Y = '%.2f'%min_Y
+                    HpreM = preM.nlargest(1, columns='High')
+                    HpreM = HpreM['High'].iloc[-1]
+                    if HpreM >= 100:
+                        HpreM = (round(HpreM/0.5) * 0.5)
+                    elif HpreM >= 25:
+                        HpreM = (round(HpreM/0.25) * 0.25)
+                    elif HpreM >= 10:
+                        HpreM = (round(HpreM/0.1) * 0.1)
+                    elif HpreM >= 5:
+                        HpreM = (round(HpreM/0.05) * 0.05)
+                    else:
+                        HpreM = (round(HpreM/0.02) * 0.02)
+                    HpreM = '%.2f'%HpreM
 
-                    min_Yp = ((float(min_Y) - float(Close))/float(Close))*100
-                    min_Yp = '%.2f'%min_Yp
+                    LpreM = dfM.nlargest(1, columns='High')
+                    LpreM = LpreM['Low'].iloc[-1]
+                    if LpreM >= 100:
+                        LpreM = (round(LpreM/0.5) * 0.5)
+                    elif LpreM >= 25:
+                        LpreM = (round(LpreM/0.25) * 0.25)
+                    elif LpreM >= 10:
+                        LpreM = (round(LpreM/0.1) * 0.1)
+                    elif LpreM >= 5:
+                        LpreM = (round(LpreM/0.05) * 0.05)
+                    else:
+                        LpreM = (round(LpreM/0.02) * 0.02)
+                    LpreM = '%.2f'%LpreM
+
+                    HpreMp = ((float(Close) - float(HpreM))/float(HpreM))*100
+                    HpreMp = '%.2f'%HpreMp
 
                     max_Y = dfall.nlargest(1, columns='High')
                     max_Y = max_Y['High'].iloc[-1]
                     max_Y = '%.2f'%max_Y
 
-                    max_Yp = ((float(max_Y) - float(Close))/float(Close))*100
-                    max_Yp = '%.2f'%max_Yp
-
-                    HpreM = preM.nlargest(1, columns='Close')
-                    HpreM = HpreM['Close'].iloc[-1]
-                    HpreM = '%.2f'%HpreM
-
-                    HpreMp = ((float(Close) - float(HpreM))/float(HpreM))*100
-                    HpreMp = '%.2f'%HpreMp
-
-                    dfall['max_Y'] = float(max_Y)
-                    dfall['min_Y'] = float(min_Y)
-                    dfY['HpreM'] = float(HpreM)
+                    dif_max = ((float(max_Y) - float(Close))/float(Close))*100
+                    dif_max = '%.2f'%dif_max
 
                     if (stock in set50):
                         inline = f'SET50'
@@ -253,41 +258,23 @@ def handle_message(event):
                     else:
                         inline = ' '
 
-                    if float(ChgY) >= 0 :
-                        trendAll = '▲'
-                    else:
-                        trendAll = '▼'
-                                
-                    text_return = f'{list} H {HpreM} ({HpreMp}%) > {Close} ({today_chg}) \nOpen {OpenD}'
+                    text_return = f'{list} H {HpreM} ({HpreMp}%) > {Close} ({today_chg}) \ntake profit {LpreM}'
                     linechat(text_return)
+                    word_to_reply = str(f'{text_return}')
+                    print(word_to_reply)
 
                     text = st[0]
                     price_now = str(Close) 
                     change = str(today_chg)
-                    chgp = str(ChgY)
-                    re_avg = f'Hp {max_Y} {max_Yp}% \nLp {min_Y} {min_Yp}%'
 
-                    if float(Close) > float(HpreM):
-                        if float(OpenD) >= float(HpreM) :
-                            notice = f'H {HpreM} ({HpreMp}%)'
-                            start = f'OD {OpenD}'
-                            stop = f' '
-                            target = f'{inline}'
-                        else:
-                            notice = f'H {HpreM} ({HpreMp}%)'
-                            start = f'OD {OpenD}'
-                            stop = f' '
-                            target = f'{inline}'
-                    else:
-                        notice = f'H {HpreM} ({HpreMp}%)'
-                        start = f'OD {OpenD}'
-                        stop = f' '
-                        target = f'{inline}'
+                    notice = f'High  {HpreM} ({HpreMp}%)'
+                    start = f'>=    {LpreM}'
+                    stop = f'Open  {OpenD}'
+                    target = f'{inline}'
+                    re_avg = f'Hyear {max_Y} ({dif_max}%)'
 
-                    word_to_reply = str('{}'.format(text_return))
-                    print(word_to_reply)
                     bubbles = []
-                    bubble = flex_stock(text,price_now,change,chgp,notice,start,stop,target,re_avg)
+                    bubble = flex_stock(text,price_now,change,notice,start,stop,target,re_avg)
                     
                     flex_to_reply = SetMessage_Object(bubble)
                     reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
