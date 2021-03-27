@@ -137,6 +137,22 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                 "contents": [
                 {
                     "type": "text",
+                    "text": " ",
+                    "flex": 3,
+                    "size": "sm"
+                }
+                ],
+                "position": "absolute",
+                "offsetTop": "31%",
+                "offsetStart": "5%",
+                "width": "100%"
+            },
+            {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                {
+                    "type": "text",
                     "text": "{}".format(HpreM),
                     "flex": 3,
                     "size": "lg"
@@ -194,6 +210,88 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                 "offsetTop": "54%",
                 "offsetStart": "5%",
                 "width": "100%"
+            },
+            {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                {
+                    "type": "text",
+                    "text": " ",
+                    "flex": 3,
+                    "size": "sm"
+                }
+                ],
+                "position": "absolute",
+                "offsetTop": "59%",
+                "offsetStart": "5%",
+                "width": "100%"
+            },
+            {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                {
+                    "type": "text",
+                    "text": " ",
+                    "flex": 3,
+                    "size": "sm"
+                }
+                ],
+                "position": "absolute",
+                "offsetTop": "66%",
+                "offsetStart": "5%",
+                "width": "100%"
+            },
+            {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                {
+                    "type": "text",
+                    "text": " ",
+                    "flex": 3,
+                    "size": "sm",
+                    "wrap": True
+                }
+                ],
+                "position": "absolute",
+                "offsetTop": "71%",
+                "offsetStart": "5%",
+                "width": "95%"
+            },
+            {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                {
+                    "type": "text",
+                    "text": " ",
+                    "flex": 3,
+                    "size": "sm"
+                }
+                ],
+                "position": "absolute",
+                "offsetTop": "77%",
+                "offsetStart": "5%",
+                "width": "100%"
+            },
+            {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                {
+                    "type": "text",
+                    "text": " ",
+                    "flex": 3,
+                    "size": "sm",
+                    "wrap": True
+                }
+                ],
+                "position": "absolute",
+                "offsetTop": "81%",
+                "offsetStart": "5%",
+                "width": "95%"
             }
             ],
             "height": "400px",
