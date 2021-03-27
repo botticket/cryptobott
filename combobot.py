@@ -13,7 +13,6 @@ from flex_crypto import *
 from dialogflow_uncle import detect_intent_texts
 from datetime import datetime,date
 
-
 app = Flask(__name__)
 
 channel_secret = 'afe7ec6bede0dde581d0a61b6447653b'
@@ -24,8 +23,6 @@ handler = WebhookHandler(channel_secret)
 
 today = date.today()
 end = datetime.now()
-current_time = end.strftime("%H:%M %p")
-current_hrs = end.strftime("%H")
 
 start_year = today.year - 1
 start_year = '{}-{}-01'.format(start_year,today.month)
@@ -34,19 +31,41 @@ yearly = '{}-01-01'.format(today.year)
 monthly = '{}-{}-01'.format(today.year,today.month)
 
 prevmo = today.month -1
-if today.month >= 4:
+
+if today.month == 12:
     prevm = '{}-{}-01'.format(today.year,prevmo)
     endvm = '{}-{}-30'.format(today.year,prevmo)
+elif today.month == 11:
+    prevm = '{}-{}-01'.format(today.year,prevmo)
+    endvm = '{}-{}-31'.format(today.year,prevmo)
+elif today.month == 10:
+    prevm = '{}-{}-01'.format(today.year,prevmo)
+    endvm = '{}-{}-30'.format(today.year,prevmo)
+elif today.month >= 8:
+    prevm = '{}-{}-01'.format(today.year,prevmo)
+    endvm = '{}-{}-31'.format(today.year,prevmo)
+elif today.month == 7:
+    prevm = '{}-{}-01'.format(today.year,prevmo)
+    endvm = '{}-{}-30'.format(today.year,prevmo)
+elif today.month == 6:
+    prevm = '{}-{}-01'.format(today.year,prevmo)
+    endvm = '{}-{}-31'.format(today.year,prevmo)
+elif today.month == 5:
+    prevm = '{}-{}-01'.format(today.year,prevmo)
+    endvm = '{}-{}-30'.format(today.year,prevmo)
+elif today.month == 4:
+    prevm = '{}-{}-01'.format(today.year,prevmo)
+    endvm = '{}-{}-31'.format(today.year,prevmo)
 elif today.month == 3:
     prevm = '{}-{}-01'.format(today.year,prevmo)
-    endvm = '{}-{}-25'.format(today.year,prevmo)
+    endvm = '{}-{}-28'.format(today.year,prevmo)
 elif today.month == 2:
     prevm = '{}-{}-01'.format(today.year,prevmo)
-    endvm = '{}-{}-30'.format(today.year,prevmo)
+    endvm = '{}-{}-31'.format(today.year,prevmo)
 else:
     prevY = today.year - 1
     prevm = '{}-12-01'.format(prevY)
-    endvm = '{}-12-30'.format(prevY)
+    endvm = '{}-12-31'.format(prevY)
 
 def linechat(text):
     ACCESS_TOKEN = "12CiN1mDzj3q93N5aTYvtWX63XlQOqDs6FWizTRUx1y"
@@ -106,7 +125,6 @@ def handle_message(event):
                 messages=[text_to_reply]
             )
         return 'OK'
-
     else:
         from bs4 import BeautifulSoup as soup
         from urllib.request import urlopen as req
@@ -164,9 +182,9 @@ def handle_message(event):
                 
                 dfall = data.DataReader(f'{list}', data_source="yahoo", start=start_year, end=end)
                 try:
-                    dfY = data.DataReader(f'{list}', data_source="yahoo", start=yearly, end=end)
+                    dfM = data.DataReader(f'{list}', data_source="yahoo", start=monthly, end=end)
                 except ValueError:
-                    dfY = data.DataReader(f'{list}', data_source="yahoo", start=start_year, end=end)
+                    dfM = data.DataReader(f'{list}', data_source="yahoo", start=start_year, end=end)
                 try:
                     preM = data.DataReader(f'{list}', data_source="yahoo", start=prevm, end=endvm)
                 except ValueError:
@@ -180,10 +198,10 @@ def handle_message(event):
                 try:
                     Close = float(st[1])
                 except ValueError:
-                    Close = dfY['Close'].iloc[-1]
+                    Close = dfall['Close'].iloc[-1]
                 Close  = '%.2f'%Close
 
-                OpenD = dfY['Open'].iloc[-1]
+                OpenD = dfall['Open'].iloc[-1]
                 OpenD  = '%.2f'%OpenD
 
                 try:
