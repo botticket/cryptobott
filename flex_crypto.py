@@ -196,22 +196,6 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "offsetTop": "54%",
                 "offsetStart": "5%",
                 "width": "100%"
-            },
-            {
-                "type": "box",
-                "layout": "vertical",
-                "contents": [
-                {
-                    "type": "text",
-                    "text": "{}".format(re_avg),
-                    "flex": 3,
-                    "size": "lg"
-                }
-                ],
-                "position": "absolute",
-                "offsetTop": "59%",
-                "offsetStart": "5%",
-                "width": "100%"
             }
             ],
             "height": "400px",

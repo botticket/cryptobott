@@ -288,11 +288,10 @@ def handle_message(event):
                 HpreM = f'High  {HpreM} ({HpreMp}%)'
                 LpreM = f'>=    {LpreM}'
                 OpenD = f'Open  {OpenD}'
-                target = f'{inline}'
-                re_avg = f'Hyear {max_Y} ({dif_max}%)'
+                target = f'Hyear {max_Y} ({dif_max}%)'
 
                 bubbles = []
-                bubble = flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target,re_avg)
+                bubble = flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target)
                 
                 flex_to_reply = SetMessage_Object(bubble)
                 reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)
