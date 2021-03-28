@@ -116,7 +116,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                     "contents": [
                     {
                         "type": "text",
-                        "text": "{} %".format(chgp),
+                        "text": "{}".format(chgp),
                         "align": "end",
                         "color": "{}".format(Change_color),
                         "gravity": "center",
@@ -139,7 +139,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "info",
+                    "text": "All time high",
                     "flex": 3,
                     "size": "sm"
                 }
@@ -171,7 +171,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(subheader),
+                    "text": "HpreM",
                     "flex": 3,
                     "size": "sm"
                 }
@@ -203,7 +203,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(subheader),
+                    "text": "Tprofit <",
                     "flex": 3,
                     "size": "sm"
                 }
@@ -235,7 +235,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(subheader),
+                    "text": "Open",
                     "flex": 3,
                     "size": "sm"
                 }
@@ -268,7 +268,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(subheader),
+                    "text": " ",
                     "flex": 3,
                     "size": "sm"
                 }
@@ -284,7 +284,7 @@ def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(avg),
+                    "text": "{} ".format(avg),
                     "flex": 3,
                     "size": "lg",
                     "wrap": True
