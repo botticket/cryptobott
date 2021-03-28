@@ -276,22 +276,24 @@ def handle_message(event):
                 else:
                     inline = ' '
 
-                text_return = f'{list} H {HpreM} ({HpreMp}%) > {Close} ({today_chg}) \ntake profit {LpreM}'
+                text_return = f'{list} \nH {HpreM} ({HpreMp}%) > {Close} ({today_chg}) \ntake profit <= {LpreM}'
                 linechat(text_return)
                 word_to_reply = str(f'{text_return}')
                 print(word_to_reply)
 
-                stockname = st[0]
+                text = st[0]
                 price_now = str(Close) 
                 change = str(today_chg)
+                chgp = str(inline)
 
-                HpreM = f'High  {HpreM} ({HpreMp}%)'
-                LpreM = f'>=    {LpreM}'
-                OpenD = f'Open  {OpenD}'
-                target = f'Hyear {max_Y} ({dif_max}%)'
+                notice = f'Hyear {max_Y} ({dif_max}%)'
+                start = f'High  {HpreM} ({HpreMp}%)'
+                stop = f'Tpro < {LpreM}'
+                target = f'Open  {OpenD}'
+                avg = ' '
 
                 bubbles = []
-                bubble = flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target)
+                bubble = flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg)
                 
                 flex_to_reply = SetMessage_Object(bubble)
                 reply_msg(reply_token,data=flex_to_reply,bot_access_key=channel_access_token)

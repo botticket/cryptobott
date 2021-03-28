@@ -1,5 +1,7 @@
-def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
+def flex_stock(text,price_now,change,chgp,notice,start,stop,target,avg):
     Change_color = ['#EE0000' if '-' in str(change) else '#23D500'][0]
+    subheader = ['...' if '-' in str(avg) else '...'][0]
+
     bubble ={
     "type": "flex",
     "altText": "Flex Message",
@@ -60,7 +62,7 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                     "contents": [
                     {
                         "type": "text",
-                        "text": "{}".format(stockname),
+                        "text": "{}".format(text),
                         "weight": "bold",
                         "color": "#F8F9F9",
                         "wrap": True,
@@ -114,9 +116,9 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                     "contents": [
                     {
                         "type": "text",
-                        "text": " ",
+                        "text": "{} %".format(chgp),
                         "align": "end",
-                        "color": " ",
+                        "color": "{}".format(Change_color),
                         "gravity": "center",
                         "size": "md",
                         "wrap": True
@@ -137,7 +139,7 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                 "contents": [
                 {
                     "type": "text",
-                    "text": " ",
+                    "text": "info",
                     "flex": 3,
                     "size": "sm"
                 }
@@ -153,7 +155,7 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(HpreM),
+                    "text": "{}".format(notice),
                     "flex": 3,
                     "size": "lg"
                 }
@@ -169,9 +171,9 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(LpreM),
+                    "text": "{}".format(subheader),
                     "flex": 3,
-                    "size": "lg"
+                    "size": "sm"
                 }
                 ],
                 "position": "absolute",
@@ -185,7 +187,7 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(OpenD),
+                    "text": "{}".format(start),
                     "flex": 3,
                     "size": "lg"
                 }
@@ -201,9 +203,9 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                 "contents": [
                 {
                     "type": "text",
-                    "text": "{}".format(target),
+                    "text": "{}".format(subheader),
                     "flex": 3,
-                    "size": "lg"
+                    "size": "sm"
                 }
                 ],
                 "position": "absolute",
@@ -217,9 +219,9 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                 "contents": [
                 {
                     "type": "text",
-                    "text": " ",
+                    "text": "{}".format(stop),
                     "flex": 3,
-                    "size": "sm"
+                    "size": "lg"
                 }
                 ],
                 "position": "absolute",
@@ -233,7 +235,7 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                 "contents": [
                 {
                     "type": "text",
-                    "text": " ",
+                    "text": "{}".format(subheader),
                     "flex": 3,
                     "size": "sm"
                 }
@@ -249,9 +251,9 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                 "contents": [
                 {
                     "type": "text",
-                    "text": " ",
+                    "text": "{}".format(target),
                     "flex": 3,
-                    "size": "sm",
+                    "size": "lg",
                     "wrap": True
                 }
                 ],
@@ -266,7 +268,7 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                 "contents": [
                 {
                     "type": "text",
-                    "text": " ",
+                    "text": "{}".format(subheader),
                     "flex": 3,
                     "size": "sm"
                 }
@@ -282,9 +284,9 @@ def flex_stock(stockname,price_now,change,HpreM,LpreM,OpenD,target):
                 "contents": [
                 {
                     "type": "text",
-                    "text": " ",
+                    "text": "{}".format(avg),
                     "flex": 3,
-                    "size": "sm",
+                    "size": "lg",
                     "wrap": True
                 }
                 ],
